@@ -3,94 +3,93 @@ import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { Dialog, DialogTitle, DialogContent } from '@material-ui/core';
-import { Tabs, TabPanel } from 'react-tabs'; // Import Tabs and TabPanel from the correct library
+import { Tabs, TabPanel } from 'react-tabs';
 import UpdateUserForm from './updateUser';
 import AddUserForm from './addUser';
 import Dashboard from './Dashboard';
 import Modal from 'react-bootstrap/Modal';
-import img from '../assets/images/BATTERIE.jpg'
-
+import img from '../assets/images/BATTERIE.jpg';
+import { getAllUsers } from '../services/user';
 function ViewUser(props) {
   const [users, setUsers] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isPopupOpenUp, setIsPopupOpenUp] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [userList,setUserList] = useState([]);
+
+
 
   const handleClosePopup = () => {
     setIsPopupOpen(false);
   };
-  
+
   const handleClosePopupUp = () => {
     setIsPopupOpenUp(false);
   };
-  
-  const handleOpenPopupUp = (user) => {
-   
-  
+
+  const handleOpenPopupUp = () => {
     setIsPopupOpenUp(true);
   };
 
-  const fetchAllUsers = async () => {
-    try {
-      const response = await fetch('http://localhost:4000/viewAllUsers');
-      const data = await response.json();
+  useEffect(() =>{
+const fetchUsers = async() =>{
+  try {
+const UserResult= await getAllUsers();
+console.log("rrrr",UserResult.data);
+setUserList(UserResult.data);
+console.log("tt",userList);
+} catch (error) {
+  console.error("Error fetching users:", error);
+}
+}
+fetchUsers();
+},[]);
+console.log("Current state:", userList);
 
-      if (response.ok) {
-        setUsers(data.users);
-      } else {
-        console.error(data.errors);
-      }
-    } catch (error) {
-      console.error('Error fetching users:', error);
-    }
-  };
+console.log("ooooooooooooo",userList);
 
-  useEffect(() => {
-    fetchAllUsers();
-  }, []);
 
-  const DeleteConfirmation = (userId) => {
-    if (!userId) {
-      console.error('Invalid userId');
-      return;
-    }
-  
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'You will not be able to recover this item!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#dc3545',
-      cancelButtonColor: '#6c757d',
-      confirmButtonText: 'Yes, delete it!'
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          const response = await fetch(`http://localhost:4000/deleteUser/${userId}`, {
-            method: 'DELETE',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
-  
-          const data = await response.json();
-  
-          if (response.ok) {
-            fetchAllUsers();
-            Swal.fire('Deleted!', 'Your item has been deleted.', 'success');
-          } else {
-            console.error(data.errors);
-            Swal.fire('Error', 'Failed to delete the item.', 'error');
-          }
-        } catch (error) {
-          console.error('Error deleting user:', error);
+const DeleteConfirmation = (userId) => {
+  if (!userId) {
+    console.error('Invalid userId');
+    return;
+  }
+
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'You will not be able to recover this item!',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#dc3545',
+    cancelButtonColor: '#6c757d',
+    confirmButtonText: 'Yes, delete it!'
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      try {
+        const response = await fetch(`http://localhost:4000/users/deleteUser/${userId}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          Swal.fire('Deleted!', 'Your item has been deleted.', 'success');
+        } else {
+          console.error(data.errors);
           Swal.fire('Error', 'Failed to delete the item.', 'error');
         }
+      } catch (error) {
+        console.error('Error deleting user:', error);
+        Swal.fire('Error', 'Failed to delete the item.', 'error');
       }
-    });
-  
-  };
+    }
+  });
+};
+
   const btnAdd = {
     marginLeft: "800px",
     backgroundColor: "#076fb9",
@@ -100,12 +99,13 @@ function ViewUser(props) {
     justifyContent: 'center',
     textAlign: 'center',
   };
+
   const btnupdate = {
     backgroundColor: "#28a745",
     borderRadius: "25px",
     border: "none",
     cursor: "pointer",
-    padding: "5px", // Adjust the padding to reduce the space around the icon
+    padding: "5px",
     outline: "none",
     transition: "background-color 0.3s",
     marginRight: "5px",
@@ -120,6 +120,7 @@ function ViewUser(props) {
     outline: "none",
     transition: "background-color 0.3s",
   };
+
   const btnshow = {
     backgroundColor: "#ffc107",
     borderRadius: "25px",
@@ -130,6 +131,7 @@ function ViewUser(props) {
     transition: "background-color 0.3s",
     marginRight: "5px",
   };
+
   const btnStyles = {
     backgroundColor: "transparent",
     border: "none",
@@ -143,10 +145,12 @@ function ViewUser(props) {
     fontSize: "1.5rem",
     color: "#333",
   };
+
   const btnHoverStyles = {
     boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.3)",
     backgroundColor: "grey",
   };
+
   const selectStyle = {
     padding: '5px',
     borderRadius: '5px',
@@ -156,6 +160,7 @@ function ViewUser(props) {
     marginLeft: "15px",
     marginBottom: "5px",
   };
+
   const [prevHover, setPrevHover] = useState(false);
   const [nextHover, setNextHover] = useState(false);
 
@@ -175,14 +180,11 @@ function ViewUser(props) {
   const pageCount = Math.ceil(users.length / itemsPerPage);
 
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = Math.min(startIndex + itemsPerPage, users.length);
+  const endIndex = Math.min(startIndex + itemsPerPage, userList.length);
+  
 
   return (
-
-  
     <div>
-
-             
       <Dialog open={isPopupOpenUp} onClose={handleClosePopup}>
         <DialogTitle>Add User</DialogTitle>
         <DialogContent>
@@ -190,16 +192,13 @@ function ViewUser(props) {
         </DialogContent>
       </Dialog>
       <Dialog open={isPopupOpen} onClose={handleClosePopupUp}>
-  <DialogTitle>Update User</DialogTitle>
-  <DialogContent>
-    <UpdateUserForm onClose={handleClosePopupUp} onOpen={handleOpenPopupUp} />
-  </DialogContent>
-</Dialog>
+        <DialogTitle>Update User</DialogTitle>
+        <DialogContent>
+          <UpdateUserForm onClose={handleClosePopupUp} onOpen={handleOpenPopupUp} />
+        </DialogContent>
+      </Dialog>
 
-
-
-
-<section class="tf-page-title ">    
+      <section class="tf-page-title ">    
             <div class="tf-container">
                 <div class="row">
                     <div class="col-md-12">
@@ -216,7 +215,7 @@ function ViewUser(props) {
                     <img src={img} alt="images"   style={{ width: '100%' }}/>
                     </div>
                 </div>
-            </div>                      
+            </div>                  
         </section>
 
         <section className="tf-dashboard tf-tab">
@@ -229,112 +228,125 @@ function ViewUser(props) {
                         <div className="col-xl-9 col-lg-12 col-md-12 overflow-table">
 
                             <div className="dashboard-content inventory content-tab">
-                <button type='submit' style={btnAdd} onClick={handleOpenPopupUp}  >
-                  <svg
-                    viewBox="0 0 1024 1024"
-                    fill="currentColor"
-                    height="20px"
-                    width="20px"
-                  >
-                    <defs>
-                      <style />
-                    </defs>
-                    <path d="M482 152h60q8 0 8 8v704q0 8-8 8h-60q-8 0-8-8V160q0-8 8-8z" />
-                    <path d="M176 474h672q8 0 8 8v60q0 8-8 8H176q-8 0-8-8v-60q0-8 8-8z" />
-                  </svg>
-                  Add
-                </button>
-                <TabPanel>
-  <div>
-    <div className="inner-content inventory">
-      <h4 className="title-dashboard">User</h4>
-      <div className="pagination-controls" style={{ marginBottom: '20px' }}>
-        <select id="itemsPerPage" value={itemsPerPage} onChange={handleChangeItemsPerPage} style={selectStyle}>
-          <option value="5">5</option>
-          <option value="10">10</option>
-          <option value="15">15</option>
-        </select>
-      </div>
-      <div className="table-ranking top">
-        <div className="title-ranking">
-          <div className="col-rankingg"><Link to="#">FirstName</Link></div>
-          <div className="col-rankingg"><Link to="#">LastName</Link></div>
-          <div className="col-rankingg"><Link to="#">Email</Link></div>
-          <div className="col-rankingg"><Link to="#">Role</Link></div>
-          <div className="col-rankingg"><Link to="#">Actions</Link></div>
+                                                            
+                            <button type='submit' style={btnAdd} onClick={handleOpenPopupUp}  >
+<svg
+viewBox="0 0 1024 1024"
+fill="currentColor"
+height="20px"
+width="20px"
 
-        </div>
-      </div>
-      <div className="table-ranking">
-        {/* Display all users */}
-        {users.slice(startIndex, endIndex).map((user) => (
-          <div className="content-ranking" key={user._id}>
-            <div className="col-rankingg">{user.firstName}</div>
-            <div className="col-rankingg">{user.lastName}</div>
-            <div className="col-rankingg">{user.email}</div>
-            <div className="col-rankingg">{user.role}</div>
-            <button type='submit'  style={btnupdate} onClick={handleClosePopup} >
-            <svg fill="none" viewBox="0 0 15 15" height="20px" width="20px" {...props}>
-      <path
-        fill="currentColor"
-        fillRule="evenodd"
-        d="M1.903 7.297c0 3.044 2.207 5.118 4.686 5.547a.521.521 0 11-.178 1.027C3.5 13.367.861 10.913.861 7.297c0-1.537.699-2.745 1.515-3.663.585-.658 1.254-1.193 1.792-1.602H2.532a.5.5 0 010-1h3a.5.5 0 01.5.5v3a.5.5 0 01-1 0V2.686l-.001.002c-.572.43-1.27.957-1.875 1.638-.715.804-1.253 1.776-1.253 2.97zm11.108.406c0-3.012-2.16-5.073-4.607-5.533a.521.521 0 11.192-1.024c2.874.54 5.457 2.98 5.457 6.557 0 1.537-.699 2.744-1.515 3.663-.585.658-1.254 1.193-1.792 1.602h1.636a.5.5 0 110 1h-3a.5.5 0 01-.5-.5v-3a.5.5 0 111 0v1.845h.002c.571-.432 1.27-.958 1.874-1.64.715-.803 1.253-1.775 1.253-2.97z"
-        clipRule="evenodd"
-      />
-    </svg>
-  </button>
- 
-  <button type='submit'   style={btnshow}>
-  <svg
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      height="20px"
-      width="20px"
-      {...props}
-    >
-      <path d="M12 9a3.02 3.02 0 00-3 3c0 1.642 1.358 3 3 3 1.641 0 3-1.358 3-3 0-1.641-1.359-3-3-3z" />
-      <path d="M12 5c-7.633 0-9.927 6.617-9.948 6.684L1.946 12l.105.316C2.073 12.383 4.367 19 12 19s9.927-6.617 9.948-6.684l.106-.316-.105-.316C21.927 11.617 19.633 5 12 5zm0 12c-5.351 0-7.424-3.846-7.926-5C4.578 10.842 6.652 7 12 7c5.351 0 7.424 3.846 7.926 5-.504 1.158-2.578 5-7.926 5z" />
-    </svg>
-  </button>
-  <button type='submit' style={btndelete} onClick={() => DeleteConfirmation(user._id)}>
-  <svg
-      viewBox="0 0 1024 1024"
-      fill="currentColor"
-      height="20px"
-      width="20px"
-      {...props}
-    >
-      <path d="M360 184h-8c4.4 0 8-3.6 8-8v8h304v-8c0 4.4 3.6 8 8 8h-8v72h72v-80c0-35.3-28.7-64-64-64H352c-35.3 0-64 28.7-64 64v80h72v-72zm504 72H160c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h60.4l24.7 523c1.6 34.1 29.8 61 63.9 61h454c34.2 0 62.3-26.8 63.9-61l24.7-523H888c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32zM731.3 840H292.7l-24.2-512h487l-24.2 512z" />
-    </svg>
-  </button>
-          </div>
-        ))}
-        {/* Pagination Controls */}
-        <div className="pagination-controls" style={{ marginTop: '20px', textAlign: 'center' }}>
-          <button
-            onClick={handlePrevPage}
-            style={{ ...btnStyles, ...(currentPage === 1 ? { pointerEvents: 'none' } : {}), ...(prevHover ? btnHoverStyles : {}) }}
-            onMouseEnter={() => setPrevHover(true)}
-            onMouseLeave={() => setPrevHover(false)}
-            disabled={currentPage === 1}
-          >
-            <FiChevronLeft style={iconStyles} />
-          </button>
-          <button
-            onClick={handleNextPage}
-            style={{ ...btnStyles, ...(currentPage === pageCount ? { pointerEvents: 'none' } : {}), ...(nextHover ? btnHoverStyles : {}) }}
-            onMouseEnter={() => setNextHover(true)}
-            onMouseLeave={() => setNextHover(false)}
-            disabled={currentPage === pageCount}
-          >
-            <FiChevronRight style={iconStyles} />
-          </button>
-          <span style={{ marginLeft: '10px' }}>{users.length}</span>
-        </div>
-      </div>
+>
+<defs>
+  <style />
+</defs>
+<path d="M482 152h60q8 0 8 8v704q0 8-8 8h-60q-8 0-8-8V160q0-8 8-8z" />
+<path d="M176 474h672q8 0 8 8v60q0 8-8 8H176q-8 0-8-8v-60q0-8 8-8z" />
+</svg>
+Add</button>
+                  <TabPanel>
+<div>
+<div className="inner-content inventory">
+  <h4 className="title-dashboard">Users</h4>
+  
+  <div className="pagination-controls" style={{ marginBottom: '20px' }}>
+    <select id="itemsPerPage" value={itemsPerPage} onChange={handleChangeItemsPerPage} style={selectStyle}>
+      <option value="5">5</option>
+      <option value="10">10</option>
+      <option value="15">15</option>
+    </select>
+  </div>
+
+  <div className="table-ranking top">
+    <div className="title-ranking">
+      <div className="col-rankingg"><Link to="#">Lastname</Link></div>
+      <div className="col-rankingg"><Link to="#">Ifirstmage</Link></div>
+      <div className="col-rankingg"><Link to="#">email</Link></div>
+
+      <div className="col-rankingg"><Link to="#">Auction</Link></div>
     </div>
   </div>
-</TabPanel>     
+
+  <div className="table-ranking">
+    {/* Affichage des éléments de la page actuelle */}
+    {console.log(userList)}
+    {userList.slice(startIndex, endIndex).map((item, index) => (
+      <div className="content-ranking" key={index}> 
+        <div className="col-rankingg">{item.lastName}</div>
+        <div className="col-rankingg">{item.firstName}</div>
+        <div className="col-rankingg">{item.email}</div>
+
+        <button type='submit'  style={btnupdate} onClick={handleOpenPopupUp} >
+        <svg fill="none" viewBox="0 0 15 15" height="20px" width="20px" {...props}>
+  <path
+    fill="currentColor"
+    fillRule="evenodd"
+    d="M1.903 7.297c0 3.044 2.207 5.118 4.686 5.547a.521.521 0 11-.178 1.027C3.5 13.367.861 10.913.861 7.297c0-1.537.699-2.745 1.515-3.663.585-.658 1.254-1.193 1.792-1.602H2.532a.5.5 0 010-1h3a.5.5 0 01.5.5v3a.5.5 0 01-1 0V2.686l-.001.002c-.572.43-1.27.957-1.875 1.638-.715.804-1.253 1.776-1.253 2.97zm11.108.406c0-3.012-2.16-5.073-4.607-5.533a.521.521 0 11.192-1.024c2.874.54 5.457 2.98 5.457 6.557 0 1.537-.699 2.744-1.515 3.663-.585.658-1.254 1.193-1.792 1.602h1.636a.5.5 0 110 1h-3a.5.5 0 01-.5-.5v-3a.5.5 0 111 0v1.845h.002c.571-.432 1.27-.958 1.874-1.64.715-.803 1.253-1.775 1.253-2.97z"
+    clipRule="evenodd"
+  />
+</svg>
+</button>
+
+<button type='submit'   style={btnshow}>
+<svg
+  viewBox="0 0 24 24"
+  fill="currentColor"
+  height="20px"
+  width="20px"
+  {...props}
+>
+  <path d="M12 9a3.02 3.02 0 00-3 3c0 1.642 1.358 3 3 3 1.641 0 3-1.358 3-3 0-1.641-1.359-3-3-3z" />
+  <path d="M12 5c-7.633 0-9.927 6.617-9.948 6.684L1.946 12l.105.316C2.073 12.383 4.367 19 12 19s9.927-6.617 9.948-6.684l.106-.316-.105-.316C21.927 11.617 19.633 5 12 5zm0 12c-5.351 0-7.424-3.846-7.926-5C4.578 10.842 6.652 7 12 7c5.351 0 7.424 3.846 7.926 5-.504 1.158-2.578 5-7.926 5z" />
+</svg>
+</button>
+<button type='submit' style={btndelete} onClick={() => DeleteConfirmation(item._id)}>
+<svg
+  viewBox="0 0 1024 1024"
+  fill="currentColor"
+  height="20px"
+  width="20px"
+  {...props}
+>
+  <path d="M360 184h-8c4.4 0 8-3.6 8-8v8h304v-8c0 4.4 3.6 8 8 8h-8v72h72v-80c0-35.3-28.7-64-64-64H352c-35.3 0-64 28.7-64 64v80h72v-72zm504 72H160c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h60.4l24.7 523c1.6 34.1 29.8 61 63.9 61h454c34.2 0 62.3-26.8 63.9-61l24.7-523H888c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32zM731.3 840H292.7l-24.2-512h487l-24.2 512z" />
+</svg>
+</button>
+      </div>
+    ))}
+  </div>
+</div>
+
+{/* Contrôles de pagination en bas du tableau */}
+<div className="pagination-controls" style={{ marginTop: '20px', textAlign: 'center' }}>
+  <button
+    onClick={handlePrevPage}
+    style={{ ...btnStyles, ...(currentPage === 1 ? { pointerEvents: "none" } : {}), ...(prevHover ? btnHoverStyles : {}) }}
+    onMouseEnter={() => setPrevHover(true)}
+    onMouseLeave={() => setPrevHover(false)}
+    disabled={currentPage === 1}
+  >
+    <FiChevronLeft style={iconStyles} />
+  </button>
+  
+  <button
+    onClick={handleNextPage}
+    style={{ ...btnStyles, ...(currentPage === pageCount ? { pointerEvents: "none" } : {}), ...(nextHover ? btnHoverStyles : {}) }}
+    onMouseEnter={() => setNextHover(true)}
+    onMouseLeave={() => setNextHover(false)}
+    disabled={currentPage === pageCount}
+  >
+    <FiChevronRight style={iconStyles} />
+  </button>
+
+  <span style={{ marginLeft:'10px'}}>{userList.length}</span>
+</div>
+</div>
+</TabPanel>
+
+                          
+                                
+                                                    
+                                
+                                
                             </div>
                         </div>
                     </div>
@@ -346,4 +358,5 @@ function ViewUser(props) {
     </div>
 );
 }
+
 export default ViewUser;

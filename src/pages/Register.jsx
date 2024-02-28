@@ -61,7 +61,7 @@ const handleSubmit = async (event) => {
   }
     try {
       const { data } = await axios.post(
-        "http://localhost:4000/register",
+        "http://localhost:4000/users/register",
         { ...values },
         { withCredentials: true }
       );

@@ -62,24 +62,7 @@ const menus = [
             },
         ]
     },
-    {
-        id: 4,
-        name: 'Pages',
-        links: '#',
-        namesub: [
-            {
-                id: 1,
-                sub: 'Dashboard ',
-                links: '/dash '
-            },
-           
-           
-         
-            
-          
-        ],
-    },
-
+   
 
     {
         id: 5,
@@ -100,12 +83,7 @@ const menus = [
     {
 
     },
-    {
-
-    },
-    {
-
-    },
+   
 
     {
         id: 7,

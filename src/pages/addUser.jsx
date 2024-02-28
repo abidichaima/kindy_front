@@ -56,7 +56,7 @@ function AddUserForm({ onClose, onAddUser }) {
   };
 
   const handleSave = () => {
-    const addUserEndpoint = "http://localhost:4000/addUser"; // Replace with your actual backend endpoint
+    const addUserEndpoint = "http://localhost:4000/users/addUser"; // Replace with your actual backend endpoint
 
     fetch(addUserEndpoint, {
       method: 'POST',
