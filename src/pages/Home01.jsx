@@ -27,7 +27,7 @@ function Home01(props) {
 
                 <Category data={dataCategory} />
 
-                <LiveAutions data={dataLiveaution} />
+               {/* */} <LiveAutions data={dataLiveaution} />
 
                 <Create data={dataCreate} />
 

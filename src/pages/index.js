@@ -26,6 +26,10 @@ import ViewUser from "./viewUser";
 import ViewQuestion from "./viewQuestion";
 import Dash from "./Dash";  
 
+import EventView from "./EventView"
+import EventDetail from "./EventDetail";
+
+
 const routes = [
   { path: '/', component: <Home01 />},
 
@@ -54,6 +58,8 @@ const routes = [
   { path: '/question', component: <ViewQuestion />},
   { path: '/dash', component: <Dash />},
   { path: '/dashboard', component: <Dashboard />},
+  { path: '/event', component: <EventView />},
+  { path: '/eventDetail/:id', component: <EventDetail />},
 
 
 ]
