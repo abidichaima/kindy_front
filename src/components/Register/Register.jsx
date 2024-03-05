@@ -3,11 +3,28 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { useCookies } from "react-cookie";
 import { Link, useNavigate } from "react-router-dom";
-
+import styles from "./styles.module.css";
+import {
+  MDBBtn,
+  MDBContainer,
+  MDBRow,
+  MDBCol,
+  MDBCard,
+  MDBCardBody,
+  MDBInput,
+  MDBTextArea,
+  MDBFile,
+  MDBInputGroup
+}
+  from 'mdb-react-ui-kit';
 
 function Register() {
 const [cookies] = useCookies(["cookie-name"]);
 const navigate = useNavigate();
+const [error, setError] = useState("");
+	const [msg, setMsg] = useState("");
+  const [errors, setErrors] = useState({})
+  const [image, setImage] = useState('');
 
 useEffect(() => {
   if (cookies.jwt) {
@@ -15,69 +32,49 @@ useEffect(() => {
   }
 }, [cookies, navigate]);
 
-const [values, setValues] = useState({ firstName: '', lastName: '', email: '', password: ''    , role: 'student', // Default role
+const [values, setValues] = useState({ firstName: '', lastName: '', email: '', password: ''    , role: 'student',   phoneNumber: '' ,    level: 'non precise level', image :'' // Ajoutez cette ligne
+// Default role
 });
 const [errorFields, setErrorFields] = useState({});
 console.log("Initial errorFields:", errorFields);
 
-const generateError = (error) => toast.error(error, { position: "bottom-right" });
 
 const handleInputChange = (e, field) => {
   setValues({ ...values, [field]: e.target.value });
 };
 
-const validateEmail = (email) => {
-  // Validation simple pour l'e-mail
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-};
+const handleImage = (e) => {
+  const file = e.target.files[0];
+  setFileToBase(file);
+  console.log(file);
 
+}
+const setFileToBase = (file) => {
+  const reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onloadend = () => {
+    setImage(reader.result);
+  }
+
+}
 const handleSubmit = async (event) => {
   event.preventDefault();
   console.log("Form submitted with values:", values);
-  // ... rest of the code
-
-
-  // Vérifier les champs obligatoires
-  const fieldsToCheck = ["firstName", "lastName", "email", "password"];
-  let hasError = false;
-
-  fieldsToCheck.forEach((field) => {
-    if (!values[field]) {
-      setErrorFields({ ...errorFields, [field]: true });
-      hasError = true;
-    }
-  });
-
-  // Vérifier le format de l'e-mail
-  if (values.email && !validateEmail(values.email)) {
-    setErrorFields({ ...errorFields, email: true });
-    generateError("Invalid email format");
-    hasError = true;
-  }
-
-  if (hasError) {
-    return;
-  }
     try {
-      const { data } = await axios.post(
-        "http://localhost:4000/users/register",
-        { ...values },
-        { withCredentials: true }
-      );
+      const url = "http://localhost:4000/user/users";
+      const { values: res } = await axios.post(url, values);
+      console.log("Form values:", values);
+      console.log("Image:", image);
+    } catch (error) {
+      if (error.response && error.response.status === 400) {
+        // Affichez le message d'erreur du serveur, s'il y en a un
+        console.error("Erreur de validation côté serveur :", error.response.data.message);
+        console.log("Form values:", values);
+console.log("Image:", image);
+      } else {
+        console.error("Erreur inattendue lors de la soumission du formulaire :", error.message);
+      }}
 
-      if (data) {
-        if (data.errors) {
-          const { email, password } = data.errors;
-          if (email) generateError(email);
-          else if (password) generateError(password);
-        } else {
-          navigate("/");
-        }
-      }
-    } catch (ex) {
-      console.log(ex);
-    }
   };
 
   return (
@@ -100,25 +97,25 @@ const handleSubmit = async (event) => {
           <div className="row justify-content-center">
             <div className="col-md-12">
               <div className="tf-heading style-2">
-                <h4 className="heading">Register</h4>
+                <h6 className="heading">Register</h6>
               </div>
             </div>
             <div className="col-xl-6 col-lg-9 col-md-12">
             <form onSubmit={(e) => handleSubmit(e)} id="contactform">
-                <fieldset className={errorFields.firstName ? 'error' : ''}>
-                  <input
-                    id="firstName"
-                    name="firstName"
-                    tabIndex="3"
-                    aria-required="true"
-                    required
-                    type="text"
-                    placeholder="First Name"
-                    value={values.firstName}
-                    onChange={(e) => setValues({ ...values, firstName: e.target.value })}
-                  />
-                  {errorFields.firstName && <p className="error-message">{errorFields.firstName}</p>}
-                </fieldset>
+            <fieldset>
+          <input
+            id="firstName"
+            name="firstName"
+            tabIndex="3"
+            aria-required="true"
+            required
+            type="text"
+            placeholder="First Name"
+            className={errors.firstName ? 'error' : ''}
+            value={values.firstName}
+            onChange={(e) => setValues({ ...values, firstName: e.target.value })}
+            />
+        </fieldset>
 <fieldset>
   <input
     id="lastName"
@@ -127,11 +124,61 @@ const handleSubmit = async (event) => {
     aria-required="true"
     required
     type="text"
+    autoComplete='off'  
+
     placeholder="Last Name"
     value={values.lastName}
     onChange={(e) => setValues({ ...values, lastName: e.target.value })}
   />
+            {errors.lastName && <span>{errors.lastName}</span>}  
+
 </fieldset>
+
+<fieldset>
+  <input
+    id="phoneNumber"
+    name="phoneNumber"
+    tabIndex="4"
+    aria-required="true"
+    required
+    type="text"
+    placeholder="phoneNumber"
+    value={values.phoneNumber}
+    onChange={(e) => setValues({ ...values, phoneNumber: e.target.value })}
+     />
+</fieldset>
+<fieldset >
+   <select className={styles['level-fieldset']}
+      id="level"
+      name="level"
+      tabIndex="5"
+      aria-required="true"
+      required
+      value={values.level}
+      onChange={(e) => handleInputChange(e, 'level')}
+   >
+      <option value="non precise level">Non Precise Level</option>
+      <option value="gradeLevel1">Grade Level 1</option>
+      <option value="gradelevel2">Grade Level 2</option>
+      <option value="gradelevel3">Grade Level 3</option>
+      <option value="gradelevel4">Grade Level 4</option>
+      <option value="gradelevel5">Grade Level 5</option>
+      <option value="gradelevel6">Grade Level 6</option>
+      <option value="gradelevel7">Grade Level 7</option>
+
+   </select>
+</fieldset>
+
+<MDBCol md='3' className='ps-5'>
+              <h11 className="mb-0">Image</h11>
+            </MDBCol>
+
+            <MDBCol md='9' className='pe-5'>
+              <img className="img-fluid" src={image} alt="" />
+              <MDBFile size='lg' id='customFile' onChange={handleImage} />
+
+
+            </MDBCol>
                 <fieldset>
                 <input
   id="email"
@@ -143,8 +190,9 @@ const handleSubmit = async (event) => {
   placeholder="Email"
   value={values.email}
   onChange={(e) => handleInputChange(e, 'email')}
-  style={{ border: errorFields.email ? '2px solid red' : '1px solid #ccc' }}
 />
+{errors.email && <span>{errors.email}</span>}  
+
                 </fieldset>
                 <fieldset>
                   <input
@@ -174,6 +222,8 @@ const handleSubmit = async (event) => {
                 <div className="button-gg mb33">
                   <Link to="#"><i className="fab fa-google"></i>Google</Link>
                 </div>
+                {error && <div className={styles.error_msg}>{error}</div>}
+						{msg && <div className={styles.success_msg}>{msg}</div>}
                 <button className="submit" type="submit">Register</button>
                 <div className="row justify-content-center">
                   <span>

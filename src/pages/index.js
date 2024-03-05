@@ -18,13 +18,14 @@ import ItemDetails01 from "./ItemDetails01";
 import ItemDetails02 from "./ItemDetails02";
 import LiveAutions01 from "./LiveAutions01";
 import LiveAutions02 from "./LiveAutions02";
-import Login from "./Login";
+import Login from "../components/Login/Login";
 import Ranking from "./Ranking";
-import Register from "./Register";
+import Register from "../components/Register/Register"
 import Wallet from "./Wallet";
 import ViewUser from "./viewUser";
 import ViewQuestion from "./viewQuestion";
 import Dash from "./Dash";  
+import EmailVerify from "../components/EmailVerify/EmailVerify";
 
 const routes = [
   { path: '/', component: <Home01 />},
@@ -54,6 +55,8 @@ const routes = [
   { path: '/question', component: <ViewQuestion />},
   { path: '/dash', component: <Dash />},
   { path: '/dashboard', component: <Dashboard />},
+
+
 
 
 ]

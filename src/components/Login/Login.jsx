@@ -3,30 +3,39 @@ import { Link, useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
-import avt1 from "../assets/images/author/author-login-1.png";
-import avt2 from "../assets/images/author/author-login-2.png";
+
 
 const Login = () => {
-  const [values, setValues] = useState({
-    name: "",
-    password: "",
-  });
+  const [values, setValues] = useState({ email: "", password: "" });
+	const [error, setError] = useState("");
 
-  const [cookies, setCookie] = useCookies(["user"]);
-  const navigate = useNavigate();
+	const handleChange = ({ currentTarget: input }) => {
+		setValues({ ...values, [input.name]: input.value });
+	};
 
-  const handleSubmit = async (e) => {
+	const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      const response = await axios.post("http://localhost:4000/users/login", values);
-
-      setCookie("user", response.data, { path: "/" });
-
-      toast.success("Login successful");
-      navigate("/");
-    } catch (err) {
-      toast.error("Invalid username or password");
+      const url = "http://localhost:4000/user/auth";
+      const response = await axios.post(url, values);
+  
+      // Vérifiez le statut de la réponse (200 OK)
+      if (response.status === 200) {
+        // Stockez le token dans le localStorage ou utilisez votre logique de gestion
+        localStorage.setItem("token", values);
+        // Redirigez l'utilisateur vers la page d'accueil ou une autre page appropriée
+        window.location = "/";
+      }
+    } catch (error) {
+      // Gestion des erreurs réseau, etc.
+      console.error("Error during login:", error);
+  
+      // Vérifiez si la réponse d'erreur contient des données
+      if (error.response && error.response.data) {
+        setError(error.response.data.message || "An error occurred during login.");
+      } else {
+        setError("An error occurred during login. Please try again later.");
+      }
     }
   };
 
@@ -37,7 +46,7 @@ const Login = () => {
           <div className="col-md-6 mx-auto">
           <div className="row justify-content-center">
 
-          <h4 className="heading" >Login</h4>
+          <h6 className="heading" >Login</h6>
 
           </div>
 
@@ -46,11 +55,11 @@ const Login = () => {
                 <label></label>
                 <input
                   type="text"
-                  name="name"
+                  name="email"
                   className="form-control"
                   placeholder="email"
 
-                  value={values.name}
+                  value={values.email}
                   onChange={(e) =>
                     setValues({ ...values, [e.target.name]: e.target.value })
                   }
@@ -76,11 +85,15 @@ const Login = () => {
               </div>
 
             </form>
-            <div className="row justify-content-center">
             <span>
-           
-              Don't have an account? <Link to="/register">Register</Link>
+              <br></br>
             </span>
+            <div className="row justify-content-center">
+            <span className="justify-content-center">
+  Did you forget your password ? <Link to="/forgot-password">Forgot Password</Link>
+  <br/><br/>
+  Don't have an account ? <Link to="/register"> Register</Link>
+</span>
             </div>
           </div>
         </div>

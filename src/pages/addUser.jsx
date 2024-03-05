@@ -49,25 +49,36 @@ function AddUserForm({ onClose, onAddUser }) {
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [level, setLevel] = useState('');
+  const [imageFile, setImageFile] = useState(null);
+
+  const [phoneNumber, setPhoneNumber] = useState('');
+
   const [role, setRole] = useState(''); // Set default role
 
   const handleClosePopup = () => {
     onClose();
   };
-
+  const isEmail = (value) => {
+    // Expression régulière pour valider une adresse e-mail simple
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  };
   const handleSave = () => {
     const addUserEndpoint = "http://localhost:4000/users/addUser"; // Replace with your actual backend endpoint
-
+    
     fetch(addUserEndpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
+        imageFile , 
         email,
         password,
         firstName,
         lastName,
+        phoneNumber , 
+        level ,
         role,
       }),
     })
@@ -135,6 +146,32 @@ function AddUserForm({ onClose, onAddUser }) {
         </Select>
       </FormControl>
 
+      <FormControl variant="outlined" style={styles.formControl}>
+        <InputLabel>Level</InputLabel>
+        <Select
+          label="level"
+          value={level}
+          onChange={e => setLevel(e.target.value)}
+        >
+          <MenuItem value="gradeLevel1">gradeLevel1</MenuItem>
+          <MenuItem value="gradeLevel2">gradeLevel2</MenuItem>
+          <MenuItem value="gradeLevel3">gradeLevel3</MenuItem>
+          <MenuItem value="gradeLevel4">gradeLevel4</MenuItem>
+          <MenuItem value="gradeLevel5">gradeLevel5</MenuItem>
+          <MenuItem value="gradeLevel6">gradeLevel6</MenuItem>
+          <MenuItem value="gradeLevel7">gradeLevel7</MenuItem>
+          <MenuItem value="non precise level ">non precise level </MenuItem>
+
+
+        </Select>
+      </FormControl>
+
+      <input
+  type="file"
+  accept="image/*"
+  onChange={(e) => setImageFile(e.target.files[0])}
+  style={styles.textField}
+/>
 
       <div style={styles.footer}>
         <Button
