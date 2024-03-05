@@ -16,7 +16,7 @@ import Home01 from "./Home01";
 
 import ItemDetails01 from "./ItemDetails01";
 import ItemDetails02 from "./ItemDetails02";
-import LiveAutions01 from "./LiveAutions01";
+import LiveAutions01 from "./EventFront";
 import LiveAutions02 from "./LiveAutions02";
 import Login from "./Login";
 import Ranking from "./Ranking";
@@ -28,6 +28,7 @@ import Dash from "./Dash";
 
 import EventView from "./EventView"
 import EventDetail from "./EventDetail";
+import EFrontDetail from "./EFrontDetail";
 
 
 const routes = [
@@ -60,6 +61,7 @@ const routes = [
   { path: '/dashboard', component: <Dashboard />},
   { path: '/event', component: <EventView />},
   { path: '/eventDetail/:id', component: <EventDetail />},
+  { path: '/FronteventDetail/:id', component: <EFrontDetail />},
 
 
 ]

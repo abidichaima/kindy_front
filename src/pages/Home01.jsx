@@ -14,9 +14,9 @@ import Create from '../components/create/Create';
 import Explore from '../components/explore/Explore';
 import HotPick from '../components/hotpick/HotPick';
 import LiveAutions from '../components/liveautions/LiveAuctions';
-
+import EventAuctions from './EventAuctions';
 import TopSeller from '../components/topseller/TopSeller';
-
+import EventFront from './EventFront';
 
 function Home01(props) {
 
@@ -26,12 +26,13 @@ function Home01(props) {
                 <Banner01 data={dataBanner} />
 
                 <Category data={dataCategory} />
-
-               {/* */} <LiveAutions data={dataLiveaution} />
+                
+                <EventFront />
+                {/* */} <LiveAutions data={dataLiveaution} />
 
                 <Create data={dataCreate} />
 
-           
+
 
 
                 <Explore data={dataExplore} />

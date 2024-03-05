@@ -18,15 +18,15 @@ import { Dialog, DialogContent, DialogTitle } from '@mui/material';
 import Modal from 'react-bootstrap/Modal';
 import Dashboard from './Dashboard';
 import CardModal from '../components/layouts/CardModal';
-
+import EventTest from './EventTest'
 
 
 
 
 function ViewQuestion(props) {
-  const [addShow, setAddShow] = useState(false);
 
-  const [modalShow, setModalShow] = useState(false);
+  const [addShow, setAddShow] = useState(false);
+  const [updateShow, setUpdateShow] = useState(false);
 
   const DeleteConfirmation = (id) => {
     console.log("id:", id);
@@ -146,8 +146,9 @@ function ViewQuestion(props) {
 
   const handleOpenPopupUp = (item) => {
     setSelectedItem(item);
-    setUpdateFormOpen(true);
-    setIsPopupOpenUp(true);
+    setUpdateShow(true);
+    console.log(updateShow);
+
   };
 
   const [prevHover, setPrevHover] = useState(false);
@@ -205,24 +206,13 @@ function ViewQuestion(props) {
 
 
     <div>
-     
-      <Dialog open={isPopupOpenUp} onClose={handleClosePopupUp} PaperProps={{ style: dialogContentStyle }}>
-        <DialogTitle>Update Event</DialogTitle>
-        <DialogContent>
-          <UpdateEventForm
-            onClose={() => {
-              setUpdateFormOpen(false);
-              handleClosePopupUp();
-            }}
-            isOpen={isUpdateFormOpen}
-            initialValues={selectedItem}
-          />
-        </DialogContent>
-      </Dialog>
+
+      
+
 
       <AddEventForm
-      show={addShow}
-      onHide={() => setAddShow(false)} 
+        show={addShow}
+        onHide={() => setAddShow(false)}
       />
 
       <section class="tf-page-title ">
@@ -308,35 +298,47 @@ function ViewQuestion(props) {
                               <div className="col-rankingg">{item.price} | {item.maxPeople}</div>
                               <div className="col-rankingg">{item.location}</div>
                               <div className="col-rankingg">{item.date}</div>
+                              <div>
+                                <button type='submit' style={btnupdate}
 
-                              <button type='submit' style={btnupdate}
-                                onClick={() => handleOpenPopupUp(item)
-                                }>
-                                <svg fill="none" viewBox="0 0 15 15" height="20px" width="20px" {...props}>
-                                  <path
-                                    fill="currentColor"
-                                    fillRule="evenodd"
-                                    d="M1.903 7.297c0 3.044 2.207 5.118 4.686 5.547a.521.521 0 11-.178 1.027C3.5 13.367.861 10.913.861 7.297c0-1.537.699-2.745 1.515-3.663.585-.658 1.254-1.193 1.792-1.602H2.532a.5.5 0 010-1h3a.5.5 0 01.5.5v3a.5.5 0 01-1 0V2.686l-.001.002c-.572.43-1.27.957-1.875 1.638-.715.804-1.253 1.776-1.253 2.97zm11.108.406c0-3.012-2.16-5.073-4.607-5.533a.521.521 0 11.192-1.024c2.874.54 5.457 2.98 5.457 6.557 0 1.537-.699 2.744-1.515 3.663-.585.658-1.254 1.193-1.792 1.602h1.636a.5.5 0 110 1h-3a.5.5 0 01-.5-.5v-3a.5.5 0 111 0v1.845h.002c.571-.432 1.27-.958 1.874-1.64.715-.803 1.253-1.775 1.253-2.97z"
-                                    clipRule="evenodd"
+                                  onClick={() => {
+                                    handleOpenPopupUp(item);
+                                    setUpdateShow(true);
+                                  }
+                                  }>
+                                  <svg fill="none" viewBox="0 0 15 15" height="20px" width="20px" {...props}>
+                                    <path
+                                      fill="currentColor"
+                                      fillRule="evenodd"
+                                      d="M1.903 7.297c0 3.044 2.207 5.118 4.686 5.547a.521.521 0 11-.178 1.027C3.5 13.367.861 10.913.861 7.297c0-1.537.699-2.745 1.515-3.663.585-.658 1.254-1.193 1.792-1.602H2.532a.5.5 0 010-1h3a.5.5 0 01.5.5v3a.5.5 0 01-1 0V2.686l-.001.002c-.572.43-1.27.957-1.875 1.638-.715.804-1.253 1.776-1.253 2.97zm11.108.406c0-3.012-2.16-5.073-4.607-5.533a.521.521 0 11.192-1.024c2.874.54 5.457 2.98 5.457 6.557 0 1.537-.699 2.744-1.515 3.663-.585.658-1.254 1.193-1.792 1.602h1.636a.5.5 0 110 1h-3a.5.5 0 01-.5-.5v-3a.5.5 0 111 0v1.845h.002c.571-.432 1.27-.958 1.874-1.64.715-.803 1.253-1.775 1.253-2.97z"
+                                      clipRule="evenodd"
+                                    />
+                                  </svg>
+                                </button>
+                                {updateShow && (
+                                  <UpdateEventForm
+                                    show={updateShow}
+                                    initialValues={selectedItem}
+                                    onHide={() => setUpdateShow(false)}
                                   />
-                                </svg>
-                              </button>
+                                )}
+                              </div>
                               <Link to={`/eventDetail/${item._id}`}>
                                 <button type="button" style={btnshow}>
-                                <svg
-                                  viewBox="0 0 24 24"
-                                  fill="currentColor"
-                                  height="20px"
-                                  width="20px"
-                                  {...props}
-                                >
-                                  <path d="M12 9a3.02 3.02 0 00-3 3c0 1.642 1.358 3 3 3 1.641 0 3-1.358 3-3 0-1.641-1.359-3-3-3z" />
-                                  <path d="M12 5c-7.633 0-9.927 6.617-9.948 6.684L1.946 12l.105.316C2.073 12.383 4.367 19 12 19s9.927-6.617 9.948-6.684l.106-.316-.105-.316C21.927 11.617 19.633 5 12 5zm0 12c-5.351 0-7.424-3.846-7.926-5C4.578 10.842 6.652 7 12 7c5.351 0 7.424 3.846 7.926 5-.504 1.158-2.578 5-7.926 5z" />
-                                </svg>
+                                  <svg
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                    height="20px"
+                                    width="20px"
+                                    {...props}
+                                  >
+                                    <path d="M12 9a3.02 3.02 0 00-3 3c0 1.642 1.358 3 3 3 1.641 0 3-1.358 3-3 0-1.641-1.359-3-3-3z" />
+                                    <path d="M12 5c-7.633 0-9.927 6.617-9.948 6.684L1.946 12l.105.316C2.073 12.383 4.367 19 12 19s9.927-6.617 9.948-6.684l.106-.316-.105-.316C21.927 11.617 19.633 5 12 5zm0 12c-5.351 0-7.424-3.846-7.926-5C4.578 10.842 6.652 7 12 7c5.351 0 7.424 3.846 7.926 5-.504 1.158-2.578 5-7.926 5z" />
+                                  </svg>
                                 </button>
                               </Link>
 
-                              
+
                               <button type='submit' style={btndelete} onClick={() => DeleteConfirmation(item._id)}>
                                 <svg
                                   viewBox="0 0 1024 1024"
@@ -352,7 +354,7 @@ function ViewQuestion(props) {
                           ))}
                         </div>
                       </div>
-                      
+
                       {/* Contrôles de pagination en bas du tableau */}
                       <div className="pagination-controls" style={{ marginTop: '20px', textAlign: 'center' }}>
                         <button
@@ -379,9 +381,6 @@ function ViewQuestion(props) {
                       </div>
                     </div>
                   </TabPanel>
-
-
-
 
 
 

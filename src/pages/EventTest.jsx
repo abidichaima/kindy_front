@@ -63,38 +63,17 @@ const styles = {
   },
 
 };
-function UpdateEventForm(props) {
-  // ERROR CONSTANT 
-  const [errTitle, setErrtitle] = useState('');
-  const [showerrtitle, setShowerrtitle] = useState(false);
-
-  const [errprice, setErrprice] = useState('');
-  const [showerrprice, setShowerrprice] = useState(false);
-
-  const [errtickets, setErrtickets] = useState('');
-  const [showerrtickets, setShowerrtickets] = useState(false);
-
-  const [errdesc, setErrdesc] = useState('');
-  const [showerrdesc, setShowerrdesc] = useState(false);
-
-  const [errloc, setErrloc] = useState('');
-  const [showerrloc, setShowerrloc] = useState(false);
-
-  const [errorg, setErrorg] = useState('');
-  const [showerrorg, setShowerrorg] = useState(false);
-
- 
-
-
-  const [id, setId] = useState(props.initialValues._id || '');
-  const [title, setTitle] = useState(props.initialValues.title || '');
-  const [price, setPrice] = useState(props.initialValues.price || '');
-  const [maxPeople, setMaxPeople] = useState(props.initialValues.maxPeople || '');
-  const [desc, setDesc] = useState(props.initialValues.desc || '');
-  const [organizer, setOrganizer] = useState(props.initialValues.organizer || '');
-  const [location, setLocation] = useState(props.initialValues.location || '');
-  const [first_image, setFirstImage] = useState(props.initialValues.image || '');
-  const [date, setDate] = useState(props.initialValues.date || null);
+function EventTest(props) {
+  
+  const [id, setId] = useState('');
+  const [title, setTitle] = useState( '');
+  const [price, setPrice] = useState( '');
+  const [maxPeople, setMaxPeople] = useState( '');
+  const [desc, setDesc] = useState('');
+  const [organizer, setOrganizer] = useState( '');
+  const [location, setLocation] = useState( '');
+  const [first_image, setFirstImage] = useState( '');
+  const [date, setDate] = useState( null);
 
   const [image, setImage] = useState(null);
 
@@ -103,8 +82,6 @@ function UpdateEventForm(props) {
     const file = e.target.files[0];
     setFileToBase(file);
     console.log(file);
-    
-
   }
   const setFileToBase = (file) => {
     const reader = new FileReader();
@@ -118,48 +95,10 @@ function UpdateEventForm(props) {
 
 
   const handleSave = () => {
-    //  input validation
-    if (!isNumber(price)) {
-      setErrprice('ensure Price is valid number');
-      setShowerrprice(true);
-
-
-    } if (!isNumber(maxPeople)) {
-      setErrtickets('ensure number of tickets is valid number');
-      setShowerrtickets(true);
-
-    }
-    if (!title) {
-      setErrtitle('Please fill in all fields');
-      setShowerrtitle(true)
-
-
-    } if (!price) {
-      setErrprice('Please fill in all fields');
-      setShowerrprice(true)
-
-
-    }
-    if (!desc) {
-      setErrdesc('Please fill in all fields');
-      setShowerrdesc(true)
-
-
-    } if (!maxPeople) {
-      setErrtickets('Please fill in all fields');
-      setShowerrtickets(true)
-
-
-    }
-    if (!organizer) {
-      setErrorg('Please fill in all fields');
-      setShowerrorg(true)
-
-
-    } if (!location) {
-      setErrloc('Please fill in all fields');
-      setShowerrloc(true)
-
+    // Basic input validation
+    if (!title || !desc || !date || !isNumber(price) || !isNumber(maxPeople)) {
+      alert('Please fill in all fields, and ensure Price and Max People are valid numbers.');
+      return;
     }
 
     // Display input data in the console
@@ -189,18 +128,16 @@ function UpdateEventForm(props) {
       .then(response => {
         console.log('Event updated successfully:', response.data);
         alert('Event updated successfully');
-       
-
       })
       .catch(error => {
         console.error('Error updating event:', error);
         alert('Error updating event');
       });
+      
 
   }
 
-
-
+  
 
 
   return (
@@ -222,21 +159,11 @@ function UpdateEventForm(props) {
             </MDBCol>
             <MDBCol md='9' className='pe-5'>
               <MDBInput size='lg' id='Title' type='text' value={title}
-                onChange={(e) => {
-                  setTitle(e.target.value)
-                  setErrtitle('');
-                }} />            </MDBCol>
+                onChange={(e) => setTitle(e.target.value)} />
+            </MDBCol>
           </MDBRow>
 
-          {showerrtitle && (
-            <MDBRow className='align-items-center pt-4 pb-3'>
-              <MDBCol md='3' className='ps-5'>
-                <h1 className="mb-0" style={{ color: 'red' }}>   </h1>
-              </MDBCol>
-              <MDBCol md='9' className='pe-5'>
-                <p style={{ color: 'red' }}>{errTitle}</p>
-              </MDBCol>
-            </MDBRow>)}
+
 
           <MDBRow className='align-items-center pt-4 pb-3'>
             <MDBCol md='3' className='ps-5'>
@@ -244,19 +171,11 @@ function UpdateEventForm(props) {
             </MDBCol>
             <MDBCol md='9' className='pe-5'>
               <MDBInput size='lg' id='Organizer' type='text' value={organizer}
-                onChange={(e) => { setOrganizer(e.target.value); setErrorg('') }} />
+                onChange={(e) => setOrganizer(e.target.value)} />
             </MDBCol>
           </MDBRow>
 
-          {showerrorg && (
-            <MDBRow className='align-items-center pt-4 pb-3'>
-              <MDBCol md='3' className='ps-5'>
-                <h1 className="mb-0" style={{ color: 'red' }}>   </h1>
-              </MDBCol>
-              <MDBCol md='9' className='pe-5'>
-                <p style={{ color: 'red' }}>{errorg}</p>
-              </MDBCol>
-            </MDBRow>)}
+
 
           <MDBRow className='align-items-center pt-4 pb-3'>
             <MDBCol md='3' className='ps-5'>
@@ -264,22 +183,9 @@ function UpdateEventForm(props) {
             </MDBCol>
             <MDBCol md='9' className='pe-5'>
               <MDBInput size='lg' id='Price' type='text' value={price}
-                onChange={(e) => {
-                  setPrice(e.target.value);
-                  setErrprice('');
-                }} />
+                onChange={(e) => setPrice(e.target.value)} />
             </MDBCol>
           </MDBRow>
-
-          {showerrprice && (
-            <MDBRow className='align-items-center pt-4 pb-3'>
-              <MDBCol md='3' className='ps-5'>
-                <h1 className="mb-0" style={{ color: 'red' }}>   </h1>
-              </MDBCol>
-              <MDBCol md='9' className='pe-5'>
-                <p style={{ color: 'red' }}>{errprice}</p>
-              </MDBCol>
-            </MDBRow>)}
 
 
 
@@ -289,22 +195,11 @@ function UpdateEventForm(props) {
             </MDBCol>
             <MDBCol md='9' className='pe-5'>
               <MDBInput size='lg' id='People' type='text' value={maxPeople}
-                onChange={(e) => {
-                  setMaxPeople(e.target.value);
-                  setErrtickets('');
-                }} />
+                onChange={(e) => setMaxPeople(e.target.value)} />
             </MDBCol>
           </MDBRow>
 
-          {showerrtickets && (
-            <MDBRow className='align-items-center pt-4 pb-3'>
-              <MDBCol md='3' className='ps-5'>
-                <h1 className="mb-0" style={{ color: 'red' }}>   </h1>
-              </MDBCol>
-              <MDBCol md='9' className='pe-5'>
-                <p style={{ color: 'red' }}>{errtickets}</p>
-              </MDBCol>
-            </MDBRow>)}
+
 
           <MDBRow className='align-items-center pt-4 pb-3'>
 
@@ -313,47 +208,21 @@ function UpdateEventForm(props) {
             </MDBCol>
 
             <MDBCol md='9' className='pe-5'>
-              <MDBInput style={{ height: '100px', width: '600px' }} size='lg' id='desc' type='textarea' rows='5' value={desc}
-                onChange={(e) => {
-                  setDesc(e.target.value);
-                  setErrdesc('');
-                }} />
+              <MDBTextArea id='textAreaExample' rows={3} value={desc}
+                onChange={(e) => setDesc(e.target.value)} />
             </MDBCol>
+
           </MDBRow>
-
-          {showerrdesc && (
-            <MDBRow className='align-items-center pt-4 pb-3'>
-              <MDBCol md='3' className='ps-5'>
-                <h1 className="mb-0" style={{ color: 'red' }}>   </h1>
-              </MDBCol>
-              <MDBCol md='9' className='pe-5'>
-                <p style={{ color: 'red' }}>{errdesc}</p>
-              </MDBCol>
-            </MDBRow>)}
-
-
           <MDBRow className='align-items-center pt-4 pb-3'>
             <MDBCol md='3' className='ps-5'>
               <h11 className="mb-0">Location</h11>
             </MDBCol>
             <MDBCol md='9' className='pe-5'>
               <MDBInput size='lg' id='form1' type='text' value={location}
-                onChange={(e) => {
-                  setLocation(e.target.value);
-                  setErrloc('');
-                }} />
+                onChange={(e) => setLocation(e.target.value)} />
             </MDBCol>
           </MDBRow>
 
-          {showerrloc && (
-            <MDBRow className='align-items-center pt-4 pb-3'>
-              <MDBCol md='3' className='ps-5'>
-                <h1 className="mb-0" style={{ color: 'red' }}>   </h1>
-              </MDBCol>
-              <MDBCol md='9' className='pe-5'>
-                <p style={{ color: 'red' }}>{errloc}</p>
-              </MDBCol>
-            </MDBRow>)}
 
           <MDBRow className='align-items-center pt-4 pb-3'>
 
@@ -371,7 +240,9 @@ function UpdateEventForm(props) {
 
           </MDBRow>
 
-         
+
+
+
           <MDBRow className='align-items-center pt-4 pb-3'>
 
             <MDBCol md='3' className='ps-5'>
@@ -393,9 +264,16 @@ function UpdateEventForm(props) {
           </MDBRow>
 
           <div style={styles.footer}>
-
-            <Link to="#" onClick={handleSave} className="button-popup" data-toggle="modal" data-target="#popup_bid_success" data-dismiss="modal" aria-label="Close"> Save </Link>
-
+           
+            
+            <Button
+              type="submit"
+              variant="contained"
+              style={styles.buttonS}
+              onClick={handleSave}
+            >
+              Save
+            </Button>
           </div>
         </MDBContainer>
       </div>
@@ -403,4 +281,4 @@ function UpdateEventForm(props) {
   );
 }
 
-export default UpdateEventForm;
+export default EventTest;
