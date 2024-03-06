@@ -1,70 +1,157 @@
 import React, { useState } from 'react';
 import { Button, TextField, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { Modal } from "react-bootstrap";
+import { Link } from 'react-router-dom'
 
+import {
+  MDBBtn,
+  MDBContainer,
+  MDBRow,
+  MDBCol,
+  MDBCard,
+  MDBCardBody,
+  MDBInput,
+  MDBTextArea,
+  MDBFile,
+  MDBInputGroup
+}
+  from 'mdb-react-ui-kit';
 const styles = {
-  popup: {
-    position: 'fixed',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    backgroundColor: '#fff',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-    borderRadius: '8px',
-    padding: '20px',
-    maxWidth: '500px',
-    width: '80%',
-    zIndex: '9999',
-  },
-  textField: {
-    marginBottom: '20px',
-  },
-  InputLabel: {
-    marginBottom: '20px',
-  },
-  buttonS: {
+    buttonS: {
     margin: '10px',
     minWidth: '120px',
+
   },
   buttonC: {
-    border: 'none',
-    cursor: 'pointer',
-    padding: '5px',
-    outline: 'none',
-    transition: 'background-color 0.3s',
-    backgroundColor: '#6c757d',
-  },
-  title: {
-    fontSize: '24px',
-    fontWeight: 'bold',
-    marginBottom: '20px',
+    border: "none",
+    cursor: "pointer",
+    padding: "5px",
+    outline: "none",
+    transition: "background-color 0.3s",
+    backgroundColor: "#6c757d",
+
+
   },
   footer: {
     textAlign: 'right',
     marginTop: '20px',
   },
-};
+  checkbox :{
+    height:"30px" ,
+    padding: "5px " ,
+    font_size: "16px" ,
+    border_radius: "5px" ,
+    border: "1px solid #ccc" , 
+    width: "100%" ,
+   
+  }}
+  
 
-function AddUserForm({ onClose, onAddUser }) {
+
+
+function AddUserForm( props ) {
+  const [show, setShow] = useState(props.show || false);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [level, setLevel] = useState('');
-  const [imageFile, setImageFile] = useState(null);
+  const [level, setLevel] = useState('non precise level'); // Set default level
 
   const [phoneNumber, setPhoneNumber] = useState('');
 
-  const [role, setRole] = useState(''); // Set default role
+  const [role, setRole] = useState('student'); // Set default role
 
-  const handleClosePopup = () => {
-    onClose();
-  };
-  const isEmail = (value) => {
-    // Expression régulière pour valider une adresse e-mail simple
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  };
+ //control saisie 
+ const [errEmail, setErrEmail] = useState('');
+ const [showerrEmail, setShowerrEmail] = useState(false);
+
+ const [errPassword, setErrPassword] = useState('');
+ const [showerrPassword, setShowerrPassword] = useState(false);
+
+ const [errFirstName, setErrFirstName] = useState('');
+ const [showerrFirstName, setShowerrFirstName] = useState(false);
+
+ const [errLastName, setErrLastName] = useState('');
+ const [showErrLastName, setShowErrLastName] = useState(false);
+ 
+ const [errLevel, setErrLevel] = useState('');
+ const [showErrLevel, setShowErrLevel] = useState(false);
+ 
+ const [errPhoneNumber, setErrPhoneNumber] = useState('');
+ const [showErrPhoneNumber, setShowErrPhoneNumber] = useState(false);
+ 
+ const [errRole, setErrRole] = useState('');
+ const [showErrRole, setShowErrRole] = useState(false);
+ const isNumber = (value) => !isNaN(Number(value));
+
+
+ const isValidEmail = (value) => {
+  // You can use a regular expression for basic email format validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(value);
+};
+   
   const handleSave = () => {
-    const addUserEndpoint = "http://localhost:4000/users/addUser"; // Replace with your actual backend endpoint
+
+    if (!isNumber(phoneNumber)) {
+      setErrPhoneNumber('Ensure phone number is a number');
+      setShowErrPhoneNumber(true);
+    } else if (phoneNumber.length !== 8) {
+      setErrPhoneNumber('Phone number must be 8 digits');
+      setShowErrPhoneNumber(true);
+    }
+    if (!isValidEmail(email)) {
+      setErrEmail('Please enter a valid email address');
+      setShowerrEmail(true);
+    }
+    //input 
+    if (!firstName) {
+      setErrFirstName('Please fill in first name');
+      setShowerrFirstName(true) }
+
+      if (!email) {
+        setErrEmail('Please fill in email');
+        setShowerrEmail(true);
+      }
+      
+      // Validate password
+      if (!password) {
+        setErrPassword('Please fill in password');
+        setShowerrPassword(true);
+      }
+      
+      // Validate first name
+      if (!firstName) {
+        setErrFirstName('Please fill in first name');
+        setShowerrFirstName(true);
+      }
+      
+      // Validate last name
+      if (!lastName) {
+        setErrLastName('Please fill in last name');
+        setShowErrLastName(true);
+      }
+      
+      // Validate level (adjust the condition as needed)
+      if (!level) {
+        setErrLevel('Please select a level');
+        setShowErrLevel(true);
+      }
+      
+      // Validate phone number
+      if (!phoneNumber) {
+        setErrPhoneNumber('Please fill in phone number');
+        setShowErrPhoneNumber(true);
+      }
+      
+      // Validate role (adjust the condition as needed)
+      if (!role) {
+        setErrRole('Please select a role');
+        setShowErrRole(true);
+      }
+
+    const addUserEndpoint = "http://localhost:4000/user/users/addUser"; // Replace with your actual backend endpoint
     
     fetch(addUserEndpoint, {
       method: 'POST',
@@ -72,126 +159,204 @@ function AddUserForm({ onClose, onAddUser }) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        imageFile , 
         email,
         password,
         firstName,
         lastName,
         phoneNumber , 
-        level ,
-        role,
+        level: level || 'non precise level', // Provide default value if empty
+        role: role || 'student', // Provide default value if empty
       }),
     })
-      .then(response => response.json())
-      .then(data => {
-        onAddUser(data);
-        onClose();
-      })
-      .catch(error => {
-        console.error('Error adding user:', error);
-      });
-  };
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      if (data.success) {
+        alert('User saved!');
+      }
+    })
+    .catch(error => {
+
+      console.error('There was a problem with the fetch operation:', error);
+      alert('Error saving user. Please try again.');
+    });
+
+};
+const handleModalClose = () => {
+  setEmail('');
+  setPassword('');
+  setLastName('');
+  setFirstName('');
+  setRole('');
+  setLevel('');
+  setPhoneNumber('');
+
+  if (props.onHide) {
+    props?.onHide?.();  }
+};
 
   return (
-    <div style={styles.popup}>
-      <div style={styles.title}>Add User</div>
-      <TextField
-        fullWidth
-        label="Email"
-        variant="outlined"
-        style={styles.textField}
-        InputProps={{ style: { color: 'black' } }}
-        value={email}
-        onChange={e => setEmail(e.target.value)}
-      />
-      <TextField
-        fullWidth
-        label="Password"
-        variant="outlined"
-        style={styles.textField}
-        InputProps={{ style: { color: 'black' } }}
-        type="password"
-        value={password}
-        onChange={e => setPassword(e.target.value)}
-      />
-      <TextField
-        fullWidth
-        label="First Name"
-        variant="outlined"
-        style={styles.textField}
-        InputProps={{ style: { color: 'black' } }}
-        value={firstName}
-        onChange={e => setFirstName(e.target.value)}
-      />
-      <TextField
-        fullWidth
-        label="Last Name"
-        variant="outlined"
-        style={styles.textField}
-        InputProps={{ style: { color: 'black' } }}
-        value={lastName}
-        onChange={e => setLastName(e.target.value)}
-      />
+    <Modal show={props?.show} onHide={handleModalClose}>
 
-<FormControl variant="outlined" style={styles.formControl}>
-        <InputLabel>Role</InputLabel>
-        <Select
-          label="Role"
-          value={role}
-          onChange={e => setRole(e.target.value)}
+
+    <Modal.Header closeButton></Modal.Header>
+    <div className="modal-body space-y-20 pd-40">
+      <h3>Add User</h3>
+
+      <MDBContainer fluid>
+
+      <MDBRow className='align-items-center pt-4 pb-3'>
+            <MDBCol md='3' className='ps-5'>
+              <h11 className="mb-0">email</h11>
+            </MDBCol>
+            <MDBCol md='9' className='pe-5'>
+              <MDBInput size='lg' id='email' type='text' value={email}
+                onChange={(e) => {setEmail(e.target.value) ; setErrEmail('')} }/>
+            </MDBCol>
+          </MDBRow>
+          {showerrEmail && (
+            <MDBRow className='align-items-center pt-4 pb-3'>
+              <MDBCol md='3' className='ps-5'>
+                <h1 className="mb-0" style={{ color: 'red' }}>   </h1>
+              </MDBCol>
+              <MDBCol md='9' className='pe-5'>
+                <p style={{ color: 'red' }}>{errEmail}</p>
+              </MDBCol>
+            </MDBRow>)}
+
+          <MDBRow className='align-items-center pt-4 pb-3'>
+            <MDBCol md='3' className='ps-5'>
+              <h11 className="mb-0">password</h11>
+            </MDBCol>
+            <MDBCol md='9' className='pe-5'>
+              <MDBInput size='lg' id='password' type='text' value={password}
+                onChange={(e) =>{ setPassword(e.target.value); setErrPassword('')}} />
+            </MDBCol>
+          </MDBRow>
+          {showerrPassword && (
+            <MDBRow className='align-items-center pt-4 pb-3'>
+              <MDBCol md='3' className='ps-5'>
+                <h1 className="mb-0" style={{ color: 'red' }}>   </h1>
+              </MDBCol>
+              <MDBCol md='9' className='pe-5'>
+                <p style={{ color: 'red' }}>{errPassword}</p>
+              </MDBCol>
+            </MDBRow>)}
+          <MDBRow className='align-items-center pt-4 pb-3'>
+            <MDBCol md='3' className='ps-5'>
+              <h11 className="mb-0">firstName</h11>
+            </MDBCol>
+            <MDBCol md='9' className='pe-5'>
+              <MDBInput size='lg' id='firstName' type='text' value={firstName}
+                onChange={(e) => {setFirstName(e.target.value)   ; setErrFirstName ('')} }
+                />
+            </MDBCol>
+          </MDBRow>
+          {showerrFirstName && (
+            <MDBRow className='align-items-center pt-4 pb-3'>
+              <MDBCol md='3' className='ps-5'>
+                <h1 className="mb-0" style={{ color: 'red' }}>   </h1>
+              </MDBCol>
+              <MDBCol md='9' className='pe-5'>
+                <p style={{ color: 'red' }}>{errFirstName}</p>
+              </MDBCol>
+            </MDBRow>)}
+
+          <MDBRow className='align-items-center pt-4 pb-3'>
+            <MDBCol md='3' className='ps-5'>
+              <h11 className="mb-0">LastName</h11>
+            </MDBCol>
+            <MDBCol md='9' className='pe-5'>
+              <MDBInput size='lg' id='LastName' type='text' value={lastName}
+                onChange={(e) => {setLastName(e.target.value) ; setErrLastName ('')}} />
+            </MDBCol>
+          </MDBRow>
+           {showErrLastName && (
+            <MDBRow className='align-items-center pt-4 pb-3'>
+              <MDBCol md='3' className='ps-5'>
+                <h1 className="mb-0" style={{ color: 'red' }}>   </h1>
+              </MDBCol>
+              <MDBCol md='9' className='pe-5'>
+                <p style={{ color: 'red' }}>{errLastName}</p>
+              </MDBCol>
+            </MDBRow>)}
+
+
+          <MDBRow className='align-items-center pt-4 pb-3'>
+            <MDBCol md='3' className='ps-5'>
+              <h11 className="mb-0">phone Number</h11>
+            </MDBCol>
+            <MDBCol md='9' className='pe-5'>
+              <MDBInput size='lg' id='phoneNumber' type='text' value={phoneNumber}
+                onChange={(e) => {setPhoneNumber(e.target.value) ; setErrPhoneNumber ('')} }/>
+            </MDBCol>
+          </MDBRow>
+          {showErrPhoneNumber && (
+            <MDBRow className='align-items-center pt-4 pb-3'>
+              <MDBCol md='3' className='ps-5'>
+                <h1 className="mb-0" style={{ color: 'red' }}>   </h1>
+              </MDBCol>
+              <MDBCol md='9' className='pe-5'>
+                <p style={{ color: 'red' }}>{errPhoneNumber}</p>
+              </MDBCol>
+            </MDBRow>)}
+
+
+            <MDBRow className='align-items-center pt-4 pb-3'>
+          <MDBCol md='3' className='checkbox'>
+        <h11 className="mb-0">Role</h11>
+      </MDBCol>
+      <MDBCol md='9' className='pe-5'>
+        <select
+      className="form-control"
+      value={role}
+          onChange={(e) => setRole(e.target.value)}
         >
-          <MenuItem value="admin">Admin</MenuItem>
-          <MenuItem value="teacher">Teacher</MenuItem>
-          <MenuItem value="student">Student</MenuItem>
-        </Select>
-      </FormControl>
+                    <option value="student">student</option>
 
-      <FormControl variant="outlined" style={styles.formControl}>
-        <InputLabel>Level</InputLabel>
-        <Select
-          label="level"
-          value={level}
-          onChange={e => setLevel(e.target.value)}
-        >
-          <MenuItem value="gradeLevel1">gradeLevel1</MenuItem>
-          <MenuItem value="gradeLevel2">gradeLevel2</MenuItem>
-          <MenuItem value="gradeLevel3">gradeLevel3</MenuItem>
-          <MenuItem value="gradeLevel4">gradeLevel4</MenuItem>
-          <MenuItem value="gradeLevel5">gradeLevel5</MenuItem>
-          <MenuItem value="gradeLevel6">gradeLevel6</MenuItem>
-          <MenuItem value="gradeLevel7">gradeLevel7</MenuItem>
-          <MenuItem value="non precise level ">non precise level </MenuItem>
+          <option value="admin">admin</option>
+          <option value="teacher">teacher</option>
+        </select>
+      </MDBCol>
+      </MDBRow>
+      <MDBRow className='align-items-center pt-4 pb-3'>
+  <MDBCol md='3' className='checkbox'>
+    <h11 className="mb-0">Level</h11>
+  </MDBCol>
+  <MDBCol md='9' className='pe-5'>
+    <select
+      className="form-control"
+      value={level}
+      onChange={(e) => setLevel(e.target.value)}
+    >
+
+            <option value="non precise level">non precise level </option>
+      <option value="gradelevel1">gradelevel1</option>
+      <option value="gradelevel2">gradelevel2</option>
+      <option value="gradelevel3">gradelevel3</option>
+      <option value="gradelevel4">gradelevel4</option>
+      <option value="gradelevel5">gradelevel5</option>
+      <option value="gradelevel6">gradelevel6</option>
+      <option value="gradelevel7">gradelevel7</option>
+    </select>
+  </MDBCol>
+
+ 
+</MDBRow>
 
 
-        </Select>
-      </FormControl>
+<div style={styles.footer}>
 
-      <input
-  type="file"
-  accept="image/*"
-  onChange={(e) => setImageFile(e.target.files[0])}
-  style={styles.textField}
-/>
+<Link to="#"  onClick={handleSave} className="button-popup" data-toggle="modal" data-target="#popup_bid_success" data-dismiss="modal" aria-label="Close"> Save </Link>
 
-      <div style={styles.footer}>
-        <Button
-          type="button"
-          variant="contained"
-          onClick={handleClosePopup}
-          style={styles.buttonC}
-        >
-          Close
-        </Button>
-        <Button
-          type="submit"
-          variant="contained"
-          style={styles.buttonS}
-          onClick={handleSave}
-        >
-          Save
-        </Button>
-      </div>
-    </div>
+</div>
+</MDBContainer>
+</div>
+</Modal>
   );
 }
 

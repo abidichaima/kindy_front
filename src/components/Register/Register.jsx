@@ -24,7 +24,47 @@ const navigate = useNavigate();
 const [error, setError] = useState("");
 	const [msg, setMsg] = useState("");
   const [errors, setErrors] = useState({})
-  const [image, setImage] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [level, setLevel] = useState('non precise level'); // Set default level
+
+  const [phoneNumber, setPhoneNumber] = useState('');
+
+  const [role, setRole] = useState('student'); // Set default role
+ //control saisie 
+ const [errEmail, setErrEmail] = useState('');
+ const [showerrEmail, setShowerrEmail] = useState(false);
+
+ const [errPassword, setErrPassword] = useState('');
+ const [showerrPassword, setShowerrPassword] = useState(false);
+
+ const [errFirstName, setErrFirstName] = useState('');
+ const [showerrFirstName, setShowerrFirstName] = useState(false);
+
+ const [errLastName, setErrLastName] = useState('');
+ const [showErrLastName, setShowErrLastName] = useState(false);
+ 
+ const [errLevel, setErrLevel] = useState('');
+ const [showErrLevel, setShowErrLevel] = useState(false);
+ 
+ const [errPhoneNumber, setErrPhoneNumber] = useState('');
+ const [showErrPhoneNumber, setShowErrPhoneNumber] = useState(false);
+ 
+ const [errRole, setErrRole] = useState('');
+ const [showErrRole, setShowErrRole] = useState(false);
+ const isNumber = (value) => !isNaN(Number(value));
+
+
+ const isValidEmail = (value) => {
+  // You can use a regular expression for basic email format validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(value);
+};
+   
+
+
 
 useEffect(() => {
   if (cookies.jwt) {
@@ -32,45 +72,97 @@ useEffect(() => {
   }
 }, [cookies, navigate]);
 
-const [values, setValues] = useState({ firstName: '', lastName: '', email: '', password: ''    , role: 'student',   phoneNumber: '' ,    level: 'non precise level', image :'' // Ajoutez cette ligne
+const [values, setValues] = useState({ firstName: '', lastName: '', email: '', password: ''    , role: 'student',   phoneNumber: '' ,    level: 'non precise level'// Ajoutez cette ligne
 // Default role
-});
+}
+
+);
 const [errorFields, setErrorFields] = useState({});
 console.log("Initial errorFields:", errorFields);
 
 
-const handleInputChange = (e, field) => {
-  setValues({ ...values, [field]: e.target.value });
-};
 
-const handleImage = (e) => {
-  const file = e.target.files[0];
-  setFileToBase(file);
-  console.log(file);
-
-}
-const setFileToBase = (file) => {
-  const reader = new FileReader();
-  reader.readAsDataURL(file);
-  reader.onloadend = () => {
-    setImage(reader.result);
-  }
-
+const handleInputChange = (e) => {
+  const {name, value} = e.target;
+  setValues({
+      ...values, [name] : value
+  })
 }
 const handleSubmit = async (event) => {
+
+ 
   event.preventDefault();
-  console.log("Form submitted with values:", values);
+
+
+  if (!isNumber(phoneNumber)) {
+    setErrPhoneNumber('Ensure phone number is a number');
+    setShowErrPhoneNumber(true);
+  } else if (phoneNumber.length !== 8) {
+    setErrPhoneNumber('Phone number must be 8 digits');
+    setShowErrPhoneNumber(true);
+  }
+  if (!isValidEmail(email)) {
+    setErrEmail('Please enter a valid email address');
+    setShowerrEmail(true);
+  }
+  //input 
+  if (!firstName) {
+    setErrFirstName('Please fill in first name');
+    setShowerrFirstName(true) }
+
+    if (!email) {
+      setErrEmail('Please fill in email');
+      setShowerrEmail(true);
+    }
+    
+    // Validate password
+    if (!password) {
+      setErrPassword('Please fill in password');
+      setShowerrPassword(true);
+    }
+    
+    // Validate first name
+    if (!firstName) {
+      setErrFirstName('Please fill in first name');
+      setShowerrFirstName(true);
+    }
+    
+    // Validate last name
+    if (!lastName) {
+      setErrLastName('Please fill in last name');
+      setShowErrLastName(true);
+    }
+    
+    // Validate level (adjust the condition as needed)
+    if (!level) {
+      setErrLevel('Please select a level');
+      setShowErrLevel(true);
+    }
+    
+    // Validate phone number
+    if (!phoneNumber) {
+      setErrPhoneNumber('Please fill in phone number');
+      setShowErrPhoneNumber(true);
+    }
+    
+    // Validate role (adjust the condition as needed)
+    if (!role) {
+      setErrRole('Please select a role');
+      setShowErrRole(true);
+    }
+
+ 
+
+ 
+
     try {
       const url = "http://localhost:4000/user/users";
       const { values: res } = await axios.post(url, values);
-      console.log("Form values:", values);
-      console.log("Image:", image);
+
     } catch (error) {
       if (error.response && error.response.status === 400) {
         // Affichez le message d'erreur du serveur, s'il y en a un
         console.error("Erreur de validation côté serveur :", error.response.data.message);
-        console.log("Form values:", values);
-console.log("Image:", image);
       } else {
         console.error("Erreur inattendue lors de la soumission du formulaire :", error.message);
       }}
@@ -97,7 +189,7 @@ console.log("Image:", image);
           <div className="row justify-content-center">
             <div className="col-md-12">
               <div className="tf-heading style-2">
-                <h6 className="heading">Register</h6>
+                <h4 className="heading">Register</h4>
               </div>
             </div>
             <div className="col-xl-6 col-lg-9 col-md-12">
@@ -108,90 +200,95 @@ console.log("Image:", image);
             name="firstName"
             tabIndex="3"
             aria-required="true"
-            required
+        
             type="text"
             placeholder="First Name"
-            className={errors.firstName ? 'error' : ''}
             value={values.firstName}
-            onChange={(e) => setValues({ ...values, firstName: e.target.value })}
+            onChange={(e) => { setValues({ ...values, firstName: e.target.value }); setErrFirstName('')}}
             />
         </fieldset>
+        {showerrFirstName && (
+  <div className='error-message'>
+    <p style={{ color: 'red' }}>{errFirstName}</p>
+  </div>
+)}
 <fieldset>
   <input
     id="lastName"
     name="lastName"
     tabIndex="4"
     aria-required="true"
-    required
+
     type="text"
     autoComplete='off'  
 
     placeholder="Last Name"
     value={values.lastName}
-    onChange={(e) => setValues({ ...values, lastName: e.target.value })}
+    onChange={(e) => {setValues({ ...values, lastName: e.target.value }); setErrLastName(''); }}
   />
-            {errors.lastName && <span>{errors.lastName}</span>}  
 
 </fieldset>
 
+{showErrLastName && (
+  <div className='error-message'>
+    <p style={{ color: 'red' }}>{errLastName}</p>
+  </div>)}
 <fieldset>
   <input
     id="phoneNumber"
     name="phoneNumber"
     tabIndex="4"
     aria-required="true"
-    required
+
     type="text"
     placeholder="phoneNumber"
     value={values.phoneNumber}
-    onChange={(e) => setValues({ ...values, phoneNumber: e.target.value })}
+    onChange={(e) => {setValues({ ...values, phoneNumber: e.target.value }); setErrPhoneNumber(''); }}
      />
 </fieldset>
+
+{showErrPhoneNumber && (
+  <div className='error-message'>
+    <p style={{ color: 'red' }}>{errPhoneNumber}</p>
+  </div>)}
 <fieldset >
    <select className={styles['level-fieldset']}
       id="level"
       name="level"
       tabIndex="5"
       aria-required="true"
-      required
+
       value={values.level}
       onChange={(e) => handleInputChange(e, 'level')}
    >
-      <option value="non precise level">Non Precise Level</option>
-      <option value="gradeLevel1">Grade Level 1</option>
-      <option value="gradelevel2">Grade Level 2</option>
-      <option value="gradelevel3">Grade Level 3</option>
-      <option value="gradelevel4">Grade Level 4</option>
-      <option value="gradelevel5">Grade Level 5</option>
-      <option value="gradelevel6">Grade Level 6</option>
-      <option value="gradelevel7">Grade Level 7</option>
+      <option value="non precise level">non precise level </option>
+      <option value="gradelevel1">gradelevel1</option>
+      <option value="gradelevel2">gradelevel2</option>
+      <option value="gradelevel3">gradelevel3</option>
+      <option value="gradelevel4">gradelevel4</option>
+      <option value="gradelevel5">gradelevel5</option>
+      <option value="gradelevel6">gradelevel6</option>
+      <option value="gradelevel7">gradelevel7</option>
 
    </select>
 </fieldset>
-
-<MDBCol md='3' className='ps-5'>
-              <h11 className="mb-0">Image</h11>
-            </MDBCol>
-
-            <MDBCol md='9' className='pe-5'>
-              <img className="img-fluid" src={image} alt="" />
-              <MDBFile size='lg' id='customFile' onChange={handleImage} />
-
-
-            </MDBCol>
                 <fieldset>
                 <input
   id="email"
   name="email"
   tabIndex="1"
   aria-required="true"
-  required
+
   type="text"
   placeholder="Email"
   value={values.email}
-  onChange={(e) => handleInputChange(e, 'email')}
+  onChange={(e) =>{ handleInputChange(e, 'email') ; setErrPhoneNumber('');}}
 />
-{errors.email && <span>{errors.email}</span>}  
+{showerrEmail && (
+  <div className='error-message'>
+    <p style={{ color: 'red' }}>{errEmail}</p>
+  </div>)}
+
 
                 </fieldset>
                 <fieldset>
@@ -200,12 +297,16 @@ console.log("Image:", image);
                     name="password"
                     tabIndex="2"
                     aria-required="true"
-                    required
+                  
                     type="password"
                     placeholder="Password"
                     value={values.password}
-                    onChange={(e) => setValues({ ...values, password: e.target.value })}
-                  />
+                    onChange={(e) => {setValues({ ...values, password: e.target.value }); setErrPassword(''); }}
+                    />
+                  {showerrPassword && (
+  <div className='error-message'>
+    <p style={{ color: 'red' }}>{errPassword}</p>
+  </div>)}
                   <span className="btn-show-pass"><i className="far fa-eye-slash"></i></span>
                 </fieldset>
                 <div className="forgot-pass-wrap">

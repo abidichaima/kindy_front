@@ -1,3 +1,8 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { Link, Route, Routes } from 'react-router-dom';
+
+
 const menus = [
     {
         id: 1,
@@ -94,6 +99,12 @@ const menus = [
         id: 8,
         name: 'register',
         links: '/register'
+    },
+    {
+        id: 9,
+    
+        name: 'profile',
+        links: '/profile'
     },
     
 ]

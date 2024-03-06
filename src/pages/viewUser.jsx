@@ -7,10 +7,13 @@ import { Tabs, TabPanel } from 'react-tabs';
 import UpdateUserForm from './updateUser';
 import AddUserForm from './addUser';
 import Dashboard from './Dashboard';
-import Modal from 'react-bootstrap/Modal';
 import img from '../assets/images/BATTERIE.jpg';
 import { getAllUsers } from '../services/user';
+import CardModal from '../components/layouts/CardModal';
+import Modal from 'react-bootstrap/Modal';
+
 function ViewUser(props) {
+
   const [users, setUsers] = useState([]);
   const [isPopupOpenUpdate, setIsPopupOpenUpdate] = useState(false);
   const [isPopupOpenUp, setIsPopupOpenUp] = useState(false);
@@ -18,7 +21,8 @@ function ViewUser(props) {
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [userList,setUserList] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-
+  const [addShow, setAddShow] = useState(false);
+  const [updateShow, setUpdateShow] = useState(false);
 
   const handleClosePopup = () => {
     setIsPopupOpen(false);
@@ -201,18 +205,12 @@ const DeleteConfirmation = (userId) => {
 
   return (
     <div>
-      <Dialog open={isPopupOpen} onClose={handleClosePopup}>
-        <DialogTitle>Add User</DialogTitle>
-        <DialogContent>
-          <AddUserForm onClose={handleClosePopup} />
-        </DialogContent>
-      </Dialog>
-      <Dialog open={isPopupOpenUp} onClose={handleClosePopupUp}>
-        <DialogTitle>Update User</DialogTitle>
-        <DialogContent>
-          <UpdateUserForm onClose={handleClosePopupUp} />
-        </DialogContent>
-      </Dialog>
+    <AddUserForm show={addShow} onHide={() => setAddShow(false)} />
+
+
+
+
+     
 
       <section class="tf-page-title ">    
             <div class="tf-container">
@@ -245,7 +243,7 @@ const DeleteConfirmation = (userId) => {
 
                             <div className="dashboard-content inventory content-tab">
                                                             
-                            <button type='submit' style={btnAdd} onClick={handleOpenPopup}  >
+                            <button type='submit' style={btnAdd} onClick={() => setAddShow(true)}   >
 <svg
 viewBox="0 0 1024 1024"
 fill="currentColor"
@@ -279,6 +277,8 @@ Add</button>
       <div className="col-rankingg"><Link to="#">FirstName</Link></div>
       <div className="col-rankingg"><Link to="#">Email</Link></div>
       <div className="col-rankingg"><Link to="#">Role</Link></div>
+      <div className="col-rankingg"><Link to="#">Phone</Link></div>
+      <div className="col-rankingg"><Link to="#">Level</Link></div>
 
       <div className="col-rankingg"><Link to="#">Actions</Link></div>
     </div>
@@ -292,21 +292,20 @@ Add</button>
         <div className="col-rankingg">{item.lastName}</div>
         <div className="col-rankingg">{item.firstName}</div>
         <div className="col-rankingg">{item.email}</div>
+     
+      
         <div className="col-rankingg">{item.role}</div>
+        <div className="col-rankingg">{item.phoneNumber}</div>
+        <div className="col-rankingg">{item.level}</div>
 
 
-        {isUpdateFormOpen && (
-                                <UpdateUserForm
-                                  onClose={() => {
-                                    setUpdateFormOpen(false);
-                                    handleClosePopupUp(); 
-                                  }}
-                                  isOpen={isUpdateFormOpen}
-                                  initialValues={selectedItem}
-                                />
-                              )}
-                              <button type='submit' style={btnupdate}
-                                onClick={() => handleOpenPopupUp(item)} >
+        <button type='submit' style={btnupdate}
+
+onClick={() => {
+  handleOpenPopupUp(item);
+  setUpdateShow(true);
+}
+}>
                                 <svg fill="none" viewBox="0 0 15 15" height="20px" width="20px" {...props}>
                                   <path
                                     fill="currentColor"
@@ -315,8 +314,14 @@ Add</button>
                                     clipRule="evenodd"
                                   />
                                 </svg>
-                              </button>
-
+                              </button>   {updateShow && (
+                                  <UpdateUserForm
+                                    show={updateShow}
+                                    initialValues={selectedItem}
+                                    onHide={() => setUpdateShow(false)}
+                                  />
+                                )}
+                            
 <button type='submit'   style={btnshow}>
 <svg
   viewBox="0 0 24 24"

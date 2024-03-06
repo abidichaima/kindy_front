@@ -2,6 +2,7 @@ import React from 'react'
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from 'axios'
+import styles from "./styles.module.css";
 
 
 function ResetPassword() {
@@ -20,10 +21,11 @@ function ResetPassword() {
             }
         }).catch(err => console.log(err))
     }
+  
 
     return(
   
-      <div className="login-page">
+      <div className="center">
       <div className="container">
         <div className="row">
           <div className="col-md-6 mx-auto">

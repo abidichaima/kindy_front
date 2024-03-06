@@ -26,6 +26,7 @@ import ViewUser from "./viewUser";
 import ViewQuestion from "./viewQuestion";
 import Dash from "./Dash";  
 import EmailVerify from "../components/EmailVerify/EmailVerify";
+import Profile from "./Profile";
 
 const routes = [
   { path: '/', component: <Home01 />},
@@ -55,6 +56,8 @@ const routes = [
   { path: '/question', component: <ViewQuestion />},
   { path: '/dash', component: <Dash />},
   { path: '/dashboard', component: <Dashboard />},
+
+  { path: '/profile', component: <Profile />},
 
 
 
