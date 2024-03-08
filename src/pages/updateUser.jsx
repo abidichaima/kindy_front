@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect } from 'react';
 import { Button, TextField, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import axios  from 'axios';
 import {
@@ -70,7 +70,13 @@ function UpdateUserForm(props ) {
   const [phoneNumber, setPhoneNumber] = useState(props.initialValues.phoneNumber || '');
 
   const [role, setRole] = useState(props.initialValues.role || ''); // Set default role
+  useEffect(() => {
+    console.log('Initial Values:', props.initialValues);
+  }, [props.initialValues]);
 
+  const userId = props.initialValues._id;
+  console.log('User ID for update:', userId);
+  
 
  //control saisie 
  const [errEmail, setErrEmail] = useState('');
@@ -95,7 +101,30 @@ function UpdateUserForm(props ) {
  const [showErrRole, setShowErrRole] = useState(false);
  const isNumber = (value) => !isNaN(Number(value));
 
+ const [verified, setVerified] = useState(props.initialValues.verified || false);
+  const [speciality, setSpeciality] = useState(props.initialValues.specialite || []);
 
+  const specialiteOptions = [
+    'Robotique',
+    'Peinture',
+    'Solfege',
+    'Piano',
+    'Guitare',
+    'Vocalise',
+    'Batterie',
+    'Violon',
+    'Violoncelle',
+    'Contrebasse',
+    'Saxophone',
+    'Oud',
+    'Synthétiseur',
+    'Qanun',
+    'Trompette',
+    'Alto',
+    'Clarinette',
+    'Cajon',
+    'Darbouka'
+  ];
  const isValidEmail = (value) => {
   // You can use a regular expression for basic email format validation
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -158,29 +187,43 @@ function UpdateUserForm(props ) {
         setErrRole('Please select a role');
         setShowErrRole(true);
       }
-    const payload ={
-      firstName , lastName  , email , role , phoneNumber , level 
-    }
+      const payload = {
+        id: userId, // Utilisez 'id' au lieu de '_id' si c'est le nom de la clé attendu par le serveur
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        role: role,
+        phoneNumber: phoneNumber,
+        level: level,
+        speciality: speciality,
+        verified: verified,
+      };
 
-    axios.put('http://localhost:4000/user/users/updateUser', payload)
-    .then(response => {
-      console.log('user updated successfully:', response.data);
-      alert('user updated successfully');
-     
+      axios.put('http://localhost:4000/user/users/updateUser', payload)
+      .then(response => {
+        console.log('user updated successfully:', response.data);
+        console.log('User ID for update:', userId);
 
-    })
-    .catch(error => {
-      console.error('Error updating user:', error);
-      alert('Error updating user');
-    });
+        alert('user updated successfully');
+      })
+      .catch(error => {
+        console.error('Error updating user:', error);
+        if (error.response) {
+          console.log('Response data:', error.response.data);
+          console.log('User ID for update:', userId);
+
+        }
+        alert('Error updating user');
+      });
+ 
 
 }
 
   return (
     
     <Modal
-    show={props.show}
-    onHide={props.onHide}
+    show={true}
+    onHide={() => {}}
   >
 
     <Modal.Header closeButton></Modal.Header>
@@ -285,6 +328,7 @@ function UpdateUserForm(props ) {
         </select>
       </MDBCol>
       </MDBRow>
+      {role === 'student' && (
       <MDBRow className='align-items-center pt-4 pb-3'>
   <MDBCol md='3' className='checkbox'>
     <h11 className="mb-0">Level</h11>
@@ -308,11 +352,57 @@ function UpdateUserForm(props ) {
 
  
 </MDBRow>
+  )}
 
+{role === 'teacher' && (
+        <>
+          <MDBRow className='align-items-center pt-4 pb-3'>
+            <MDBCol md='3' className='checkbox'>
+              <h11 className="mb-0">Speciality</h11>
+            </MDBCol>
+            <MDBCol md='9' className='pe-5'>
+              {specialiteOptions.map((option) => (
+                <div key={option}>
+                  <input
+                    type="checkbox"
+                    id={option}
+                    value={option}
+                    checked={speciality.includes(option)}
+                    onChange={(e) => {
+                      const checked = e.target.checked;
+                      setSpeciality((prevSpecialite) =>
+                        checked
+                          ? [...prevSpecialite, option]
+                          : prevSpecialite.filter((item) => item !== option)
+                      );
+                    }}
+                  />
+                  <label htmlFor={option}>{option}</label>
+                </div>
+              ))}
+            </MDBCol>
+          </MDBRow>
+        </>
+      )}
+
+<MDBRow className='align-items-center pt-4 pb-3'>
+          <MDBCol md='3' className='checkbox'>
+            <h11 className="mb-0">Verified</h11>
+          </MDBCol>
+          <MDBCol md='9' className='pe-5'>
+            <input
+              type="checkbox"
+              id="verified"
+              checked={verified}
+              onChange={(e) => setVerified(e.target.checked)}
+            />
+            <label htmlFor="verified">Verified</label>
+          </MDBCol>
+        </MDBRow>
 
 <div style={styles.footer}>
 
-  <Link to="#" onClick={handleSave} className="button-popup" data-toggle="modal" data-target="#popup_bid_success" data-dismiss="modal" aria-label="Close"> Save </Link>
+<Link to="#" onClick={() => handleSave()} className="button-popup" data-toggle="modal" data-target="#popup_bid_success" data-dismiss="modal" aria-label="Close"> Save </Link>
 
 </div>
 </MDBContainer>

@@ -268,11 +268,13 @@ Add</button>
       <option value="5">5</option>
       <option value="10">10</option>
       <option value="15">15</option>
+      <option value="50">50</option>
     </select>
   </div>
 
   <div className="table-ranking top">
     <div className="title-ranking">
+
       <div className="col-rankingg"><Link to="#">LastName</Link></div>
       <div className="col-rankingg"><Link to="#">FirstName</Link></div>
       <div className="col-rankingg"><Link to="#">Email</Link></div>
@@ -289,6 +291,7 @@ Add</button>
     {console.log(userList)}
     {userList.slice(startIndex, endIndex).map((item, index) => (
       <div className="content-ranking" key={index}> 
+
         <div className="col-rankingg">{item.lastName}</div>
         <div className="col-rankingg">{item.firstName}</div>
         <div className="col-rankingg">{item.email}</div>

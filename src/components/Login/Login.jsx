@@ -6,35 +6,44 @@ import axios from "axios";
 
 
 const Login = () => {
-  const [values, setValues] = useState({ email: "", password: "" });
-	const [error, setError] = useState("");
+  const [values, setValues] = useState({ email: '', password: '' });
+  const [error, setError] = useState('');
 
-	const handleChange = ({ currentTarget: input }) => {
-		setValues({ ...values, [input.name]: input.value });
-	};
+  const handleChange = ({ currentTarget: input }) => {
+    setValues({ ...values, [input.name]: input.value });
+  };
+	const navigate = useNavigate()
 
-	const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      const url = "http://localhost:4000/user/auth";
-      const response = await axios.post(url, values);
-  
-      // Vérifiez le statut de la réponse (200 OK)
-      if (response.status === 200) {
-        // Stockez le token dans le localStorage ou utilisez votre logique de gestion
-        localStorage.setItem("token", values);
-        // Redirigez l'utilisateur vers la page d'accueil ou une autre page appropriée
-        window.location = "/";
+      const url = 'http://localhost:4000/user/auth';
+      const response = await axios.post(url, values, {
+        headers: {
+          'Content-Type': 'application/json',
+        },});
+
+        localStorage.setItem("user", JSON.stringify({role: "admin"}))
+        navigate("/dash")
+
+      // Check if the response status is in the success range (e.g., 200-299)
+      if (response.status >= 200 && response.status < 300) {
+        // Store the token in localStorage or implement your token handling logic
+     
+      } else {
+        setError('An error occurred during login. Please try again later.');
       }
     } catch (error) {
-      // Gestion des erreurs réseau, etc.
-      console.error("Error during login:", error);
-  
-      // Vérifiez si la réponse d'erreur contient des données
+      // Handle network errors, etc.
+      console.error('Error during login:', error);
+      console.error('Error during login:', error.response);
+
+      // Check if the error has a response and contains data
       if (error.response && error.response.data) {
-        setError(error.response.data.message || "An error occurred during login.");
+        setError(error.response.data.message || 'An error occurred during login.');
       } else {
-        setError("An error occurred during login. Please try again later.");
+        setError('An error occurred during login. Please try again later.');
       }
     }
   };

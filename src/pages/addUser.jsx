@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Button, TextField, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { Modal } from "react-bootstrap";
 import { Link } from 'react-router-dom'
+import Swal from 'sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 
 import {
   MDBBtn,
@@ -59,6 +61,8 @@ function AddUserForm( props ) {
   const [level, setLevel] = useState('non precise level'); // Set default level
 
   const [phoneNumber, setPhoneNumber] = useState('');
+ 
+  const [specialite, setSpecialite] = useState([]);
 
   const [role, setRole] = useState('student'); // Set default role
 
@@ -84,7 +88,39 @@ function AddUserForm( props ) {
  const [errRole, setErrRole] = useState('');
  const [showErrRole, setShowErrRole] = useState(false);
  const isNumber = (value) => !isNaN(Number(value));
+ const levelOptions = [
+  'nonpreciselevel',
 
+  'level1',
+  'level2',
+  'level3',
+  'level4',
+  'level5',
+  'level6',
+  'level7',
+ 
+];
+ const specialiteOptions = [
+  'Robotique',
+  'Peinture',
+  'Solfege',
+  'Piano',
+  'Guitare',
+  'Vocalise',
+  'Batterie',
+  'Violon',
+  'Violoncelle',
+  'Contrebasse',
+  'Saxophone',
+  'Oud',
+  'Synthétiseur',
+  'Qanun',
+  'Trompette',
+  'Alto',
+  'Clarinette',
+  'Cajon',
+  'Darbouka'
+];
 
  const isValidEmail = (value) => {
   // You can use a regular expression for basic email format validation
@@ -134,10 +170,7 @@ function AddUserForm( props ) {
       }
       
       // Validate level (adjust the condition as needed)
-      if (!level) {
-        setErrLevel('Please select a level');
-        setShowErrLevel(true);
-      }
+     
       
       // Validate phone number
       if (!phoneNumber) {
@@ -164,8 +197,9 @@ function AddUserForm( props ) {
         firstName,
         lastName,
         phoneNumber , 
-        level: level || 'non precise level', // Provide default value if empty
+        level: 'non precise level', // Provide default value if empty
         role: role || 'student', // Provide default value if empty
+        specialite
       }),
     })
     .then(response => {
@@ -176,8 +210,12 @@ function AddUserForm( props ) {
     })
     .then(data => {
       if (data.success) {
-        alert('User saved!');
-      }
+        Swal.fire({
+          title: 'User Saved!',
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1500, // Close after 1.5 seconds
+        });      }
     })
     .catch(error => {
 
@@ -194,7 +232,7 @@ const handleModalClose = () => {
   setRole('');
   setLevel('');
   setPhoneNumber('');
-
+  setSpecialite('');
   if (props.onHide) {
     props?.onHide?.();  }
 };
@@ -323,6 +361,7 @@ const handleModalClose = () => {
         </select>
       </MDBCol>
       </MDBRow>
+      {role === 'student' && (
       <MDBRow className='align-items-center pt-4 pb-3'>
   <MDBCol md='3' className='checkbox'>
     <h11 className="mb-0">Level</h11>
@@ -334,21 +373,52 @@ const handleModalClose = () => {
       onChange={(e) => setLevel(e.target.value)}
     >
 
-            <option value="non precise level">non precise level </option>
-      <option value="gradelevel1">gradelevel1</option>
-      <option value="gradelevel2">gradelevel2</option>
-      <option value="gradelevel3">gradelevel3</option>
-      <option value="gradelevel4">gradelevel4</option>
-      <option value="gradelevel5">gradelevel5</option>
-      <option value="gradelevel6">gradelevel6</option>
-      <option value="gradelevel7">gradelevel7</option>
+            <option value="nonpreciselevel">non precise level </option>
+      <option value="level1">gradelevel1</option>
+      <option value="level2">gradelevel2</option>
+      <option value="level3">gradelevel3</option>
+      <option value="level4">gradelevel4</option>
+      <option value="level5">gradelevel5</option>
+      <option value="level6">gradelevel6</option>
+      <option value="level7">gradelevel7</option>
     </select>
   </MDBCol>
+  </MDBRow>
 
- 
+  
+)}
+  {role === 'teacher' && (
+ <MDBRow className='align-items-center pt-4 pb-3'>
+ <MDBCol md='3' className='checkbox'>
+   <h11 className="mb-0">Speciality</h11>
+ </MDBCol>
+ <MDBCol md='9' className='pe-5'>
+   {specialiteOptions.map((option) => (
+     <div key={option}>
+       <input
+         type="checkbox"
+         id={option}
+         value={option}
+         checked={specialite.includes(option)}
+         onChange={(e) => {
+           const checked = e.target.checked;
+           setSpecialite((prevSpecialite) =>
+             checked
+               ? [...prevSpecialite, option]
+               : prevSpecialite.filter((item) => item !== option)
+           );
+         }}
+       />
+       <label htmlFor={option}>{option}</label>
+     </div>
+   ))}
+ </MDBCol>
 </MDBRow>
 
+ 
 
+
+)}
 <div style={styles.footer}>
 
 <Link to="#"  onClick={handleSave} className="button-popup" data-toggle="modal" data-target="#popup_bid_success" data-dismiss="modal" aria-label="Close"> Save </Link>

@@ -4,6 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { useCookies } from "react-cookie";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./styles.module.css";
+import Swal from 'sweetalert2';
 import {
   MDBBtn,
   MDBContainer,
@@ -19,10 +20,10 @@ import {
   from 'mdb-react-ui-kit';
 
 function Register() {
-const [cookies] = useCookies(["cookie-name"]);
-const navigate = useNavigate();
-const [error, setError] = useState("");
-	const [msg, setMsg] = useState("");
+  const [cookies] = useCookies(["cookie-name"]);
+  const navigate = useNavigate();
+  const [error, setError] = useState("");
+  const [msg, setMsg] = useState("");
   const [errors, setErrors] = useState({})
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -33,131 +34,146 @@ const [error, setError] = useState("");
   const [phoneNumber, setPhoneNumber] = useState('');
 
   const [role, setRole] = useState('student'); // Set default role
- //control saisie 
- const [errEmail, setErrEmail] = useState('');
- const [showerrEmail, setShowerrEmail] = useState(false);
+  //control saisie 
+  const [errEmail, setErrEmail] = useState('');
+  const [showerrEmail, setShowerrEmail] = useState(false);
 
- const [errPassword, setErrPassword] = useState('');
- const [showerrPassword, setShowerrPassword] = useState(false);
+  const [errPassword, setErrPassword] = useState('');
+  const [showerrPassword, setShowerrPassword] = useState(false);
 
- const [errFirstName, setErrFirstName] = useState('');
- const [showerrFirstName, setShowerrFirstName] = useState(false);
+  const [errFirstName, setErrFirstName] = useState('');
+  const [showerrFirstName, setShowerrFirstName] = useState(false);
 
- const [errLastName, setErrLastName] = useState('');
- const [showErrLastName, setShowErrLastName] = useState(false);
- 
- const [errLevel, setErrLevel] = useState('');
- const [showErrLevel, setShowErrLevel] = useState(false);
- 
- const [errPhoneNumber, setErrPhoneNumber] = useState('');
- const [showErrPhoneNumber, setShowErrPhoneNumber] = useState(false);
- 
- const [errRole, setErrRole] = useState('');
- const [showErrRole, setShowErrRole] = useState(false);
- const isNumber = (value) => !isNaN(Number(value));
+  const [errLastName, setErrLastName] = useState('');
+  const [showErrLastName, setShowErrLastName] = useState(false);
 
+  const [errLevel, setErrLevel] = useState('');
+  const [showErrLevel, setShowErrLevel] = useState(false);
 
- const isValidEmail = (value) => {
-  // You can use a regular expression for basic email format validation
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(value);
-};
-   
+  const [errPhoneNumber, setErrPhoneNumber] = useState('');
+  const [showErrPhoneNumber, setShowErrPhoneNumber] = useState(false);
+
+  const [errConfirmPassword, setErrConfirmPassword] = useState('');
+  const [showErrConfirmPassword, setShowErrConfirmPassword] = useState(false);
 
 
+  const isNumber = (value) => !isNaN(Number(value));
 
-useEffect(() => {
-  if (cookies.jwt) {
-    navigate("/");
+
+  const [confirmPassword, setConfirmPassword] = useState(''); // Step 1
+
+  const isValidEmail = (value) => {
+    // You can use a regular expression for basic email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(value);
+  };
+
+
+
+
+  useEffect(() => {
+    if (cookies.jwt) {
+      navigate("/");
+    }
+  }, [cookies, navigate]);
+
+  const [values, setValues] = useState({
+    firstName: '', lastName: '', email: '', password: '', role: 'student', phoneNumber: '', level: 'non precise level' , confirmPassword :'' 
+    // Default role
   }
-}, [cookies, navigate]);
 
-const [values, setValues] = useState({ firstName: '', lastName: '', email: '', password: ''    , role: 'student',   phoneNumber: '' ,    level: 'non precise level'// Ajoutez cette ligne
-// Default role
-}
-
-);
-const [errorFields, setErrorFields] = useState({});
-console.log("Initial errorFields:", errorFields);
+  );
+  const [errorFields, setErrorFields] = useState({});
+  console.log("Initial errorFields:", errorFields);
 
 
 
-const handleInputChange = (e) => {
-  const {name, value} = e.target;
-  setValues({
-      ...values, [name] : value
-  })
-}
-const handleSubmit = async (event) => {
-
- 
-  event.preventDefault();
-
-
-  if (!isNumber(phoneNumber)) {
-    setErrPhoneNumber('Ensure phone number is a number');
-    setShowErrPhoneNumber(true);
-  } else if (phoneNumber.length !== 8) {
-    setErrPhoneNumber('Phone number must be 8 digits');
-    setShowErrPhoneNumber(true);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setValues({
+      ...values, [name]: value
+    })
   }
-  if (!isValidEmail(email)) {
-    setErrEmail('Please enter a valid email address');
-    setShowerrEmail(true);
-  }
-  //input 
-  if (!firstName) {
-    setErrFirstName('Please fill in first name');
-    setShowerrFirstName(true) }
+  const handleSubmit = async (event) => {
+
+
+    event.preventDefault();
+
+
+    if (!isNumber(phoneNumber)) {
+      setErrPhoneNumber('Ensure phone number is a number');
+      setShowErrPhoneNumber(true);
+    } 
+     if (phoneNumber.length !== 8) {
+      setErrPhoneNumber('Phone number must be 8 digits');
+      setShowErrPhoneNumber(true);
+    }
+    if (!isValidEmail(email)) {
+      setErrEmail('Please enter a valid email address');
+      setShowerrEmail(true);
+    }
+    //input 
+    if (!firstName) {
+      setErrFirstName('Please fill in first name');
+      setShowerrFirstName(true)
+    }
 
     if (!email) {
       setErrEmail('Please fill in email');
       setShowerrEmail(true);
     }
-    
+
     // Validate password
     if (!password) {
       setErrPassword('Please fill in password');
       setShowerrPassword(true);
     }
-    
+
     // Validate first name
     if (!firstName) {
       setErrFirstName('Please fill in first name');
       setShowerrFirstName(true);
     }
-    
+
     // Validate last name
     if (!lastName) {
       setErrLastName('Please fill in last name');
       setShowErrLastName(true);
     }
-    
+
     // Validate level (adjust the condition as needed)
     if (!level) {
       setErrLevel('Please select a level');
       setShowErrLevel(true);
     }
-    
+
     // Validate phone number
     if (!phoneNumber) {
       setErrPhoneNumber('Please fill in phone number');
       setShowErrPhoneNumber(true);
     }
-    
-    // Validate role (adjust the condition as needed)
-    if (!role) {
-      setErrRole('Please select a role');
-      setShowErrRole(true);
+    if (!confirmPassword) {
+      setErrConfirmPassword('Please confirm your password'); // Step 3
+      setShowErrConfirmPassword(true); // Step 3
+    } else if (confirmPassword !== values.password) {
+      setErrConfirmPassword('Passwords do not match'); // Step 3
+      setShowErrConfirmPassword(true); // Step 3
     }
+    // Validate role (adjust the condition as needed)
+   
 
- 
 
- 
+
 
     try {
       const url = "http://localhost:4000/user/users";
       const { values: res } = await axios.post(url, values);
+      Swal.fire({
+        icon: 'success',
+        title: 'Registration Successful!',
+        text: 'Please verify your email.',
+      });
+      navigate('/login')
 
     } catch (error) {
       if (error.response && error.response.status === 400) {
@@ -165,7 +181,8 @@ const handleSubmit = async (event) => {
         console.error("Erreur de validation côté serveur :", error.response.data.message);
       } else {
         console.error("Erreur inattendue lors de la soumission du formulaire :", error.message);
-      }}
+      }
+    }
 
   };
 
@@ -193,101 +210,101 @@ const handleSubmit = async (event) => {
               </div>
             </div>
             <div className="col-xl-6 col-lg-9 col-md-12">
-            <form onSubmit={(e) => handleSubmit(e)} id="contactform">
-            <fieldset>
-          <input
-            id="firstName"
-            name="firstName"
-            tabIndex="3"
-            aria-required="true"
-        
-            type="text"
-            placeholder="First Name"
-            value={values.firstName}
-            onChange={(e) => { setValues({ ...values, firstName: e.target.value }); setErrFirstName('')}}
-            />
-        </fieldset>
-        {showerrFirstName && (
-  <div className='error-message'>
-    <p style={{ color: 'red' }}>{errFirstName}</p>
-  </div>
-)}
-<fieldset>
-  <input
-    id="lastName"
-    name="lastName"
-    tabIndex="4"
-    aria-required="true"
-
-    type="text"
-    autoComplete='off'  
-
-    placeholder="Last Name"
-    value={values.lastName}
-    onChange={(e) => {setValues({ ...values, lastName: e.target.value }); setErrLastName(''); }}
-  />
-
-</fieldset>
-
-{showErrLastName && (
-  <div className='error-message'>
-    <p style={{ color: 'red' }}>{errLastName}</p>
-  </div>)}
-<fieldset>
-  <input
-    id="phoneNumber"
-    name="phoneNumber"
-    tabIndex="4"
-    aria-required="true"
-
-    type="text"
-    placeholder="phoneNumber"
-    value={values.phoneNumber}
-    onChange={(e) => {setValues({ ...values, phoneNumber: e.target.value }); setErrPhoneNumber(''); }}
-     />
-</fieldset>
-
-{showErrPhoneNumber && (
-  <div className='error-message'>
-    <p style={{ color: 'red' }}>{errPhoneNumber}</p>
-  </div>)}
-<fieldset >
-   <select className={styles['level-fieldset']}
-      id="level"
-      name="level"
-      tabIndex="5"
-      aria-required="true"
-
-      value={values.level}
-      onChange={(e) => handleInputChange(e, 'level')}
-   >
-      <option value="non precise level">non precise level </option>
-      <option value="gradelevel1">gradelevel1</option>
-      <option value="gradelevel2">gradelevel2</option>
-      <option value="gradelevel3">gradelevel3</option>
-      <option value="gradelevel4">gradelevel4</option>
-      <option value="gradelevel5">gradelevel5</option>
-      <option value="gradelevel6">gradelevel6</option>
-      <option value="gradelevel7">gradelevel7</option>
-
-   </select>
-</fieldset>
+              <form onSubmit={(e) => handleSubmit(e)} id="contactform">
                 <fieldset>
-                <input
-  id="email"
-  name="email"
-  tabIndex="1"
-  aria-required="true"
+                  <input
+                    id="firstName"
+                    name="firstName"
+                    tabIndex="3"
+                    aria-required="true"
 
-  type="text"
-  placeholder="Email"
-  value={values.email}
-  onChange={(e) =>{ handleInputChange(e, 'email') ; setErrPhoneNumber('');}}
-/>
-{showerrEmail && (
-  <div className='error-message'>
-    <p style={{ color: 'red' }}>{errEmail}</p>
-  </div>)}
+                    type="text"
+                    placeholder="First Name"
+                    value={values.firstName}
+                    onChange={(e) => { setValues({ ...values, firstName: e.target.value }); setErrFirstName('') }}
+                  />
+                </fieldset>
+                {showerrFirstName && (
+                  <div className='error-message'>
+                    <p style={{ color: 'red' }}>{errFirstName}</p>
+                  </div>
+                )}
+                <fieldset>
+                  <input
+                    id="lastName"
+                    name="lastName"
+                    tabIndex="4"
+                    aria-required="true"
+
+                    type="text"
+                    autoComplete='off'
+
+                    placeholder="Last Name"
+                    value={values.lastName}
+                    onChange={(e) => { setValues({ ...values, lastName: e.target.value }); setErrLastName(''); }}
+                  />
+
+                </fieldset>
+
+                {showErrLastName && (
+                  <div className='error-message'>
+                    <p style={{ color: 'red' }}>{errLastName}</p>
+                  </div>)}
+                <fieldset>
+                  <input
+                    id="phoneNumber"
+                    name="phoneNumber"
+                    tabIndex="4"
+                    aria-required="true"
+
+                    type="text"
+                    placeholder="phoneNumber"
+                    value={values.phoneNumber}
+                    onChange={(e) => { setValues({ ...values, phoneNumber: e.target.value }); setErrPhoneNumber(''); }}
+                  />
+                </fieldset>
+
+                {showErrPhoneNumber && (
+                  <div className='error-message'>
+                    <p style={{ color: 'red' }}>{errPhoneNumber}</p>
+                  </div>)}
+                <fieldset >
+                  <select className={styles['level-fieldset']}
+                    id="level"
+                    name="level"
+                    tabIndex="5"
+                    aria-required="true"
+
+                    value={values.level}
+                    onChange={(e) => handleInputChange(e, 'level')}
+                  >
+                    <option value="non precise level">non precise level </option>
+                    <option value="gradelevel1">gradelevel1</option>
+                    <option value="gradelevel2">gradelevel2</option>
+                    <option value="gradelevel3">gradelevel3</option>
+                    <option value="gradelevel4">gradelevel4</option>
+                    <option value="gradelevel5">gradelevel5</option>
+                    <option value="gradelevel6">gradelevel6</option>
+                    <option value="gradelevel7">gradelevel7</option>
+
+                  </select>
+                </fieldset>
+                <fieldset>
+                  <input
+                    id="email"
+                    name="email"
+                    tabIndex="1"
+                    aria-required="true"
+
+                    type="text"
+                    placeholder="Email"
+                    value={values.email}
+                    onChange={(e) => { handleInputChange(e, 'email'); setErrPhoneNumber(''); }}
+                  />
+                  {showerrEmail && (
+                    <div className='error-message'>
+                      <p style={{ color: 'red' }}>{errEmail}</p>
+                    </div>)}
 
 
                 </fieldset>
@@ -297,24 +314,42 @@ const handleSubmit = async (event) => {
                     name="password"
                     tabIndex="2"
                     aria-required="true"
-                  
+
                     type="password"
                     placeholder="Password"
                     value={values.password}
-                    onChange={(e) => {setValues({ ...values, password: e.target.value }); setErrPassword(''); }}
-                    />
+                    onChange={(e) => { setValues({ ...values, password: e.target.value }); setErrPassword(''); }}
+                  />
                   {showerrPassword && (
-  <div className='error-message'>
-    <p style={{ color: 'red' }}>{errPassword}</p>
-  </div>)}
-                  <span className="btn-show-pass"><i className="far fa-eye-slash"></i></span>
+                    <div className='error-message'>
+                      <p style={{ color: 'red' }}>{errPassword}</p>
+                    </div>)}
+                  <span className="btn-show-pass"></span>
                 </fieldset>
+
+                
+<fieldset>
+  <input
+    id="confirmpassword" // Step 2
+    name="confirmpassword" // Step 2
+    tabIndex="3"
+    aria-required="true"
+    type="password"
+    placeholder="Confirm Password"
+    value={confirmPassword} // Step 2
+    onChange={(e) => {
+      setConfirmPassword(e.target.value); // Step 2
+      setErrConfirmPassword(''); // Step 3
+    }}
+  />
+  {showErrConfirmPassword && ( // Step 3
+    <div className='error-message'>
+      <p style={{ color: 'red' }}>{errConfirmPassword}</p>
+    </div>
+  )}
+</fieldset>
                 <div className="forgot-pass-wrap">
-                  <label>
-                    I agree to the terms and services
-                    <input type="checkbox" />
-                    <span className="btn-checkbox"></span>
-                  </label>
+                 
                 </div>
                 <div className="title-login">Or login with social</div>
                 <div className="button-gg">
@@ -323,8 +358,7 @@ const handleSubmit = async (event) => {
                 <div className="button-gg mb33">
                   <Link to="#"><i className="fab fa-google"></i>Google</Link>
                 </div>
-                {error && <div className={styles.error_msg}>{error}</div>}
-						{msg && <div className={styles.success_msg}>{msg}</div>}
+
                 <button className="submit" type="submit">Register</button>
                 <div className="row justify-content-center">
                   <span>
