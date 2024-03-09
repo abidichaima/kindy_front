@@ -18,7 +18,15 @@ import {
   MDBInputGroup
 }
   from 'mdb-react-ui-kit';
-
+  import {
+    ref,
+    uploadBytes,
+    getDownloadURL,
+    listAll,
+    list,
+  } from "firebase/storage";
+  import { storage } from "../../firebase";
+  import { v4 } from "uuid";
 function Register() {
   const [cookies] = useCookies(["cookie-name"]);
   const navigate = useNavigate();
@@ -32,6 +40,7 @@ function Register() {
   const [level, setLevel] = useState('non precise level'); // Set default level
 
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [confirmPassword, setconfirmPassword] = useState('');
 
   const [role, setRole] = useState('student'); // Set default role
   //control saisie 
@@ -60,14 +69,35 @@ function Register() {
   const isNumber = (value) => !isNaN(Number(value));
 
 
-  const [confirmPassword, setConfirmPassword] = useState(''); // Step 1
+  const [imageUpload, setImageUpload] = useState(null);
+  const [imageUrls, setImageUrls] = useState([]);
+
 
   const isValidEmail = (value) => {
     // You can use a regular expression for basic email format validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(value);
   };
+const imagesListRef = ref(storage, "images/");
+  const uploadFile = () => {
+    if (imageUpload == null) return;
+    const imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
+    uploadBytes(imageRef, imageUpload).then((snapshot) => {
+      getDownloadURL(snapshot.ref).then((url) => {
+        setImageUrls((prev) => [...prev, url]);
+      });
+    });
+  };
 
+  useEffect(() => {
+    listAll(imagesListRef).then((response) => {
+      response.items.forEach((item) => {
+        getDownloadURL(item).then((url) => {
+          setImageUrls((prev) => [...prev, url]);
+        });
+      });
+    });
+  }, []);
 
 
 
@@ -78,7 +108,8 @@ function Register() {
   }, [cookies, navigate]);
 
   const [values, setValues] = useState({
-    firstName: '', lastName: '', email: '', password: '', role: 'student', phoneNumber: '', level: 'non precise level' , confirmPassword :'' 
+    firstName: '', lastName: '', email: '', password: '', role: 'student', phoneNumber: '', level: 'non precise level' ,    confirmPassword: '' // Include confirmPassword here
+
     // Default role
   }
 
@@ -130,10 +161,7 @@ function Register() {
     }
 
     // Validate first name
-    if (!firstName) {
-      setErrFirstName('Please fill in first name');
-      setShowerrFirstName(true);
-    }
+  
 
     // Validate last name
     if (!lastName) {
@@ -152,20 +180,20 @@ function Register() {
       setErrPhoneNumber('Please fill in phone number');
       setShowErrPhoneNumber(true);
     }
-    if (!confirmPassword) {
-      setErrConfirmPassword('Please confirm your password'); // Step 3
-      setShowErrConfirmPassword(true); // Step 3
-    } else if (confirmPassword !== values.password) {
-      setErrConfirmPassword('Passwords do not match'); // Step 3
-      setShowErrConfirmPassword(true); // Step 3
+    if (!values.confirmPassword) {
+      setErrConfirmPassword('Please confirm your password');
+      setShowErrConfirmPassword(true);
+    } else if (values.confirmPassword !== values.password) {
+      setErrConfirmPassword('Passwords do not match');
+      setShowErrConfirmPassword(true);
     }
-    // Validate role (adjust the condition as needed)
-   
 
 
 
 
     try {
+      console.log("Sending request with values:", values);
+
       const url = "http://localhost:4000/user/users";
       const { values: res } = await axios.post(url, values);
       Swal.fire({
@@ -179,6 +207,9 @@ function Register() {
       if (error.response && error.response.status === 400) {
         // Affichez le message d'erreur du serveur, s'il y en a un
         console.error("Erreur de validation côté serveur :", error.response.data.message);
+        console.error('Error during form submission:', error);
+
+        
       } else {
         console.error("Erreur inattendue lors de la soumission du formulaire :", error.message);
       }
@@ -336,11 +367,10 @@ function Register() {
     aria-required="true"
     type="password"
     placeholder="Confirm Password"
-    value={confirmPassword} // Step 2
-    onChange={(e) => {
-      setConfirmPassword(e.target.value); // Step 2
-      setErrConfirmPassword(''); // Step 3
-    }}
+    value={values.confirmPassword} // Step 2
+    onChange={(e) => { setValues({ ...values, confirmPassword: e.target.value }); setErrConfirmPassword('');  }}
+
+  
   />
   {showErrConfirmPassword && ( // Step 3
     <div className='error-message'>
@@ -348,6 +378,8 @@ function Register() {
     </div>
   )}
 </fieldset>
+
+
                 <div className="forgot-pass-wrap">
                  
                 </div>
