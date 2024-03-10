@@ -35,8 +35,8 @@ import avtf5 from '../assets/images/author/author-follow3.jpg'
 import avtf6 from '../assets/images/author/author-follow4.jpg'
 
 import Swal from 'sweetalert2';
-import AddQuestionForm from './addQuestion';
-import UpdateQuestionForm from './updateQuestion';
+import AddQuestionForm from './AddQuestion';
+import UpdateQuestionForm from './UpdateQuestion';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import {Dialog, DialogContent,DialogTitle} from '@mui/material';
 import Modal from 'react-bootstrap/Modal';

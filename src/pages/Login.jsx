@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
+import 'react-toastify/dist/ReactToastify.css';
 import avt1 from "../assets/images/author/author-login-1.png";
 import avt2 from "../assets/images/author/author-login-2.png";
 

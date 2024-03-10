@@ -23,8 +23,9 @@ import Ranking from "./Ranking";
 import Register from "./Register";
 import Wallet from "./Wallet";
 import ViewUser from "./viewUser";
-import ViewQuestion from "./viewQuestion";
+import ViewQuestion from "./ViewQuestion"
 import Dash from "./Dash";  
+import ViewQuizz from "./ViewQuizz";
 
 const routes = [
   { path: '/', component: <Home01 />},
@@ -54,6 +55,8 @@ const routes = [
   { path: '/question', component: <ViewQuestion />},
   { path: '/dash', component: <Dash />},
   { path: '/dashboard', component: <Dashboard />},
+  { path: '/quizz', component: <ViewQuizz/>},
+
 
 
 ]
