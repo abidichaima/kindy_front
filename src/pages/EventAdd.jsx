@@ -83,6 +83,8 @@ function AddEventForm(props) {
   const [location, setLocation] = useState('');
   const [image, setImage] = useState('');
   const [date, setDate] = useState(new Date());
+  const [tickets, setTickets] = useState(0);
+
 
   const isNumber = (value) => !isNaN(Number(value));
 
@@ -160,6 +162,7 @@ function AddEventForm(props) {
         date,
         location,
         organizer,
+        tickets,
         image,
       }),
     })

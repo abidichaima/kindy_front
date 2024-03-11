@@ -29,7 +29,10 @@ import Dash from "./Dash";
 import EventView from "./EventView"
 import EventDetail from "./EventDetail";
 import EFrontDetail from "./EFrontDetail";
-
+import EventSuccess from "./EventSuccess";
+import EventFail from "./EventFail";
+import EventTickets from "./EventTickets";
+import EventTest from './EventTest'
 
 const routes = [
   { path: '/', component: <Home01 />},
@@ -62,6 +65,10 @@ const routes = [
   { path: '/event', component: <EventView />},
   { path: '/eventDetail/:id', component: <EventDetail />},
   { path: '/FronteventDetail/:id', component: <EFrontDetail />},
+  { path: '/success', component: <EventSuccess />},
+  { path: '/fail', component: <EventFail />},
+  { path: '/ticket', component: <EventTickets />},
+  { path: '/test', component: <EventTest />},
 
 
 ]

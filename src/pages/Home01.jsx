@@ -26,8 +26,11 @@ function Home01(props) {
                 <Banner01 data={dataBanner} />
 
                 <Category data={dataCategory} />
+        
+                        <EventFront />
                 
-                <EventFront />
+
+
                 {/* */} <LiveAutions data={dataLiveaution} />
 
                 <Create data={dataCreate} />

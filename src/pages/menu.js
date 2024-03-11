@@ -78,6 +78,11 @@ const menus = [
         links: '/contact',
     },
     {
+        id: 6,
+        name: 'Tickets',
+        links: '/test',
+    },
+    {
 
     },
 

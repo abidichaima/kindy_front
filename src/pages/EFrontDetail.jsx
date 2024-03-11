@@ -3,11 +3,13 @@ import PropTypes from 'prop-types';
 import PageTitle from '../components/pagetitle/PageTitle';
 import { Link } from 'react-router-dom';
 
-import CardModal from '../components/layouts/CardModal';
+import CardModal from './EventPayment';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import EventIcon from '@material-ui/icons/Event';
+
+
 EFrontDetail.propTypes = {
 
 };
@@ -16,6 +18,7 @@ function EFrontDetail(props) {
 
     const { id } = useParams();
     const [data, setData] = useState(null);
+    const [user, setUser] = useState(1);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -93,7 +96,7 @@ function EFrontDetail(props) {
                                             <div className="price"><div className="icon"> <EventIcon fontSize="large" /></div></div>
                                         </div>
                                         <div className="button">
-                                            <Link to="#" onClick={()=>setModalShow(true)} className="tf-button" data-toggle="modal" data-target="#popup_bid" style={{ width: '100%', padding: '15px', fontSize: '18px' }}>
+                                            <Link to="#" onClick={() => setModalShow(true)} className="tf-button" data-toggle="modal" data-target="#popup_bid" style={{ width: '100%', padding: '15px', fontSize: '18px' }}>
                                                 BOOK A TICKET
                                             </Link>
                                         </div>
@@ -119,10 +122,14 @@ function EFrontDetail(props) {
                     </div>
                 </div>
 
-                <CardModal
-                    show={modalShow}
-                    onHide={() => setModalShow(false)}
-                />
+                        <CardModal
+                            show={modalShow}
+                            onHide={() => setModalShow(false)}
+                            event={data}
+                            user={user}
+                        />
+                
+
             </section>
 
         </div>
