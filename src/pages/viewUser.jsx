@@ -274,13 +274,12 @@ Add</button>
 
   <div className="table-ranking top">
     <div className="title-ranking">
+    <div className="col-rankingg"><Link to="#">Image</Link></div>
 
       <div className="col-rankingg"><Link to="#">LastName</Link></div>
       <div className="col-rankingg"><Link to="#">FirstName</Link></div>
       <div className="col-rankingg"><Link to="#">Email</Link></div>
-      <div className="col-rankingg"><Link to="#">Role</Link></div>
-      <div className="col-rankingg"><Link to="#">Phone</Link></div>
-      <div className="col-rankingg"><Link to="#">Level</Link></div>
+ 
 
       <div className="col-rankingg"><Link to="#">Actions</Link></div>
     </div>
@@ -291,15 +290,19 @@ Add</button>
     {console.log(userList)}
     {userList.slice(startIndex, endIndex).map((item, index) => (
       <div className="content-ranking" key={index}> 
-
+  <div className="col-rankingg">
+      {item.image && item.image.url ? (
+        <img src={item.image.url} alt="Image " />
+      ) : (
+        <span>No Image</span>
+      )}
+    </div>
         <div className="col-rankingg">{item.lastName}</div>
         <div className="col-rankingg">{item.firstName}</div>
         <div className="col-rankingg">{item.email}</div>
      
       
-        <div className="col-rankingg">{item.role}</div>
-        <div className="col-rankingg">{item.phoneNumber}</div>
-        <div className="col-rankingg">{item.level}</div>
+   
 
 
         <button type='submit' style={btnupdate}
@@ -308,7 +311,9 @@ onClick={() => {
   handleOpenPopupUp(item);
   setUpdateShow(true);
 }
-}>
+}
+
+>
                                 <svg fill="none" viewBox="0 0 15 15" height="20px" width="20px" {...props}>
                                   <path
                                     fill="currentColor"
@@ -325,7 +330,8 @@ onClick={() => {
                                   />
                                 )}
                             
-<button type='submit'   style={btnshow}>
+                            <Link to={`/showUser/${item._id}`}>
+                                <button type="button" style={btnshow}>
 <svg
   viewBox="0 0 24 24"
   fill="currentColor"
@@ -337,6 +343,7 @@ onClick={() => {
   <path d="M12 5c-7.633 0-9.927 6.617-9.948 6.684L1.946 12l.105.316C2.073 12.383 4.367 19 12 19s9.927-6.617 9.948-6.684l.106-.316-.105-.316C21.927 11.617 19.633 5 12 5zm0 12c-5.351 0-7.424-3.846-7.926-5C4.578 10.842 6.652 7 12 7c5.351 0 7.424 3.846 7.926 5-.504 1.158-2.578 5-7.926 5z" />
 </svg>
 </button>
+                              </Link>
 <button type='submit' style={btndelete} onClick={() => DeleteConfirmation(item._id)}>
 <svg
   viewBox="0 0 1024 1024"

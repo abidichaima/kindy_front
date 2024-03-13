@@ -3,41 +3,65 @@ import { Link, useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
-
+import Cookies from 'js-cookie';
+import Swal from 'sweetalert2';
+import { jwtDecode } from "jwt-decode";
 
 const Login = () => {
+
+
+  const styles=  {
+
+    footer: {
+      textAlign: 'right',
+      marginTop: '330px',
+      },
+
+      header :{
+        marginTop : '100px'
+      }
+  }
   const [values, setValues] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
 
   const handleChange = ({ currentTarget: input }) => {
     setValues({ ...values, [input.name]: input.value });
   };
+
+
 	const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    
+   
     try {
       const url = 'http://localhost:4000/user/auth';
       const response = await axios.post(url, values, {
         headers: {
           'Content-Type': 'application/json',
-        },});
+        },
+      });
 
-        localStorage.setItem("user", JSON.stringify({role: "admin"}))
-        navigate("/dash")
-
-      // Check if the response status is in the success range (e.g., 200-299)
       if (response.status >= 200 && response.status < 300) {
-        // Store the token in localStorage or implement your token handling logic
-     
+        // Decode the JWT token
+        const decodedToken = jwtDecode(response.data.data);
+
+        // Store user information in cookies
+ // Accessing user information
+
+ // Store user information in cookies
+ Cookies.set('user', JSON.stringify(decodedToken ), { expires: 7 }); // Set an expiration time if needed
+        // Navigate to the dashboard
+        navigate('/');
       } else {
+        // Handle the case where the response status is not in the success range
         setError('An error occurred during login. Please try again later.');
       }
     } catch (error) {
-      // Handle network errors, etc.
+      // Handle other errors related to the axios request
       console.error('Error during login:', error);
-      console.error('Error during login:', error.response);
 
       // Check if the error has a response and contains data
       if (error.response && error.response.data) {
@@ -45,16 +69,29 @@ const Login = () => {
       } else {
         setError('An error occurred during login. Please try again later.');
       }
+      Swal.fire({
+        icon: 'error',
+        title: 'Login Error',
+        text: 'check your email and password ',
+      });
     }
   };
+   
+
+
+
 
   return (
+
+    <div style={styles.header}>
+
+ 
     <div className="login-page">
       <div className="container">
         <div className="row">
           <div className="col-md-6 mx-auto">
           <div className="row justify-content-center">
-
+          
           <h6 className="heading" >Login</h6>
 
           </div>
@@ -98,18 +135,23 @@ const Login = () => {
               <br></br>
             </span>
             <div className="row justify-content-center">
-            <span className="justify-content-center">
-  Did you forget your password ? <Link to="/forgot-password">Forgot Password</Link>
-  <br/><br/>
-  Don't have an account ? <Link to="/register"> Register</Link>
-</span>
-            </div>
+  <div className="text-center">
+    <span>
+      Did you forget your password? <Link to="/forgot-password">Forgot Password</Link>
+      <br/><br/>
+      Don't have an account? <Link to="/register">Register</Link>
+    </span>
+  </div>
+</div>
+<div style={styles.footer}>
+
+</div>
           </div>
         </div>
       </div>
     </div>
-
+    </div>
   );
-};
+  };
 
 export default Login;

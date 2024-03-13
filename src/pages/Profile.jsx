@@ -1,57 +1,96 @@
-import React , {useState,useContext} from 'react';
-import Button from 'react-bootstrap/Button';
+import React, { useState, useContext, useEffect } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import PageTitle from '../components/pagetitle/PageTitle';
 import { Link } from 'react-router-dom';
-import { createPortal } from 'react-dom';
-//import avt from '../assets/images/logo1.png'
+import Cookies from 'js-cookie';
 import img from '../assets/images/BATTERIE.jpg'
 
-import img1 from '../assets/images/product/product4.jpg'
-import img2 from '../assets/images/product/product5.jpg'
-import img3 from '../assets/images/product/product6.jpg'
-import img4 from '../assets/images/product/product7.jpg'
-import img5 from '../assets/images/product/product8.jpg'
-import img6 from '../assets/images/product/product9.jpg'
-import icon1 from '../assets/images/svg/icon-wallet-1.svg'
-import icon2 from '../assets/images/svg/icon-wallet-2.svg'
-import icon3 from '../assets/images/svg/icon-wallet-3.svg'
-import icon4 from '../assets/images/svg/icon-wallet-4.svg'
-import icon5 from '../assets/images/svg/icon-wallet-5.svg'
-import icon6 from '../assets/images/svg/icon-wallet-6.svg'
-import icon7 from '../assets/images/svg/icon-wallet-7.svg'
-import icon8 from '../assets/images/svg/icon-wallet-8.svg'
-import avt1 from '../assets/images/author/history-at1.jpg'
-import avt2 from '../assets/images/author/history-at2.jpg'
-import avt3 from '../assets/images/author/history-at3.jpg'
-import avt4 from '../assets/images/author/history-at4.jpg'
-import avt5 from '../assets/images/author/history-at5.jpg'
-import avt6 from '../assets/images/author/history-at6.jpg'
-import avtf1 from '../assets/images/author/author-follow1.jpg'
-import avtf2 from '../assets/images/author/author-follow2.jpg'
-import avtf3 from '../assets/images/author/author-follow3.jpg'
-import avtf4 from '../assets/images/author/author-follow4.jpg'
-import avtf5 from '../assets/images/author/author-follow3.jpg'
-import avtf6 from '../assets/images/author/author-follow4.jpg'
 
-import Swal from 'sweetalert2';
-import AddQuestionForm from './addQuestion';
-import UpdateQuestionForm from './updateQuestion';
-import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
-import {Dialog, DialogContent,DialogTitle} from '@mui/material';
-import Modal from 'react-bootstrap/Modal';
-import sideProfile from './SideProfile';
-import Dashboard from './Dashboard';
 import SideProfile from './SideProfile';
+import UpdateProfile from './UpdateProfile';
 
 
 
 
 function Profile(props) {
 
-  
+    function getUserInfoFromCookie() {
+        // Obtenez la valeur du cookie actuel (vous pouvez remplacer document.cookie par la méthode que vous utilisez pour récupérer les cookies)
+        var cookieValue = document.cookie.match(/(?:^|;) ?user=([^;]*)(?:;|$)/);
+      
+        if (cookieValue) {
+          // Décodez la chaîne JSON
+          var decodedValue = decodeURIComponent(cookieValue[1].replace(/\+/g, ' '));
+      
+          // Convertissez la chaîne JSON en objet JavaScript
+          var userObject = JSON.parse(decodedValue);
+      
+          // Retournez l'objet utilisateur
+          return userObject;
+        } else {
+          // Retournez null si le cookie n'est pas trouvé
+          return null;
+        }
+      }
+      
+      // Utilisez la fonction pour obtenir les informations de l'utilisateur
+      var currentUser = getUserInfoFromCookie();
+      
+      // Vérifiez si les informations de l'utilisateur existent
+      if (currentUser) {
+        // Affichez les informations de l'utilisateur
+        console.log("First Name:", currentUser.firstName);
+        console.log("Last Name:", currentUser.lastName);
+        console.log("Email:", currentUser.email);
+        console.log("Role:", currentUser.role);
+        console.log("Phone Number:", currentUser.phoneNumber);
+        console.log("Image:", currentUser.image);
+        console.log("Level:", currentUser.level);
+        console.log("Speciality:", currentUser.speciality);
+      } else {
+        console.log("Les informations de l'utilisateur ne sont pas disponibles.");
+      }
+      const btnupdate = {
+        backgroundColor: "#28a745",
+        borderRadius: "25px",
+        border: "none",
+        cursor: "pointer",
+        padding: "5px",
+        outline: "none",
+        transition: "background-color 0.3s",
+        marginRight: "5px",
+      };
+
+      
+  const handleOpenPopupUp = (item) => {
+    setSelectedItem(item);
+    setUpdateFormOpen(true);
+  };
+
+  const [isPopupOpenUpdate, setIsPopupOpenUpdate] = useState(false);
+  const [isPopupOpenUp, setIsPopupOpenUp] = useState(false);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+  const [updateShow, setUpdateShow] = useState(false);
+
+  const handleClosePopup = () => {
+    setIsPopupOpen(false);
+  };
+
+  const handleClosePopupUp = () => {
+    setIsPopupOpenUp(false);
+  };
+
  
 
+  
+  const handleOpenupdate = () => {
+    isPopupOpenUpdate(true);
+  };
+
+  const [isUpdateFormOpen, setUpdateFormOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+   
 return (
 
    
@@ -86,26 +125,147 @@ return (
                         </div>
                         <div className="col-xl-9 col-lg-12 col-md-12 overflow-table">
 
-                            <div className="dashboard-content inventory content-tab">
-                                                            
+                                <div className="dashboard-content inventory content-tab">
+
+
+
+
+                                    <section className="tf-item-detail">
+                                        <div className="tf-container">
+                                            <div className="row">
+                                                <div className="col-md-12">
+                                                <div className="tf-item-detail-inner">
+                                                        <div className="image">
+                                                        {currentUser.image && currentUser.image.url && (
+  <div>
+    <img src={currentUser.image.url} alt="" style={{ width: '500px', height: '400px' }} />
+  </div>
+)}
+
+{!currentUser.image && (
+  <p>no image</p>
+)}
+
+                                                       <div className="content">
+  <h2 className="title-detail"></h2>
+
+  <Tabs className="tf-tab">
+    <TabList className="menu-tab">
+      <Tab className="tab-title">
+        <Link to="#">firstName</Link>
+      </Tab>
+      <Tab className="tab-title">
+        <Link to="#">lastName</Link>
+      </Tab>
+      <Tab className="tab-title">
+        <Link to="#">email</Link>
+      </Tab>
+      <Tab className="tab-title">
+        <Link to="#">role</Link>
+      </Tab>
+      <Tab className="tab-title">
+        <Link to="#">phoneNumber</Link>
+      </Tab>
+      <Tab className="tab-title">
+        <Link to="#">level</Link>
+      </Tab>
+      <Tab className="tab-title">
+        <Link to="#">speciality</Link>
+      </Tab>
+      <Tab className="tab-title">
+        <Link to="#">actions</Link>
+      </Tab>
+    </TabList>
+    <TabPanel>
+      <div className="tab-details">
+        <p>{currentUser.firstName} </p>
+      </div>
+    </TabPanel>
+
+    <TabPanel>
+      <div className="tab-details">
+        <p>{currentUser.lastName}</p>
+      </div>
+    </TabPanel>
+
+    <TabPanel>
+      <div className="tab-details">
+        <p>{currentUser.email}</p>
+      </div>
+    </TabPanel>
+
+    <TabPanel>
+      <div className="tab-details">
+        <p>{currentUser.role}</p>
+      </div>
+    </TabPanel>
+
+    <TabPanel>
+      <div className="tab-details">
+      <p>{currentUser.phoneNumber}</p>
+      </div>
+    </TabPanel>
+
+    <TabPanel>
+      <div className="tab-details">
+      <p>{currentUser.level}</p>
+      </div>
+    </TabPanel>
+
+    <TabPanel>
+      <div className="tab-details">
+   <p>{currentUser.speciality}</p>
+      </div>
+    </TabPanel>
+
+    <TabPanel>
+<button type='submit' style={btnupdate}
+
+onClick={() => {
+  handleOpenPopupUp();
+  setUpdateShow(true);
+}
+}
+
+>
+                                <svg fill="none" viewBox="0 0 15 15" height="30px" width="100px" {...props}>
+                                  <path
+                                    fill="currentColor"
+                                    fillRule="evenodd"
+                                    d="M1.903 7.297c0 3.044 2.207 5.118 4.686 5.547a.521.521 0 11-.178 1.027C3.5 13.367.861 10.913.861 7.297c0-1.537.699-2.745 1.515-3.663.585-.658 1.254-1.193 1.792-1.602H2.532a.5.5 0 010-1h3a.5.5 0 01.5.5v3a.5.5 0 01-1 0V2.686l-.001.002c-.572.43-1.27.957-1.875 1.638-.715.804-1.253 1.776-1.253 2.97zm11.108.406c0-3.012-2.16-5.073-4.607-5.533a.521.521 0 11.192-1.024c2.874.54 5.457 2.98 5.457 6.557 0 1.537-.699 2.744-1.515 3.663-.585.658-1.254 1.193-1.792 1.602h1.636a.5.5 0 110 1h-3a.5.5 0 01-.5-.5v-3a.5.5 0 111 0v1.845h.002c.571-.432 1.27-.958 1.874-1.64.715-.803 1.253-1.775 1.253-2.97z"
+                                    clipRule="evenodd"
+                                  />
+                                </svg>
+                                
+                              </button>   {updateShow && (
+                                  <UpdateProfile
+                                    show={updateShow}
+                                    initialValues={currentUser} // Make sure to pass the correct user object
+                                    onHide={() => setUpdateShow(false)}
+                                  /> 
+                                )}</TabPanel>
                             
+  </Tabs>
+  
+</div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </div>
+
+                                    </section>
 
 
-                                  
-                               this is profile
-                                
-                                                    
-                                
-                                
+
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </Tabs> 
-                
-            </div>
-        </section>
-        
-    </div>
+                    </Tabs>
+                </div>
+            </section>
+        </div>
 );
 }
 

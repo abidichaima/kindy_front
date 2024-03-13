@@ -4,10 +4,10 @@ import AOS from 'aos';
 import { Route, Routes } from 'react-router-dom';
 import Header from './components/header';
 import Footer from './components/footer';
-import EmailVerify  from './components/EmailVerify/EmailVerify';
+import EmailVerify from './components/EmailVerify/EmailVerify';
 import routes from './pages';
 import Page404 from './pages/404';
-import ForgotPassword from './components/ForgetPassword/ForgotPassword'
+import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './components/ResetPassword/ResetPassword';
 import '../src/assets/binasea.css';
 import '../src/assets/font-awesome.css';
@@ -27,6 +27,9 @@ function App() {
             <Header />
 
             <Routes>
+            <Route path='/users/:id/verify/:token' element={<EmailVerify />} />
+                <Route path='/forgot-password' element={<ForgotPassword />}/>
+                <Route path='/reset_password/:id/:token' element={<ResetPassword />}/>
                 
                 {
                     routes.map((data,idx) => (
@@ -34,9 +37,7 @@ function App() {
 
                     ))
                 }
-                <Route path="/users/:id/verify/:token" element={<EmailVerify />} />
-                <Route path="/forgot-password" element={<ForgotPassword />}></Route>
-                <Route path="/reset_password/:id/:token" element={<ResetPassword />}></Route>
+
                 <Route path='*' element={<Page404 />} />
             </Routes>
 

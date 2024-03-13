@@ -1,8 +1,6 @@
 import React, { useState , useEffect } from 'react';
 import { Button, TextField, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import axios  from 'axios';
-import Swal from 'sweetalert2';
-
 import {
   MDBBtn,
   MDBContainer,
@@ -15,6 +13,9 @@ import {
   MDBFile
 }
   from 'mdb-react-ui-kit';
+
+  import Swal from 'sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
   import { Modal } from "react-bootstrap";
 import { Link } from 'react-router-dom'
   const styles = {
@@ -62,24 +63,25 @@ import { Link } from 'react-router-dom'
 
 
 
-function UpdateUserForm(props ) {
- 
-  const [email, setEmail] = useState(props.initialValues.email || '');
-  const [firstName, setFirstName] = useState(props.initialValues.firstName || '');
-  const [lastName, setLastName] = useState(props.initialValues.lastName || '');
-  const [level, setLevel] = useState(props.initialValues.level || '');  
-  const [first_image, setFirstImage] = useState(props.initialValues.image || '');
+function UpdateProfile(props ) {
 
-  const [image, setImage] = useState(null);
+    const [email, setEmail] = useState(props.initialValues?.email || '');
+    const [firstName, setFirstName] = useState(props.initialValues?.firstName || '');
+    const [lastName, setLastName] = useState(props.initialValues?.lastName || '');
+    const [level, setLevel] = useState(props.initialValues?.level || '');
+    const [first_image, setFirstImage] = useState(props.initialValues?.image || '');
+    const [image, setImage] = useState(props.initialValues?.image || '');
 
-  const [phoneNumber, setPhoneNumber] = useState(props.initialValues.phoneNumber || '');
-
-  const [role, setRole] = useState(props.initialValues.role || ''); // Set default role
+    const [phoneNumber, setPhoneNumber] = useState(props.initialValues?.phoneNumber || '');
+    const [role, setRole] = useState(props.initialValues?.role || '');
+    const [verified, setVerified] = useState(props.initialValues?.verified || false);
+    const [speciality, setSpeciality] = useState(props.initialValues?.specialite || []);
+    
   useEffect(() => {
     console.log('Initial Values:', props.initialValues);
   }, [props.initialValues]);
 
-  const userId = props.initialValues._id;
+  const userId = props.initialValues?._id;
   console.log('User ID for update:', userId);
   
 
@@ -110,9 +112,10 @@ function UpdateUserForm(props ) {
  const [showErrRole, setShowErrRole] = useState(false);
  const isNumber = (value) => !isNaN(Number(value));
 
- const [verified, setVerified] = useState(props.initialValues.verified || false);
-  const [speciality, setSpeciality] = useState(props.initialValues.specialite || []);
 
+
+
+ 
   const specialiteOptions = [
     'Robotique',
     'Peinture',
@@ -196,21 +199,22 @@ function UpdateUserForm(props ) {
         setErrRole('Please select a role');
         setShowErrRole(true);
       }
-    
+      if (!image) {
+        setErrImage('Please select a picture');
+        setShowErrImage(true);
+      }
       const payload = {
         id: userId, // Utilisez 'id' au lieu de '_id' si c'est le nom de la clé attendu par le serveur
-      // Utilisez 'id' au lieu de '_id' si c'est le nom de la clé attendu par le serveur
-        firstName ,
-        lastName ,
-        email,
-        role,
-        phoneNumber,
-        level,
-        speciality,
-        verified,
-        image  ,
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        role: role,
+        phoneNumber: phoneNumber,
+        level: level,
+        speciality: speciality,
+     
+        image : image ,
       };
-      console.log ('payloaddd', payload)
 
       axios.put('http://localhost:4000/user/users/updateUser', payload)
       .then(response => {
@@ -256,11 +260,11 @@ const setFileToBase = (file) => {
   }}
   return (
     
+    
     <Modal
     show={props.show}
     onHide={props.onHide}
   >
-  
 
     <Modal.Header closeButton></Modal.Header>
     <div className="modal-body space-y-20 pd-40">
@@ -421,20 +425,7 @@ const setFileToBase = (file) => {
         </>
       )}
 
-<MDBRow className='align-items-center pt-4 pb-3'>
-          <MDBCol md='3' className='checkbox'>
-            <h11 className="mb-0">Verified</h11>
-          </MDBCol>
-          <MDBCol md='9' className='pe-5'>
-            <input
-              type="checkbox"
-              id="verified"
-              checked={verified}
-              onChange={(e) => setVerified(e.target.checked)}
-            />
-            <label htmlFor="verified">Verified</label>
-          </MDBCol>
-        </MDBRow>
+
 
         
         <MDBRow className='align-items-center pt-4 pb-3'>
@@ -453,10 +444,23 @@ const setFileToBase = (file) => {
 
 </MDBRow>
 
+{showErrImage && (
+<MDBRow className='align-items-center pt-4 pb-3'>
+  <MDBCol md='3' className='ps-5'>
+    <h1 className="mb-0" style={{ color: 'red' }}>   </h1>
+  </MDBCol>
+  <MDBCol md='9' className='pe-5'>
+    <p style={{ color: 'red' }}>{errImage}</p>
+  </MDBCol>
+</MDBRow>)}
+
+
+                         
 
 <div style={styles.footer}>
 
 <Link to="#" onClick={() => handleSave()} className="button-popup" data-toggle="modal" data-target="#popup_bid_success" data-dismiss="modal" aria-label="Close"> Save </Link>
+
 
 </div>
 </MDBContainer>
@@ -465,4 +469,4 @@ const setFileToBase = (file) => {
   );
 }
 
-export default UpdateUserForm;
+export default UpdateProfile;

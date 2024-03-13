@@ -18,21 +18,14 @@ import {
   MDBInputGroup
 }
   from 'mdb-react-ui-kit';
-  import {
-    ref,
-    uploadBytes,
-    getDownloadURL,
-    listAll,
-    list,
-  } from "firebase/storage";
-  import { storage } from "../../firebase";
-  import { v4 } from "uuid";
+ 
 function Register() {
   const [cookies] = useCookies(["cookie-name"]);
   const navigate = useNavigate();
-  const [error, setError] = useState("");
-  const [msg, setMsg] = useState("");
-  const [errors, setErrors] = useState({})
+
+
+
+ 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
@@ -41,6 +34,7 @@ function Register() {
 
   const [phoneNumber, setPhoneNumber] = useState('');
   const [confirmPassword, setconfirmPassword] = useState('');
+
 
   const [role, setRole] = useState('student'); // Set default role
   //control saisie 
@@ -66,11 +60,12 @@ function Register() {
   const [showErrConfirmPassword, setShowErrConfirmPassword] = useState(false);
 
 
+
+
+
+
   const isNumber = (value) => !isNaN(Number(value));
 
-
-  const [imageUpload, setImageUpload] = useState(null);
-  const [imageUrls, setImageUrls] = useState([]);
 
 
   const isValidEmail = (value) => {
@@ -78,58 +73,13 @@ function Register() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(value);
   };
-const imagesListRef = ref(storage, "images/");
-  const uploadFile = () => {
-    if (imageUpload == null) return;
-    const imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
-    uploadBytes(imageRef, imageUpload).then((snapshot) => {
-      getDownloadURL(snapshot.ref).then((url) => {
-        setImageUrls((prev) => [...prev, url]);
-      });
-    });
-  };
-
-  useEffect(() => {
-    listAll(imagesListRef).then((response) => {
-      response.items.forEach((item) => {
-        getDownloadURL(item).then((url) => {
-          setImageUrls((prev) => [...prev, url]);
-        });
-      });
-    });
-  }, []);
 
 
+ 
 
-  useEffect(() => {
-    if (cookies.jwt) {
-      navigate("/");
-    }
-  }, [cookies, navigate]);
-
-  const [values, setValues] = useState({
-    firstName: '', lastName: '', email: '', password: '', role: 'student', phoneNumber: '', level: 'non precise level' ,    confirmPassword: '' // Include confirmPassword here
-
-    // Default role
-  }
-
-  );
-  const [errorFields, setErrorFields] = useState({});
-  console.log("Initial errorFields:", errorFields);
-
-
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setValues({
-      ...values, [name]: value
-    })
-  }
   const handleSubmit = async (event) => {
 
-
     event.preventDefault();
-
 
     if (!isNumber(phoneNumber)) {
       setErrPhoneNumber('Ensure phone number is a number');
@@ -180,42 +130,44 @@ const imagesListRef = ref(storage, "images/");
       setErrPhoneNumber('Please fill in phone number');
       setShowErrPhoneNumber(true);
     }
-    if (!values.confirmPassword) {
+    if (!confirmPassword) {
       setErrConfirmPassword('Please confirm your password');
       setShowErrConfirmPassword(true);
-    } else if (values.confirmPassword !== values.password) {
+    } else if (confirmPassword !== password) {
       setErrConfirmPassword('Passwords do not match');
       setShowErrConfirmPassword(true);
     }
 
+ 
 
 
 
     try {
-      console.log("Sending request with values:", values);
-
-      const url = "http://localhost:4000/user/users";
-      const { values: res } = await axios.post(url, values);
+      const payload = { email, password, firstName, lastName, phoneNumber, level, confirmPassword };
+      console.log(payload);
+    
+      await axios.post("http://localhost:4000/user/users", JSON.stringify(payload), {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+    
       Swal.fire({
         icon: 'success',
         title: 'Registration Successful!',
         text: 'Please verify your email.',
       });
-      navigate('/login')
-
+      navigate('/login');
     } catch (error) {
-      if (error.response && error.response.status === 400) {
-        // Affichez le message d'erreur du serveur, s'il y en a un
-        console.error("Erreur de validation côté serveur :", error.response.data.message);
-        console.error('Error during form submission:', error);
-
-        
-      } else {
-        console.error("Erreur inattendue lors de la soumission du formulaire :", error.message);
-      }
+      console.error('There was a problem with the fetch operation:', error);
+      Swal.fire({
+        title: 'Error saving User !',
+        icon: 'warning',
+        showConfirmButton: false,
+        timer: 1500, // Close after 1.5 seconds
+      });
     }
-
-  };
+  }    
 
   return (
     <div>
@@ -248,12 +200,11 @@ const imagesListRef = ref(storage, "images/");
                     name="firstName"
                     tabIndex="3"
                     aria-required="true"
-
+value={firstName}
                     type="text"
                     placeholder="First Name"
-                    value={values.firstName}
-                    onChange={(e) => { setValues({ ...values, firstName: e.target.value }); setErrFirstName('') }}
-                  />
+                    onChange={(e) => {setFirstName(e.target.value)   ; setErrFirstName ('')} }
+                    />
                 </fieldset>
                 {showerrFirstName && (
                   <div className='error-message'>
@@ -266,13 +217,13 @@ const imagesListRef = ref(storage, "images/");
                     name="lastName"
                     tabIndex="4"
                     aria-required="true"
+                    value={lastName}
 
                     type="text"
                     autoComplete='off'
 
                     placeholder="Last Name"
-                    value={values.lastName}
-                    onChange={(e) => { setValues({ ...values, lastName: e.target.value }); setErrLastName(''); }}
+                    onChange={(e) => {setLastName(e.target.value)   ; setErrLastName ('')}}
                   />
 
                 </fieldset>
@@ -287,11 +238,11 @@ const imagesListRef = ref(storage, "images/");
                     name="phoneNumber"
                     tabIndex="4"
                     aria-required="true"
+                    value={phoneNumber}
 
                     type="text"
                     placeholder="phoneNumber"
-                    value={values.phoneNumber}
-                    onChange={(e) => { setValues({ ...values, phoneNumber: e.target.value }); setErrPhoneNumber(''); }}
+                    onChange={(e) => {setPhoneNumber(e.target.value) ; setErrPhoneNumber ('')}}
                   />
                 </fieldset>
 
@@ -306,8 +257,7 @@ const imagesListRef = ref(storage, "images/");
                     tabIndex="5"
                     aria-required="true"
 
-                    value={values.level}
-                    onChange={(e) => handleInputChange(e, 'level')}
+                    onChange={(e) => setLevel(e.target.value)}
                   >
                     <option value="non precise level">non precise level </option>
                     <option value="gradelevel1">gradelevel1</option>
@@ -326,11 +276,11 @@ const imagesListRef = ref(storage, "images/");
                     name="email"
                     tabIndex="1"
                     aria-required="true"
+                    value={email}
 
                     type="text"
                     placeholder="Email"
-                    value={values.email}
-                    onChange={(e) => { handleInputChange(e, 'email'); setErrPhoneNumber(''); }}
+                    onChange={(e) => {setEmail(e.target.value); setErrEmail ('')}}
                   />
                   {showerrEmail && (
                     <div className='error-message'>
@@ -345,11 +295,11 @@ const imagesListRef = ref(storage, "images/");
                     name="password"
                     tabIndex="2"
                     aria-required="true"
+                    value={password}
 
                     type="password"
                     placeholder="Password"
-                    value={values.password}
-                    onChange={(e) => { setValues({ ...values, password: e.target.value }); setErrPassword(''); }}
+                    onChange={(e) => {setPassword(e.target.value); setErrPassword ('')}}
                   />
                   {showerrPassword && (
                     <div className='error-message'>
@@ -364,11 +314,12 @@ const imagesListRef = ref(storage, "images/");
     id="confirmpassword" // Step 2
     name="confirmpassword" // Step 2
     tabIndex="3"
+    value={confirmPassword}
+
     aria-required="true"
     type="password"
     placeholder="Confirm Password"
-    value={values.confirmPassword} // Step 2
-    onChange={(e) => { setValues({ ...values, confirmPassword: e.target.value }); setErrConfirmPassword('');  }}
+    onChange={(e) =>{ setconfirmPassword(e.target.value) ; setErrConfirmPassword ('')}}
 
   
   />
@@ -378,6 +329,9 @@ const imagesListRef = ref(storage, "images/");
     </div>
   )}
 </fieldset>
+
+
+
 
 
                 <div className="forgot-pass-wrap">

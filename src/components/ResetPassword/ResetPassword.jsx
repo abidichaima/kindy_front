@@ -2,10 +2,28 @@ import React from 'react'
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from 'axios'
-import styles from "./styles.module.css";
-
-
 function ResetPassword() {
+
+  const styles=  {
+    
+    footer: {
+      textAlign: 'right',
+      marginTop: '1000px',
+      display: 'block' ,
+  width: '50% ', 
+
+      },
+
+    formgroup: {
+      textAlign: 'right',
+      marginTop: '200px',
+      weight : '100px'
+      },
+  
+      header :{
+        marginTop : '300px'
+      }
+  }
     const [password, setPassword] = useState()
     const navigate = useNavigate()
     const {id, token} = useParams()
@@ -24,7 +42,8 @@ function ResetPassword() {
   
 
     return(
-  
+      <div style={styles.header}>
+
       <div className="center">
       <div className="container">
         <div className="row">
@@ -34,7 +53,7 @@ function ResetPassword() {
         <h6>Reset Password</h6>
         <br/>
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
+        <div className="formgroup" style={{ maxWidth: '500px', margin: '0 auto' }}>
             <label htmlFor="email">
             </label>
             <input
@@ -54,10 +73,16 @@ function ResetPassword() {
           </form>
           </div>
           </div> 
+
+          <div style={styles.footer}>
+
+</div>          </div> 
+
+
           </div> 
           </div> 
           </div>
-    )
+)       
 }
 
 export default ResetPassword;

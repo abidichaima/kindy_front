@@ -4,8 +4,19 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios'
 import Swal from 'sweetalert2';
 
-
 function ForgotPassword() {
+
+  const styles=  {
+
+    footer: {
+      textAlign: 'right',
+      marginTop: '400px',
+      },
+
+      header :{
+        marginTop : '200px'
+      }
+  }
     const [email, setEmail] = useState()
     const navigate = useNavigate()
  
@@ -28,11 +39,14 @@ function ForgotPassword() {
 
     return(
 
-
+      <div style={styles.header}>
       
-        <div className="d-flex justify-content-center align-items-center bg-secondary vh-100">
-      <div className="bg-white p-3 rounded w-25">
-      <div className="row justify-content-center">
+      <div className="login-page">
+      <div className="container">
+        <div className="row">
+          <div className="col-md-6 mx-auto">
+          <div className="row justify-content-center">
+
         <h6 className="heading">Forgot Password</h6> 
         </div>
         <form onSubmit={handleSubmit}>
@@ -57,10 +71,14 @@ function ForgotPassword() {
           </div>
           </form>
          
-     
+          <div style={styles.footer}>
+
+</div>
+</div>
+   </div>
     </div>
       </div>
-
+      </div>
     )
 }
 

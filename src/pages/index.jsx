@@ -13,7 +13,7 @@ import Explore04 from "./Explore04";
 import Faqs from "./Faqs";
 import HelpCenter from "./HelpCenter";
 import Home01 from "./Home01";
-
+import ShowUser from "./ShowUser";
 import ItemDetails01 from "./ItemDetails01";
 import ItemDetails02 from "./ItemDetails02";
 import LiveAutions01 from "./LiveAutions01";
@@ -25,8 +25,61 @@ import Wallet from "./Wallet";
 import ViewUser from "./viewUser";
 import ViewQuestion from "./viewQuestion";
 import Dash from "./Dash";  
-import EmailVerify from "../components/EmailVerify/EmailVerify";
 import Profile from "./Profile";
+import { useCookies } from "react-cookie";
+import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect } from 'react';
+import Cookies from 'js-cookie';
+
+function getUserInfoFromCookie() {
+  // Obtenez la valeur du cookie actuel (vous pouvez remplacer document.cookie par la méthode que vous utilisez pour récupérer les cookies)
+  var cookieValue = document.cookie.match(/(?:^|;) ?user=([^;]*)(?:;|$)/);
+
+  if (cookieValue) {
+    // Décodez la chaîne JSON
+    var decodedValue = decodeURIComponent(cookieValue[1].replace(/\+/g, ' '));
+
+    // Convertissez la chaîne JSON en objet JavaScript
+    var userObject = JSON.parse(decodedValue);
+
+    // Retournez l'objet utilisateur
+    return userObject;
+  } else {
+    // Retournez null si le cookie n'est pas trouvé
+    return null;
+  }
+}
+
+// Utilisez la fonction pour obtenir les informations de l'utilisateur
+var currentUser = getUserInfoFromCookie();
+
+// Vérifiez si les informations de l'utilisateur existent
+if (currentUser) {
+  // Affichez les informations de l'utilisateur
+  console.log("First Name:", currentUser.firstName);
+  console.log("Last Name:", currentUser.lastName);
+  console.log("Email:", currentUser.email);
+  console.log("Role:", currentUser.role);
+  console.log("Phone Number:", currentUser.phoneNumber);
+  console.log("Image:", currentUser.image);
+  console.log("Level:", currentUser.level);
+  console.log("Speciality:", currentUser.speciality);
+} else {
+  console.log("Les informations de l'utilisateur ne sont pas disponibles.");
+}
+
+const DashWrapper = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (currentUser.role === 'student' || currentUser.role === 'teacher') {
+      Cookies.remove('user');
+      navigate('/login');
+    }
+  }, [currentUser.role, navigate]);
+
+  return <Dash />;
+};
 
 const routes = [
   { path: '/', component: <Home01 />},
@@ -54,11 +107,13 @@ const routes = [
   { path: '/contact', component: <Contact />},
   { path: '/users', component: <ViewUser />},
   { path: '/question', component: <ViewQuestion />},
-  { path: '/dash', component: <Dash />},
+
+  { path: '/dash', component: <DashWrapper /> },
   { path: '/dashboard', component: <Dashboard />},
 
   { path: '/profile', component: <Profile />},
 
+  { path: '/showUser/:id', component: <ShowUser />},
 
 
 

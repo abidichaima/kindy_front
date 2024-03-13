@@ -65,7 +65,7 @@ function AddUserForm( props ) {
   const [specialite, setSpecialite] = useState([]);
 
   const [role, setRole] = useState('student'); // Set default role
-
+  const [image, setImage] = useState('');
  //control saisie 
  const [errEmail, setErrEmail] = useState('');
  const [showerrEmail, setShowerrEmail] = useState(false);
@@ -85,6 +85,9 @@ function AddUserForm( props ) {
  const [errPhoneNumber, setErrPhoneNumber] = useState('');
  const [showErrPhoneNumber, setShowErrPhoneNumber] = useState(false);
  
+ const [errimg, setErrimg] = useState('');
+ const [showerrimg, setShowerrimg] = useState(false);
+
  const [errRole, setErrRole] = useState('');
  const [showErrRole, setShowErrRole] = useState(false);
  const isNumber = (value) => !isNaN(Number(value));
@@ -183,9 +186,15 @@ function AddUserForm( props ) {
         setErrRole('Please select a role');
         setShowErrRole(true);
       }
+      if (!image) {
+        setErrimg('Please fill in all fields');
+        setShowerrimg(true)
+  
+  
+      } 
 
     const addUserEndpoint = "http://localhost:4000/user/users/addUser"; // Replace with your actual backend endpoint
-    
+
     fetch(addUserEndpoint, {
       method: 'POST',
       headers: {
@@ -196,34 +205,63 @@ function AddUserForm( props ) {
         password,
         firstName,
         lastName,
-        phoneNumber , 
-        level: 'non precise level', // Provide default value if empty
-        role: role || 'student', // Provide default value if empty
-        specialite
+        phoneNumber,
+        level: 'non precise level',
+        role: role || 'student',
+        specialite,
+        image,
       }),
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
-    })
-    .then(data => {
-      if (data.success) {
+    }
+    )
+
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        console.log(response); // Log the response
+
+
+        return response.json();
+      })
+      .then(data => {
+        console.log(data); 
+        // Log the data received from the server
+        if (data && data.user) {
+          Swal.fire({
+            title: 'User Saved!',
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1500, // Close after 1.5 seconds
+          });
+        } else {
+          throw new Error('Unexpected response format');
+        }
+      })
+      .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
         Swal.fire({
-          title: 'User Saved!',
-          icon: 'success',
+          title: 'Error saving User !',
+          icon: 'warning',
           showConfirmButton: false,
           timer: 1500, // Close after 1.5 seconds
-        });      }
-    })
-    .catch(error => {
-
-      console.error('There was a problem with the fetch operation:', error);
-      alert('Error saving user. Please try again.');
-    });
+        });
+      });
 
 };
+console.log('image',image); // Log the data received from the server
+
+const handleImage = (e) => {
+  const file = e.target.files[0];
+  setFileToBase(file);
+  console.log(file);
+  setErrimg('');
+}
+const setFileToBase = (file) => {
+  const reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onloadend = () => {
+    setImage(reader.result);
+  } }
 const handleModalClose = () => {
   setEmail('');
   setPassword('');
@@ -415,10 +453,36 @@ const handleModalClose = () => {
  </MDBCol>
 </MDBRow>
 
- 
 
 
 )}
+
+<MDBRow className='align-items-center pt-4 pb-3'>
+
+<MDBCol md='3' className='ps-5'>
+  <h11 className="mb-0">Image</h11>
+</MDBCol>
+
+<MDBCol md='9' className='pe-5'>
+  <img className="img-fluid" src={image} alt="" />
+  <MDBFile size='lg' id='customFile' onChange={handleImage} />
+
+
+</MDBCol>
+
+</MDBRow>
+
+{showerrimg && (
+<MDBRow className='align-items-center pt-4 pb-3'>
+  <MDBCol md='3' className='ps-5'>
+    <h1 className="mb-0" style={{ color: 'red' }}>   </h1>
+  </MDBCol>
+  <MDBCol md='9' className='pe-5'>
+    <p style={{ color: 'red' }}>{errimg}</p>
+  </MDBCol>
+</MDBRow>)}
+
+
 <div style={styles.footer}>
 
 <Link to="#"  onClick={handleSave} className="button-popup" data-toggle="modal" data-target="#popup_bid_success" data-dismiss="modal" aria-label="Close"> Save </Link>
