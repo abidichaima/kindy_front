@@ -135,16 +135,7 @@ return (
                                             <div className="row">
                                                 <div className="col-md-12">
                                                 <div className="tf-item-detail-inner">
-                                                        <div className="image">
-                                                        {currentUser.image && currentUser.image.url && (
-  <div>
-    <img src={currentUser.image.url} alt="" style={{ width: '500px', height: '400px' }} />
-  </div>
-)}
-
-{!currentUser.image && (
-  <p>no image</p>
-)}
+                                                       
 
                                                        <div className="content">
   <h2 className="title-detail"></h2>
@@ -252,7 +243,6 @@ onClick={() => {
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
                                         </div>
 
                                     </section>

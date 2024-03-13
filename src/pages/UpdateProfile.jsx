@@ -223,7 +223,7 @@ function UpdateProfile(props ) {
 
         Swal.fire({
           title: 'Success',
-          text: 'User updated successfully',
+          text: 'login again to see modifications ',
           icon: 'success',
           confirmButtonText: 'OK'
         });
