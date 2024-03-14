@@ -8,19 +8,48 @@ import img from '../assets/images/BATTERIE.jpg'
 //import img from '../assets/images/externe piano.jpg'
 //import { useNavigate } from "react-router-dom";
 //import avt from '../assets/images/logo1.png'
-
-
-
 import Swal from 'sweetalert2';
+
+
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import {Dialog, DialogContent,DialogTitle} from '@mui/material';
 import Modal from 'react-bootstrap/Modal';
 import Dashboard from './Dashboard';
 import { deleteQuestion, getAllquestions } from '../services/question';
 import CardModal from '../components/layouts/CardModal';
-import { addQuizz ,getAllquizzs} from '../services/quizz';
+import { addQuizz ,getAllquizzs,deleteQuizz} from '../services/quizz';
+import QuizzAdd from './QuizzAdd';
 
 function ViewQuizz(props) {
+
+  const DeleteConfirmation = async (id) => {
+    try {
+      const result = await Swal.fire({
+        title: 'Are you sure?',
+        text: 'You will not be able to recover this item!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Yes, delete it!'
+    });
+  
+      if (result.isConfirmed) {
+        
+        await deleteQuizz(id);
+        Swal.fire('Deleted!', 'Your item has been deleted.', 'success');
+      }
+
+    } catch (error) {
+      console.error('Error deleting item:', error);
+      Swal.fire(
+        'Error',
+        'Failed to delete the item.',
+        'error'
+      );
+    }
+  };
+
 const [addShow, setAddShow] = useState(false);
 const [updateShow, setUpdateShow] = useState(false);
 
@@ -139,7 +168,12 @@ return (
 
    
     <div>
-
+<QuizzAdd
+show={addShow}
+onHide={() => setAddShow(false)}
+        style={{ backgroundColor: 'white' }}
+   
+      />
         <section class="tf-page-title ">    
             <div class="tf-container">
                 <div class="row">
@@ -202,11 +236,13 @@ Add</button>
 
   <div className="table-ranking top">
     <div className="title-ranking">
-      <div className="col-rankingg"><Link to="#">Titre</Link></div>
+      <div className="col-rankingg"><Link to="#">Title</Link></div>
       <div className="col-rankingg"><Link to="#">Description</Link></div>
-      <div className="col-rankingg"><Link to="#">Duree</Link></div>
-      <div className="col-rankingg"><Link to="#">Date debut</Link></div>
-      <div className="col-rankingg"><Link to="#">Date fin</Link></div>
+      <div className="col-rankingg"><Link to="#">Duration</Link></div>
+      <div className="col-rankingg"><Link to="#">Level</Link></div>
+
+      <div className="col-rankingg"><Link to="#">Start Date </Link></div>
+      <div className="col-rankingg"><Link to="#">End Date </Link></div>
 
     </div>
   </div>
@@ -219,6 +255,8 @@ Add</button>
         <div className="col-rankingg">{item.titre}</div>
         <div className="col-rankingg">{item.description}</div>
         <div className="col-rankingg">{item.duree}</div>
+        <div className="col-rankingg">{item.level}</div>
+
         <div className="col-rankingg">{item.dateDebut}</div>
         <div className="col-rankingg">{item.dateFin}</div>
 
@@ -239,7 +277,7 @@ Add</button>
 </button>
 
 
-
+<Link to={`/quizzDetail/${item._id}`}>
 <button type='submit'   style={btnshow}>
 <svg
   viewBox="0 0 24 24"
@@ -251,8 +289,8 @@ Add</button>
   <path d="M12 9a3.02 3.02 0 00-3 3c0 1.642 1.358 3 3 3 1.641 0 3-1.358 3-3 0-1.641-1.359-3-3-3z" />
   <path d="M12 5c-7.633 0-9.927 6.617-9.948 6.684L1.946 12l.105.316C2.073 12.383 4.367 19 12 19s9.927-6.617 9.948-6.684l.106-.316-.105-.316C21.927 11.617 19.633 5 12 5zm0 12c-5.351 0-7.424-3.846-7.926-5C4.578 10.842 6.652 7 12 7c5.351 0 7.424 3.846 7.926 5-.504 1.158-2.578 5-7.926 5z" />
 </svg>
-</button>
-<button   style={btndelete}  >
+</button></Link>
+<button   style={btndelete}  onClick={() => DeleteConfirmation(item._id)}>
 <svg
   viewBox="0 0 1024 1024"
   fill="currentColor"

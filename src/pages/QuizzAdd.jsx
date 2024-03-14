@@ -6,6 +6,9 @@ import axios from 'axios';
 import { Modal } from "react-bootstrap";
 import Swal from 'sweetalert2';
 import {  getAllquestions } from '../services/question';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import Select from 'react-select'; 
 
 import {
   MDBBtn,
@@ -66,94 +69,62 @@ function QuizzAdd(props) {
   const [showResp, setshowResp] = useState(false);
   
   
-   const [questionItem, setQuestionItem] = useState({
-     ennonce: "",
-     image: "",
-     responsesData: [{ content: "", isCorrect: false }]
+   const [quizzItem, setquizzItem] = useState({
+     titre: "",
+     description: "",
+     duree: "",
+     dateDebut: "",
+     dateFin: "",
+     questions:"",
    });
-   const [image, setImage] = useState("");
-   const navigate = useNavigate();
- 
-   const previewFiles = (file) => {
-     const reader = new FileReader();
-     reader.readAsDataURL(file);
-     reader.onloadend = () => {
-       setImage(reader.result);
-     }
-   }
- 
-   const handleChangeFile = (e) => {
-     const image = e.target.files[0];
-     setImage(image);
-     previewFiles(image);
-   };
- 
-   const onValueChange = (e, index) => {
-     const { name, value } = e.currentTarget;
-     const updatedResponses = [...questionItem.responsesData];
-     updatedResponses[index][name] = name === "isCorrect" ? value === "true" : value;
- 
-     setQuestionItem({ ...questionItem, responsesData: updatedResponses });
-   };
- 
-   const handleAddResponse = () => {
-     setQuestionItem({
-       ...questionItem,
-       responsesData: [...questionItem.responsesData, { content: "", isCorrect: false }]
-     });
-   };
- 
-   const url = "http://localhost:4000/question";
- 
-   const AddQuestion = async (e) => {
-     e.preventDefault();
-     if (!questionItem.ennonce  ) {
-       setEnnonceErr('Please fill in the question');
-       setshowErrE(true) }
-       if (!questionItem.responsesData.content) {
-         setrespErr('Please fill in the responses');
-         setshowResp(true) }
-       
- 
-     try {
-       const formData = new FormData();
-       formData.append("ennonce", questionItem.ennonce);
-       if (image==="") {
-         console.log("none");
-       }
-       else{
-        formData.append("image", image);
-       }
-       formData.append("responsesData", JSON.stringify(questionItem.responsesData));
-      // console.log(formData.);
-     /* formData.forEach(function(value, key){
-       console.log(key + ': ' + value);
-   });  */
-       const result = await axios.post(`${url}/add`, formData, {
-         headers: {
-           'Content-Type': 'multipart/form-data'
-         }
-       });
-   
-       if (result.status === 201) {
-        Swal.fire({
-          icon: 'success',
-          title: 'Question added successfully!',
-          showConfirmButton: false,
-          timer: 1500 
-        }).then(() => {
-          if (props.onHide) {
-            props.onHide();
-          }
-        });
-               }
-     } catch (error) {
-       console.log(error);
-     }
-   };
   
-  const handleModalClose = () => {
-    //setTitle('');
+   const [questionList, setQuestionList] = useState([]);
+  const [selectedOptions, setSelectedOptions] = useState([]);
+
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const questionResult = await getAllquestions();
+        setQuestionList(questionResult.data.map(question => ({
+          label: question.ennonce, 
+          value: question._id 
+        })));
+      } catch (error) {
+        console.error('Error fetching questions:', error);
+      }
+    };
+
+    fetchQuestions();
+  }, []);
+
+  function handleSelect(data) {
+    setSelectedOptions(data);
+    setquizzItem(quizzItem => ({
+      ...quizzItem,
+      questions: data
+    }));
+  }
+   const navigate = useNavigate();
+
+   const onValueChange = (e, index) => {
+     const { name, value } = e.currentTarget; 
+     setquizzItem({ ...quizzItem });
+   };
+ 
+  
+ 
+  
+  
+   const handleModalClose = () => {
+    setquizzItem({
+      titre: "",
+      description: "",
+      duree: "",
+      dateDebut: "",
+      dateFin: "",
+      level: "",
+      questions:"",
+    });
     
 
     if (props.onHide) {
@@ -161,10 +132,61 @@ function QuizzAdd(props) {
     }
   };
 
+  const customStyles = {
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.isSelected ? '#007bff' : 'white',
+      color: state.isSelected ? 'white' : 'black',
+    }),
+    control: (provided) => ({
+      ...provided,
+      border: '1px solid #ced4da',
+    }),
+  };
+  const url = "http://localhost:4000/quizz";
+ 
+   const AddQuizz = async (e) => {
+     e.preventDefault();
+     
+     try {
+      const formData = new FormData();
+       formData.append("titre", quizzItem.titre);
+       formData.append("description", quizzItem.description);
+       formData.append("duree", quizzItem.duree);
+       formData.append("dateDebut", quizzItem.dateDebut);
+       formData.append("dateFin", quizzItem.dateFin);
+       formData.append("level", quizzItem.level);
+       formData.append("questions", JSON.stringify(quizzItem.questions));
+      // console.log(formData.);
+      formData.forEach(function(value, key){
+       console.log(key + ': ' + value);
+   });  
+console.log("dddd",quizzItem);
+       const result = await axios.post(`${url}/add`, quizzItem);
+       console.log("dddd222",result);
+
+       if (result.status === 201) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Quizz added successfully!',
+          showConfirmButton: false,
+          timer: 1500 
+        }).then(() => {
+          if (props.onHide) {
+           handleModalClose();
+          }
+        });
+               }
+     } catch (error) {
+       console.log(error);
+     }
+   };
+   
   return (
 
     <Modal style={styles.popup}
-    show={props.show} onHide={props.onHide}
+    show={props.show}
+    onHide={handleModalClose}
     >
 
       <Modal.Header closeButton></Modal.Header>
@@ -175,74 +197,115 @@ function QuizzAdd(props) {
 
           <MDBRow className='align-items-center pt-4 pb-3'>
             <MDBCol md='3' className='ps-5 '>
-              <h11 className="mb-0">Ennonce</h11>
+              <h11 className="mb-0">Titre</h11>
             </MDBCol>
             <MDBCol md='9' className='pe-5'>
-              <MDBInput size='lg' name='ennonce' type='text' value={questionItem.ennonce}
+              <MDBInput size='lg' name='titre' type='text' value={quizzItem.titre}
                 onChange={(e) => {
-                    setQuestionItem({ ...questionItem, ennonce: e.target.value });
+                    setquizzItem({ ...quizzItem, titre: e.target.value });
                    
                 }} />
             </MDBCol>
           </MDBRow>
-
-    
-     <MDBRow className='align-items-center pt-4 pb-3'>
+          <MDBRow className='align-items-center pt-4 pb-3'>
             <MDBCol md='3' className='ps-5 '>
-              <h11 className="mb-0">Ennonce</h11>
+              <h11 className="mb-0">Description</h11>
             </MDBCol>
             <MDBCol md='9' className='pe-5'>
-              <MDBInput size='lg'  name="image" type='file'  accept="image/*"
-             onChange={handleChangeFile}
-                       />
-            </MDBCol>
-          </MDBRow>
-          <img src={image}   />
-         
-          <Button
-        variant="contained"
-        onClick={handleAddResponse}
-        style={{ marginBottom: '10px' }}
-      >
-        Add Response
-      </Button>
-      {questionItem.responsesData.map((response, index) => (
-        <div key={index}>
-            <MDBRow className='align-items-center pt-4 pb-3'>
-            <MDBCol md='3' className='ps-5 '>
-              <h11 className="mb-0">Response</h11>
-            </MDBCol>
-            <MDBCol md='9' className='pe-5'>
-              <MDBInput size='lg' name="content" type='text' value={response.content}
-                 onChange={(e) => { 
-                  onValueChange(e, index); 
-                  setrespErr(''); 
+              <MDBInput size='lg' name='description' type='text' value={quizzItem.description}
+                onChange={(e) => {
+                  setquizzItem({ ...quizzItem, description: e.target.value });
+                   
                 }} />
             </MDBCol>
           </MDBRow>
-          {showResp && (
-            <MDBRow className='align-items-center pt-4 pb-3'>
-              <MDBCol md='3' className='ps-5'>
-                <h1 className="mb-0" style={{ color: 'red' }}>   </h1>
-              </MDBCol>
-              <MDBCol md='9' className='pe-5'>
-                <p style={{ color: 'red' }}>{respErr}</p>
-              </MDBCol>
-            </MDBRow>)}
-          <select
-    className="form-select form-select-lg"
-    style={{ padding: '0.5rem', borderRadius: '0.3rem', border: '1px solid #ced4da' }}
-    value={response.isCorrect ? "true" : "false"}
-    onChange={(e) => onValueChange(e, index)}
-    name="isCorrect"
-  >
-    <option value="true">True</option>
-    <option value="false">False</option>
-  </select>
-        </div>
-      ))} 
+          <MDBRow className='align-items-center pt-4 pb-3'>
+            <MDBCol md='3' className='ps-5 '>
+              <h11 className="mb-0">Duree</h11>
+            </MDBCol>
+            <MDBCol md='9' className='pe-5'>
+              <MDBInput size='lg' name='duree' type='text' value={quizzItem.duree}
+                onChange={(e) => {
+                  setquizzItem({ ...quizzItem, duree: e.target.value });
+                   
+                }} />
+            </MDBCol>
+          </MDBRow>
+          <MDBRow className='align-items-center pt-4 pb-3'>
+            <MDBCol md='3' className='ps-5 '>
+              <h11 className="mb-0">Level</h11>
+            </MDBCol>
+            <MDBCol md='9' className='pe-5'>
+              <MDBInput size='lg' name='level' type='text' value={quizzItem.level}
+                onChange={(e) => {
+                  setquizzItem({ ...quizzItem, level: e.target.value });
+                   
+                }} />
+            </MDBCol>
+          </MDBRow>
+          <MDBRow className='align-items-center pt-4 pb-3'>
+            <MDBCol md='3' className='ps-5 '>
+              <h11 className="mb-0">Date Debut</h11>
+            </MDBCol>
+            <MDBCol md='9' className='pe-5'>
+            <DatePicker
+      selected={quizzItem.dateDebut} 
+      onChange={(dateD) => { 
+        setquizzItem({ ...quizzItem, dateDebut: dateD });
+      }}
+     
+     name='dateDebut'
+        showTimeSelect
+        timeFormat="HH:mm"
+        timeIntervals={15}
+        timeCaption="Time"
+        calendarClassName="custom-calendar"
+        dateFormat="MMMM d, yyyy h:mm aa"
+      />
+    
+            </MDBCol>
+          </MDBRow>
+          <MDBRow className='align-items-center pt-4 pb-3'>
+            <MDBCol md='3' className='ps-5 '>
+              <h11 className="mb-0">Date Fin</h11>
+            </MDBCol>
+            <MDBCol md='9' className='pe-5'>
+            <DatePicker
+      selected={quizzItem.dateFin} 
+      onChange={(dateF) => { 
+        setquizzItem({ ...quizzItem, dateFin: dateF });
+      }}
+      name='dateFin'
+      showTimeSelect
+        timeFormat="HH:mm"
+        timeIntervals={15}
+        timeCaption="Time"
+        dateFormat="MMMM d, yyyy h:mm aa"
+    />
+            </MDBCol>
+          </MDBRow>
+
+
+    
+    
+          <div className="app">
+      <h2>Choose your questions</h2>
+      <div className="dropdown-container">
+        <Select
+          styles={customStyles}
+          options={questionList}
+          placeholder="Select questions"
+          value={selectedOptions}
+          onChange={handleSelect}
+          isSearchable={true}
+          isMulti
+        />
+      </div>
+    </div>
+          
+    
           <div style={styles.footer}>
-  <button onClick={AddQuestion} className="button-popup">Save</button>
+  <button  className="button-popup" onClick={AddQuizz}>Save</button>
 </div>
         </MDBContainer>
       </div>

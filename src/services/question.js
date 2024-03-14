@@ -4,6 +4,10 @@ const url = "http://localhost:4000/question";
 export const getAllquestions = async () => {   
     return await axios.get(`${url}/showall`);   
 };
+const urlUser = "http://localhost:4000/users";
+export const getuser = async (id) => {   
+    return await axios.get(`${urlUser}/${id}`);   
+};
 export const addQuestion = async (formData) => {
   return await axios.post(`${url}/add`, formData, {
       headers: {

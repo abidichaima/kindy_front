@@ -26,6 +26,11 @@ import ViewUser from "./viewUser";
 import ViewQuestion from "./ViewQuestion"
 import Dash from "./Dash";  
 import ViewQuizz from "./ViewQuizz";
+import Quizz from "./QuizzComp";
+import QuizzComp from "./QuizzComp";
+import Profile from "./profile";
+import QuestionDetail from "./QuestionDetail";
+import QuizzDetail from "./QuizzDetail";
 
 const routes = [
   { path: '/', component: <Home01 />},
@@ -56,6 +61,12 @@ const routes = [
   { path: '/dash', component: <Dash />},
   { path: '/dashboard', component: <Dashboard />},
   { path: '/quizz', component: <ViewQuizz/>},
+  { path: '/test', component: <QuizzComp/>},
+  { path: '/profile', component: <Profile/>},
+  { path: '/questionDetail/:id', component: <QuestionDetail />},
+  { path: '/quizzDetail/:id', component: <QuizzDetail />},
+
+
 
 
 

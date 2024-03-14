@@ -9,7 +9,7 @@ export const addQuizz = async (formData) => {
   });
   
 };
-export const deleteQuestion = async (id) => {
+export const deleteQuizz = async (id) => {
  return await axios.delete(`${url}/delete/${id}`);     
  };
  export const editQuestion = async (id, question) => {

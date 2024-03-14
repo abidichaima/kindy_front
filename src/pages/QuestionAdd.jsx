@@ -110,7 +110,7 @@ function QuestionAdd(props) {
      if (!questionItem.ennonce  ) {
        setEnnonceErr('Please fill in the question');
        setshowErrE(true) }
-       if (!questionItem.responsesData.content) {
+     if (!questionItem.responsesData.content) {
          setrespErr('Please fill in the responses');
          setshowResp(true) }
        
@@ -143,17 +143,22 @@ function QuestionAdd(props) {
           timer: 1500 
         }).then(() => {
           if (props.onHide) {
-            props.onHide();
+            handleModalClose();
           }
+          navigate('/question'); // Correction : utilisez la fonction navigate correctement
         });
-               }
+      }
      } catch (error) {
        console.log(error);
      }
    };
   
   const handleModalClose = () => {
-    //setTitle('');
+    setQuestionItem({
+      ennonce: "",
+      image: "",
+      responsesData: [{ content: "", isCorrect: false }]
+    });
     
 
     if (props.onHide) {
@@ -164,8 +169,10 @@ function QuestionAdd(props) {
   return (
 
     <Modal style={styles.popup}
-    show={props.show} onHide={props.onHide}
+      show={props.show}
+      onHide={handleModalClose}
     >
+    
 
       <Modal.Header closeButton></Modal.Header>
       <div className="modal-body space-y-20 pd-40">
@@ -201,12 +208,12 @@ function QuestionAdd(props) {
               <h11 className="mb-0">Ennonce</h11>
             </MDBCol>
             <MDBCol md='9' className='pe-5'>
-              <MDBInput size='lg'  name="image" type='file'  accept="image/*"
+              <MDBInput size='lg' className="img-fluid" name="image" type='file' src={image}  accept="image/*"
              onChange={handleChangeFile}
                        />
             </MDBCol>
           </MDBRow>
-          <img src={image}   />
+        
          
           <Button
         variant="contained"

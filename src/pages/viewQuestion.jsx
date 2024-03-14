@@ -185,8 +185,8 @@ return (
    
     <div>
 <QuestionAdd
-show={addShow}
-onHide={() => setAddShow(false)}
+ show={addShow}
+ onHide={() => setAddShow(false)}
         style={{ backgroundColor: 'white' }}
    
       />
@@ -264,7 +264,9 @@ Add</button>
     {questionList.slice(startIndex, endIndex).map((item, index) => (
       <div className="content-ranking" key={index}> 
         <div className="col-rankingg">{item.ennonce}</div>
-        <div className="col-rankingg"> <img src={item.image.url} alt="Cloudinary Image" /></div>
+        <div className="col-rankingg">  {item.image && item.image.url &&
+    <img src={item.image.url} alt="Cloudinary Image" />
+  }</div>
         <button type='submit'  style={btnupdate} onClick={() => {
                       handleOpenPopupUp(item);
                                     setUpdateShow(true);
@@ -287,7 +289,7 @@ Add</button>
                                   />
                                 )}
 
-
+<Link to={`/questionDetail/${item._id}`}>
 <button type='submit'   style={btnshow}>
 <svg
   viewBox="0 0 24 24"
@@ -300,6 +302,7 @@ Add</button>
   <path d="M12 5c-7.633 0-9.927 6.617-9.948 6.684L1.946 12l.105.316C2.073 12.383 4.367 19 12 19s9.927-6.617 9.948-6.684l.106-.316-.105-.316C21.927 11.617 19.633 5 12 5zm0 12c-5.351 0-7.424-3.846-7.926-5C4.578 10.842 6.652 7 12 7c5.351 0 7.424 3.846 7.926 5-.504 1.158-2.578 5-7.926 5z" />
 </svg>
 </button>
+</Link>
 <button   style={btndelete} onClick={() => DeleteConfirmation(item._id)} >
 <svg
   viewBox="0 0 1024 1024"
