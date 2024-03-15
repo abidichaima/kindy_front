@@ -47,8 +47,8 @@ const Header = () => {
                                 <div id="site-logo" className="clearfix">
                                     <div id="site-logo-inner">
                                         <Link to="/" rel="home" className="main-logo">
-                                            <img id="logo_header" className='logo-dark' src={logo} alt="Binasea" />
-                                            <img id="logo_header" className='logo-light' src={logo} alt="Binasea" />
+                                            <img id="logo_header" className='logo-dark' src={logo} alt="Binasea" style={{ width: '70px', height: '70px' }} />
+                                            <img id="logo_header" className='logo-light' src={logo} alt="Binasea" style={{ width: '70px', height: '70px' }} />
                                         </Link>
                                     </div>
                                 </div>

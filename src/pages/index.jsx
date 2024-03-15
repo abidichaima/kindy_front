@@ -30,6 +30,9 @@ import { useCookies } from "react-cookie";
 import { Link, useNavigate } from "react-router-dom";
 import React, { useEffect } from 'react';
 import Cookies from 'js-cookie';
+import ViewLesson from "./viewLesson";
+import ViewCalendar from "./ViewCalendar";
+import './index.css';
 
 function getUserInfoFromCookie() {
   // Obtenez la valeur du cookie actuel (vous pouvez remplacer document.cookie par la méthode que vous utilisez pour récupérer les cookies)
@@ -115,6 +118,8 @@ const routes = [
 
   { path: '/showUser/:id', component: <ShowUser />},
 
+  { path: '/lesson', component: <ViewLesson />},
+  { path: '/calendar', component: <ViewCalendar />},
 
 
 ]
