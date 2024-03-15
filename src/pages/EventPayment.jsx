@@ -73,7 +73,7 @@ const CardModal = (props) => {
                 <p className="text-center sub-heading">How many tickets you want ?</p>
                 <p className="label-1">Enter quantity. <span className="color-popup">{(maxPeople-reserved)} available</span></p>
 
-                <input type="text" className="form-control" onChange={handleAmount}
+                <input type="number" className="form-control" onChange={handleAmount}
                 />
                 {showerr && <p className="label-1" style={{ color: 'red' }}>{err}</p>}
                 <br></br>
