@@ -31,7 +31,11 @@ import QuizzComp from "./QuizzComp";
 import Profile from "./profile";
 import QuestionDetail from "./QuestionDetail";
 import QuizzDetail from "./QuizzDetail";
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 
+import SelectedQuizz from "./SelectedQuizz";
+import ViewResult from "./ViewResult";
+import ResultDetail from "./ResultDetail";
 const routes = [
   { path: '/', component: <Home01 />},
 
@@ -65,7 +69,14 @@ const routes = [
   { path: '/profile', component: <Profile/>},
   { path: '/questionDetail/:id', component: <QuestionDetail />},
   { path: '/quizzDetail/:id', component: <QuizzDetail />},
+  { path: '/quizz/:id', component: <SelectedQuizz />},
+  { path: '/results', component: <ViewResult />},
+  { path: '/resultDetail/:id', component: <ResultDetail />},
 
+  
+
+
+  
 
 
 

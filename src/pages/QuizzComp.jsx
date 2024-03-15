@@ -9,15 +9,18 @@ import img from '../assets/images/BATTERIE.jpg'
 import { getuser } from '../services/question';
 import SideProfile from './SideProfile';
 import { duration } from '@mui/material';
-import { Grid, Typography } from '@material-ui/core';
-
+import axios from 'axios';
 function QuizzComp() {
+  const [questionResponses, setQuestionResponses] = useState([]);
+  const [quizResults, setQuizResults] = useState([]);
   const [selectedQuiz, setSelectedQuiz] = useState(null);
   const [showQuiz, setShowQuiz] = useState(false);  
   const [user,setuser] = useState([]);
   const [quizzList, setQuizzList] = useState([]);
-  const [quizDuration, setQuizDuration] = useState(60);
+  const [quizDuration, setQuizDuration] = useState();
+  const [score, setScore] = useState();
 
+  const [quizResult, setQuizResult] = useState();
   useEffect(() => {
     const fetchUser = async () => {
         const userResult = await getuser("65f104d40b866b69b10b9552"); 
@@ -30,16 +33,19 @@ function QuizzComp() {
     const fetchQuizzes = async () => {
       try {
         const quizzResult = await getAllquizzs();
-        setQuizzList(quizzResult.data);
+        const filteredQuizzes = quizzResult.data.filter(quiz => quiz.level === user.level);
+        setQuizzList(filteredQuizzes);
+        console.log(quizDuration);
       } catch (error) {
         console.error('Error fetching quizzes:', error);
       }
     };
-
+  
     fetchQuizzes();
-  }, []);
+  }, [user.level, quizDuration]);
 
   const handleStartQuiz = (quiz) => {
+    // Vérifier si un quiz est sélectionné
     if (quiz) {
       const currentDate = new Date();
       const startDate = new Date(quiz.dateDebut);
@@ -47,24 +53,78 @@ function QuizzComp() {
     
       if (currentDate >= startDate && currentDate <= endDate) {
         setSelectedQuiz(quiz);
+        setuser(user);
         setShowQuiz(true);
+        setQuizDuration(quiz.duree);
+        
       } else {
         alert('Le quiz n\'est pas encore disponible ou a expiré.');
       }
     }
   };
+  const handleQuestionSubmit = (response) => {
+    setQuestionResponses(prevResponses => [...prevResponses, response]);
+    
+  };
+  const sendQuizResult = async (quizResult) => {
+    try {
+      const response = await axios.post('http://localhost:4000/result/add', quizResult, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      console.log('Réponse de la requête POST:', response.data);
+    } catch (error) {
+      console.error('Erreur lors de l\'envoi de la requête POST:', error);
+    }
+  };
+  
+  const handleQuizCompletion = (result) => {
+    console.log("result", result);
+    // Créer un objet contenant les informations du quiz
+    const quizResult = {
+      userId: result.questions[0].userId._id,
+      quizId: result.questions[0].quizId._id,
+      responses: questionResponses,
+      score: result.correctPoints,
+    };
+    console.log("resultapressss", quizResult);
+    sendQuizResult(quizResult);
+  };
+const generateQuiz = () => {
+  // Vérifier si un quiz est sélectionné
+  if (!selectedQuiz) return null;
 
-  const renderQuizItem = (quiz) => (
-    <Grid item key={quiz.id}>
-      <Link to="#" onClick={() => handleStartQuiz(quiz)}>
-        {/* Replace the icon below with your desired icon component */}
-        <i className="material-icons">assessment</i>
-        <Typography>{quiz.titre}</Typography>
-      </Link>
-    </Grid>
-  );
+  const quizR = selectedQuiz;// Récupérer l'ID du quiz sélectionné
+  const userR = user; // Récupérer l'ID de l'utilisateur
 
+  return {
+    quizTitle: selectedQuiz.titre,
+    quizSynopsis: selectedQuiz.description,
+    questions: selectedQuiz.questions.map(question => {
+      const correctAnswerIndices = question.responses
+        .map((response, index) => response.isCorrect ? index+1 : null)
+        .filter(index => index !== null);
 
+      return {
+        userId: userR, // Ajouter l'ID de l'utilisateur à chaque question
+        quizId: quizR, // Ajouter l'ID du quiz à chaque question
+        questionId:question._id,
+        question: question.ennonce,
+        questionType: "text", 
+        answerSelectionType: "multiple",
+        imageUrl: question.image ? question.image.url : null,
+        answers: question.responses.map(response => response.content),
+        correctAnswer: correctAnswerIndices,
+        messageForCorrectAnswer: "Correct answer. Good job.",
+        messageForIncorrectAnswer: "Incorrect answer, Please try again.",
+        explanation: "Explanation goes here.",
+        point: "10"
+
+      };
+    }),
+  };
+};
   return (
     <div>
       <section className="tf-page-title ">    
@@ -103,7 +163,27 @@ function QuizzComp() {
                           <div className="tf-item-detail-inner">
                             <div className="content">
                               <h2 className="title-detail"></h2>
-                              
+                              {quizzList.map((quiz) => (
+                                <div key={quiz.id}>
+                                  <h3>{quiz.titre}</h3>
+                                  <p>{quiz.description}</p>
+                                  <Button onClick={() => handleStartQuiz(quiz)}>Commencer le quiz</Button>
+                                </div>
+                              ))}
+                              {showQuiz && generateQuiz() && <Quiz quiz={generateQuiz()}   shuffle
+        shuffleAnswer
+        showInstantFeedback
+        onComplete={handleQuizCompletion}
+        onQuestionSubmit={handleQuestionSubmit}
+        disableSynopsis
+        timer={quizDuration}
+       // allowPauseTimer
+       // continueTillCorrect
+    />}
+
+
+
+    
                             </div>
                           </div>
                         </div>
@@ -116,29 +196,10 @@ function QuizzComp() {
           </Tabs>
         </div>
       </section>
-      <section className="tf-dashboard tf-tab">
-        <div className="tf-container">
-          <Grid container spacing={3}>
-            <Grid item xs={3}>
-              {/* Your side profile component */}
-              <SideProfile />
-            </Grid>
-            <Grid item xs={9}>
-              <div className="dashboard-content inventory content-tab">
-                <section className="tf-item-detail">
-                  <div className="tf-container">
-                    <Grid container spacing={3}>
-                      {quizzList.map(renderQuizItem)}
-                    </Grid>
-                  </div>
-                </section>
-              </div>
-            </Grid>
-          </Grid>
-        </div>
-      </section>
     </div>
   );
 };
 
 export default QuizzComp;
+
+//<Link to={`/quizz/${quiz._id}`}> <Button >Commencer le quiz</Button></Link>
