@@ -1,14 +1,14 @@
 import React, { useState, useContext, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import PageTitle from '../components/pagetitle/PageTitle';
 import { Link } from 'react-router-dom';
 
 import CardModal from './EventPayment';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import EventIcon from '@material-ui/icons/Event';
-
+import { useAddCommentMutation, useFetchCommentsQuery } from '../pages/redux/slices/commentsApi';
+import Comment from './EventComment';
+import { useFetchEventsQuery, useGetEventIdQuery } from './redux/slices/eventsApi';
 
 EFrontDetail.propTypes = {
 
@@ -17,31 +17,54 @@ EFrontDetail.propTypes = {
 function EFrontDetail(props) {
 
     const { id } = useParams();
-    const [data, setData] = useState(null);
+
     const [user, setUser] = useState(1);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get(`http://localhost:4000/events/${id}`);
-                setData(response.data.event);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
-
-        if (id) {
-            fetchData();
-        }
-    }, [id]); // Ensure id is in the dependency array
-
-    console.log('Current data:', data);
-
-
     const [modalShow, setModalShow] = useState(false);
 
+    let { data: data } = useGetEventIdQuery(id) || {};
+    
+    
+    
+    
+    //COMMENT SECTION 
+    const [comment, setComment] = useState('');
+    let { data: comments } = useFetchCommentsQuery(id) || {};
+
+    let totals = comments?.map((item) => item?.replies?.length)
+    let ultimateTotal = totals?.reduce((acc, item) => acc + item, 0);
+    ultimateTotal = ultimateTotal + comments?.length;
+
+
+    // add comments 
+
+    const [addComment, { isLoading, isError, error }] = useAddCommentMutation();
+
+    const submitHandler = async (e) => {
+        e.preventDefault();
+        console.log('Event ID:', id);
+        console.log('Comment:', comment);
+
+        try {
+
+            await addComment({
+                eventId: id,
+                data: {
+                    eventId: id,
+                    username: 'admin',
+                    userid:'332068d295aa9aa915fad3ce',
+                    comment: comment
+                }
+            });
+            setComment('');
+        } catch (error) {
+            console.error('Error adding comment:', error);
+        }
+    };
+
+    //END COMMENT 
+
     if (!data) {
-        // Data is still loading
+
         return <p>Loading...</p>;
     }
     return (
@@ -55,11 +78,11 @@ function EFrontDetail(props) {
                         <div className="col-md-12">
                             <div className="tf-item-detail-inner">
                                 <div className="image">
-                                    <img src={data.image.url} alt="Binasea" style={{ width: '800px', height: '700px' }} />                                                        </div>
+                                    <img src={data.event.image.url} alt="Binasea" style={{ width: '800px', height: '700px' }} />                                                        </div>
                                 <div className="content">
 
-                                    <h2 className="title-detail">Event {data.title}  </h2>
-                                    <p className="except">Organized BY {data.organizer} .</p>
+                                    <h2 className="title-detail">Event {data.event.title}  </h2>
+                                    <p className="except">Organized BY {data.event.organizer} .</p>
 
                                     <Tabs className="tf-tab">
                                         <TabList className="menu-tab ">
@@ -71,20 +94,20 @@ function EFrontDetail(props) {
                                         <TabPanel >
                                             <div className="tab-details">
 
-                                                <p >Price: {data.price}</p>
+                                                <p >Price: {data.event.price}</p>
                                                 <br></br>
-                                                <p >Number of Tickets: {data.maxPeople}</p>
+                                                <p >Number of Tickets: {data.event.maxPeople}</p>
                                                 <br></br>
-                                                <p >Location: {data.location}</p>
+                                                <p >Location: {data.event.location}</p>
                                                 <br></br>
-                                                <p >Date & Time: {data.date}</p>
+                                                <p >Date & Time: {data.event.date}</p>
                                                 <br></br>
 
                                             </div>
                                         </TabPanel>
                                         <TabPanel >
                                             <ul className="tab-bid">
-                                                <p>{data.desc} </p>
+                                                <p>{data.event.desc} </p>
                                             </ul>
                                         </TabPanel>
 
@@ -117,18 +140,45 @@ function EFrontDetail(props) {
                             </div>
                         </div>
 
+                        <section style={{ backgroundColor: 'white', marginTop: '4px', marginBottom: '2px', paddingTop: '8px', paddingBottom: '16px', color: '#333', fontFamily: 'Arial, sans-serif' }} class="bg-white mt-4 mb-2 dark:bg-gray-900 py-8 lg:py-16">
+                            <div style={{ maxWidth: 'calc(100% - 2rem)', marginLeft: 'auto', marginRight: 'auto', paddingLeft: '16px', paddingRight: '16px' }} class="max-w-2xl mx-auto px-4">
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }} class="flex justify-between items-center mb-6">
+                                    <h2 style={{ fontSize: '1rem', lineHeight: '1.5rem', fontWeight: 'bold', color: '#333' }} class="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">Discussion ({Number(ultimateTotal)})</h2>
+                                </div>
+                                <form onSubmit={submitHandler} style={{ marginBottom: '6px' }} class="mb-6">
+                                    <div style={{ paddingTop: '8px', paddingRight: '16px', paddingBottom: '4px', paddingLeft: '16px', marginBottom: '4px', backgroundColor: 'white', borderTopLeftRadius: '8px', borderTopRightRadius: '8px', borderBottomRightRadius: '4px', borderBottomLeftRadius: '4px', border: '1px solid #ccc', color: '#333', fontFamily: 'Arial, sans-serif' }} class="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+                                        <label for="comment" style={{ display: 'none' }} class="sr-only">Your comment</label>
+                                        <textarea id="comment" rows="6" onChange={(e) => setComment(e.target.value)}
+                                            style={{ width: '100%', padding: '0px', fontSize: '20px', color: '#333', border: '0', outline: 'none', backgroundColor: 'white' }}
+                                            class="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none dark:text-white dark:placeholder-gray-400 dark:bg-gray-800"
+                                            placeholder="Write a comment..." required value={comment}/>
+                                    </div>
+                                    <button type="submit"
+                                        style={{ display: 'inline-flex', justifyContent: 'center', alignItems: 'center', paddingTop: '0.625rem', paddingBottom: '0.625rem', paddingLeft: '1rem', paddingRight: '1rem', fontSize: '15px', fontWeight: 'bold', textAlign: 'center', color: '#fff', backgroundColor: '#1e3a8a', borderRadius: '0.375rem', outline: 'none', cursor: 'pointer', transition: 'background-color 0.2s, border-color 0.2s, color 0.2s', border: '1px solid transparent', whiteSpace: 'nowrap', textDecoration: 'none', userSelect: 'none' }}
+                                        class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-primary-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800">
+                                        Post comment
+                                    </button>
+                                </form>
+
+                                {
+                                    comments?.map((comment) => {
+                                        return <Comment key={comment?._id} comment={comment} />
+                                    })
+                                }
+                            </div>
+                        </section>
 
 
                     </div>
                 </div>
 
-                        <CardModal
-                            show={modalShow}
-                            onHide={() => setModalShow(false)}
-                            event={data}
-                            user={user}
-                        />
-                
+                <CardModal
+                    show={modalShow}
+                    onHide={() => setModalShow(false)}
+                    event={data.event}
+                    user={user}
+                />
+
 
             </section>
 

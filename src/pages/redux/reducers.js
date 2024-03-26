@@ -1,10 +1,10 @@
 import { combineReducers } from "redux";
 import tickets from "./slices/ticketsSlice.js";
-// import wishlist from "./slices/wishlistSlice.js";
+ import comments from "./slices/commentSlice.js";
 
 const reducers = combineReducers({
   tickets,
-  //wishlist,
+  comments,
 });
 
 export default reducers;

@@ -39,10 +39,7 @@ const ticketsSlice = createSlice({
         state.tickets[index] = payload;
       }
     },
-   /* addTicketReducer: (state, action) => {
-      const payload = action.payload;
-      state.tickets.push(payload);
-    },*/
+  
     addTicketReducer: (state, action) => {
       const payload = action.payload;
       state.tickets.push(payload);

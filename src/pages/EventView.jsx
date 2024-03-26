@@ -141,7 +141,6 @@ function ViewQuestion(props) {
     transition: 'box-shadow 0.3s',
   };
 
-  const [isUpdateFormOpen, setUpdateFormOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
 
   const handleOpenPopupUp = (item) => {
@@ -158,7 +157,6 @@ function ViewQuestion(props) {
   const handleOpenPopup = () => setIsPopupOpen(true);
   const [isPopupOpenUp, setIsPopupOpenUp] = useState(false);
 
-  // const handleOpenPopupUp = () => setIsPopupOpenUp(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5); // Modifié pour démarrer à 5 par défaut
   const [data, setData] = useState([]);

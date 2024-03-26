@@ -3,18 +3,8 @@ import PageTitle from '../components/pagetitle/PageTitle';
 import Dashboard from './Dashboard';
 import img from '../assets/images/BATTERIE.jpg'
 
-import PropTypes from 'prop-types';
-import img1 from '../assets/images/item-details.jpg'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import avtd1 from '../assets/images/author/author-detail-1.png'
-import avtd2 from '../assets/images/author/author-detail-2.png'
-import avtd3 from '../assets/images/author/authour-bid-1.png'
-import avtd4 from '../assets/images/author/authour-bid-2.png'
-import avtd5 from '../assets/images/author/authour-bid-3.png'
-import avtd6 from '../assets/images/author/author-history-1.jpg'
-import avtd7 from '../assets/images/author/author-history-2.jpg'
 import { Link } from 'react-router-dom'
-import { useLocation } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
@@ -114,7 +104,6 @@ function EventDetail(props) {
     const endIndex = Math.min(startIndex + itemsPerPage, dataT.length);
 
     if (!data) {
-        // Data is still loading
         return <p>Loading...</p>;
     }
 
