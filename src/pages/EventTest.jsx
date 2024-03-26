@@ -1,63 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
-import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { Button } from 'react-bootstrap';
 import { QRCodeCanvas } from 'qrcode.react';
-import { AiFillCopy, AiOutlineDownload } from "react-icons/ai";
-import html2canvas from "html2canvas";
+import {  AiOutlineDownload } from "react-icons/ai";
 import { jsPDF } from 'jspdf'
-import QRcode    from 'qrcode.react'
 EventTest.propTypes = {
 
 };
 
 function EventTest(props) {
-  /*
-    const [id, setid] = useState(1);
-    const [dataT, setDataT] = useState([]);
   
-    useEffect(() => {
-      const fetchDataT = async () => {
-        try {
-          const response = await axios.get(`http://localhost:4000/tickets/user/${id}`);
-          // Assuming response.data.tickets is an array of tickets
-          setDataT(response.data.tickets || []);
-        } catch (error) {
-          console.error('Error fetching data:', error);
-        }
-      };
-      if (id) {
-        fetchDataT();
-      }
-  
-    });
-  
-    console.log("data of tickett ", dataT);
-  
-    const [data, setData] = useState([]);
-    const [events, setEvents] = useState([]);
-    const fetchEvents = async () => {
-      const eventPromises = dataT.map(async (item) => {
-        try {
-          const response = await axios.get(`http://localhost:4000/events/${item.event_id}`);
-          return response.data.event;
-        } catch (error) {
-          console.error('Error fetching event data:', error);
-          return null;
-        }
-      });
-  
-      const eventResults = await Promise.all(eventPromises);
-      setEvents(eventResults);
-    };
-  
-    useEffect(() => {
-      if (dataT.length > 0) {
-        fetchEvents();
-      }
-    }, [dataT]);
-  */
   const [id, setid] = useState(1);
   const [dataT, setDataT] = useState([]);
   const [events, setEvents] = useState([]);
@@ -100,21 +51,7 @@ function EventTest(props) {
     return `This ticket is for user ${item.user_id} for the event: ${eventTitle}, number of tickets: ${item.number}, total paid: ${item.amount}`;
   };
 
- /* const QrCodeDownload = async () => {
-    const canvas =  (
-      await html2canvas(document.getElementById("canvas"))
-    ).toDataURL();
-
-    if (canvas) {
-     
-      const a = document.createElement("a");
-      a.download = "QrCode.png";
-      a.href = canvas;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    }
-  };*/
+ 
 
  const QrCodeDownload = () => {
 

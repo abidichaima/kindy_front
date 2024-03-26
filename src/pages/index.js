@@ -33,6 +33,8 @@ import EventSuccess from "./EventSuccess";
 import EventFail from "./EventFail";
 import EventTickets from "./EventTickets";
 import EventTest from './EventTest'
+import EventsDashComments from "./EventsDashComments";
+import EventsDashReplies from "./EventDashReplies";
 
 const routes = [
   { path: '/', component: <Home01 />},
@@ -69,6 +71,8 @@ const routes = [
   { path: '/fail', component: <EventFail />},
   { path: '/ticket', component: <EventTickets />},
   { path: '/test', component: <EventTest />},
+  { path: '/comments', component: <EventsDashComments />},
+  { path: '/replies/:id', component: <EventsDashReplies />},
 
 
 ]

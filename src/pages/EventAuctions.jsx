@@ -58,7 +58,7 @@ function EventAutions(props) {
                             }}
                         >
                             {
-                                data.slice(0, 4).map(idx => (
+                                data?.slice(0, 4).map(idx => (
                                     <SwiperSlide key={idx.id}>
                                         <div className="slider-item">
                                             <div className="sc-product style1">

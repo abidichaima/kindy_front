@@ -51,27 +51,15 @@ const styles = {
 
 
 function AddEventForm(props) {
+  const [err, setErr] = useState('');
 
   // ERROR CONSTANT 
-  const [errTitle, setErrtitle] = useState('');
   const [showerrtitle, setShowerrtitle] = useState(false);
-
-  const [errprice, setErrprice] = useState('');
   const [showerrprice, setShowerrprice] = useState(false);
-
-  const [errtickets, setErrtickets] = useState('');
   const [showerrtickets, setShowerrtickets] = useState(false);
-
-  const [errdesc, setErrdesc] = useState('');
   const [showerrdesc, setShowerrdesc] = useState(false);
-
-  const [errloc, setErrloc] = useState('');
   const [showerrloc, setShowerrloc] = useState(false);
-
-  const [errorg, setErrorg] = useState('');
   const [showerrorg, setShowerrorg] = useState(false);
-
-  const [errimg, setErrimg] = useState('');
   const [showerrimg, setShowerrimg] = useState(false);
 
 
@@ -89,107 +77,87 @@ function AddEventForm(props) {
   const isNumber = (value) => !isNaN(Number(value));
 
   const handleSave = () => {
-    //  input validation
     if (!isNumber(price)) {
-      setErrprice('ensure Price is valid number');
+      setErr('ensure Price is valid number');
       setShowerrprice(true);
 
-
     } if (!isNumber(maxPeople)) {
-      setErrtickets('ensure number of tickets is valid number');
+      setErr('ensure number of tickets is valid number');
       setShowerrtickets(true);
-
     }
     if (!title) {
-      setErrtitle('Please fill in all fields');
+      setErr('Please fill in all fields');
       setShowerrtitle(true)
 
-
     } if (!price) {
-      setErrprice('Please fill in all fields');
+      setErr('Please fill in all fields');
       setShowerrprice(true)
-
-
     }
     if (!desc) {
-      setErrdesc('Please fill in all fields');
+      setErr('Please fill in all fields');
       setShowerrdesc(true)
 
-
     } if (!image) {
-      setErrimg('Please fill in all fields');
+      setErr('Please fill in all fields');
       setShowerrimg(true)
 
-
     } if (!maxPeople) {
-      setErrtickets('Please fill in all fields');
+      setErr('Please fill in all fields');
       setShowerrtickets(true)
-
-
     }
     if (!organizer) {
-      setErrorg('Please fill in all fields');
+      setErr('Please fill in all fields');
       setShowerrorg(true)
 
-
     } if (!location) {
-      setErrloc('Please fill in all fields');
+      setErr('Please fill in all fields');
       setShowerrloc(true)
 
     }
+    if(location && organizer && maxPeople && image && desc && price && title) {
+      const addEventEndpoint = "http://localhost:4000/events/addImage";
 
-    // Display input data in the console
-    console.log('Title:', title);
-    console.log('Price:', price);
-    console.log('Max People:', maxPeople);
-    console.log('Description:', desc);
-    console.log('Date:', date);
-    console.log('location:', location);
-    console.log('organizer:', organizer);console.log('Image', image);
-    // Additional logic for saving the data goes here
-    const addEventEndpoint = "http://localhost:4000/events/addImage"; // backend endpoint
-
-    fetch(addEventEndpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        title,
-        price,
-        maxPeople,
-        desc,
-        date,
-        location,
-        organizer,
-        tickets,
-        image,
-      }),
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
+      fetch(addEventEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title,
+          price,
+          maxPeople,
+          desc,
+          date,
+          location,
+          organizer,
+          tickets,
+          image,
+        }),
       })
-      .then(data => {
-        if (data.success) {
-          alert('Event saved!');
-        }
-      })
-      .catch(error => {
-
-        console.error('There was a problem with the fetch operation:', error);
-        alert('Error saving event. Please try again.');
-      });
-
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          if (data.success) {
+            alert('Event saved!');
+            handleModalClose();
+          }
+        })
+        .catch(error => {
+          console.error('There was a problem with the fetch operation:', error);
+          alert('Error saving event. Please try again.');
+        });
+    }
   };
 
   const handleImage = (e) => {
     const file = e.target.files[0];
     setFileToBase(file);
     console.log(file);
-    setErrimg('');
+    setErr('');
   }
   const setFileToBase = (file) => {
     const reader = new FileReader();
@@ -236,7 +204,7 @@ function AddEventForm(props) {
               <MDBInput size='lg' id='Title' type='text' value={title}
                 onChange={(e) => {
                   setTitle(e.target.value)
-                  setErrtitle('');
+                  setErr('');
                 }} />
             </MDBCol>
           </MDBRow>
@@ -247,7 +215,7 @@ function AddEventForm(props) {
                 <h1 className="mb-0" style={{ color: 'red' }}>   </h1>
               </MDBCol>
               <MDBCol md='9' className='pe-5'>
-                <p style={{ color: 'red' }}>{errTitle}</p>
+                <p style={{ color: 'red' }}>{err}</p>
               </MDBCol>
             </MDBRow>)}
 
@@ -258,7 +226,7 @@ function AddEventForm(props) {
             </MDBCol>
             <MDBCol md='9' className='pe-5'>
               <MDBInput size='lg' id='Organizer' type='text' value={organizer}
-                onChange={(e) => { setOrganizer(e.target.value); setErrorg('') }} />
+                onChange={(e) => { setOrganizer(e.target.value); setErr('') }} />
             </MDBCol>
           </MDBRow>
 
@@ -268,7 +236,7 @@ function AddEventForm(props) {
                 <h1 className="mb-0" style={{ color: 'red' }}>   </h1>
               </MDBCol>
               <MDBCol md='9' className='pe-5'>
-                <p style={{ color: 'red' }}>{errorg}</p>
+                <p style={{ color: 'red' }}>{err}</p>
               </MDBCol>
             </MDBRow>)}
 
@@ -277,10 +245,10 @@ function AddEventForm(props) {
               <h11 className="mb-0">Price</h11>
             </MDBCol>
             <MDBCol md='9' className='pe-5'>
-              <MDBInput size='lg' id='Price' type='text' value={price}
+              <MDBInput size='lg' id='Price' type='number' value={price}
                 onChange={(e) => {
                   setPrice(e.target.value);
-                  setErrprice('');
+                  setErr('');
                 }} />
             </MDBCol>
           </MDBRow>
@@ -291,7 +259,7 @@ function AddEventForm(props) {
                 <h1 className="mb-0" style={{ color: 'red' }}>   </h1>
               </MDBCol>
               <MDBCol md='9' className='pe-5'>
-                <p style={{ color: 'red' }}>{errprice}</p>
+                <p style={{ color: 'red' }}>{err}</p>
               </MDBCol>
             </MDBRow>)}
 
@@ -300,10 +268,10 @@ function AddEventForm(props) {
               <h11 className="mb-0">Tickets</h11>
             </MDBCol>
             <MDBCol md='9' className='pe-5'>
-              <MDBInput size='lg' id='People' type='text' value={maxPeople}
+              <MDBInput size='lg' id='People' type='number' value={maxPeople}
                 onChange={(e) => {
                   setMaxPeople(e.target.value);
-                  setErrtickets('');
+                  setErr('');
                 }} />
             </MDBCol>
           </MDBRow>
@@ -314,7 +282,7 @@ function AddEventForm(props) {
                 <h1 className="mb-0" style={{ color: 'red' }}>   </h1>
               </MDBCol>
               <MDBCol md='9' className='pe-5'>
-                <p style={{ color: 'red' }}>{errtickets}</p>
+                <p style={{ color: 'red' }}>{err}</p>
               </MDBCol>
             </MDBRow>)}
 
@@ -328,7 +296,7 @@ function AddEventForm(props) {
               <MDBInput style={{ height: '100px', width: '600px' }} size='lg' id='desc' type='textarea' rows='5' value={desc}
                 onChange={(e) => {
                   setDesc(e.target.value);
-                  setErrdesc('');
+                  setErr('');
                 }} />
             </MDBCol>
 
@@ -341,7 +309,7 @@ function AddEventForm(props) {
                 <h1 className="mb-0" style={{ color: 'red' }}>   </h1>
               </MDBCol>
               <MDBCol md='9' className='pe-5'>
-                <p style={{ color: 'red' }}>{errdesc}</p>
+                <p style={{ color: 'red' }}>{err}</p>
               </MDBCol>
             </MDBRow>)}
 
@@ -353,7 +321,7 @@ function AddEventForm(props) {
               <MDBInput size='lg' id='form1' type='text' value={location}
                 onChange={(e) => {
                   setLocation(e.target.value);
-                  setErrloc('');
+                  setErr('');
                 }} />
             </MDBCol>
           </MDBRow>
@@ -364,7 +332,7 @@ function AddEventForm(props) {
                 <h1 className="mb-0" style={{ color: 'red' }}>   </h1>
               </MDBCol>
               <MDBCol md='9' className='pe-5'>
-                <p style={{ color: 'red' }}>{errloc}</p>
+                <p style={{ color: 'red' }}>{err}</p>
               </MDBCol>
             </MDBRow>)}
 
@@ -390,7 +358,7 @@ function AddEventForm(props) {
                 <h1 className="mb-0" style={{ color: 'red' }}>   </h1>
               </MDBCol>
               <MDBCol md='9' className='pe-5'>
-                <p style={{ color: 'red' }}>{errimg}</p>
+                <p style={{ color: 'red' }}>{err}</p>
               </MDBCol>
             </MDBRow>)}
 

@@ -1,25 +1,13 @@
 import React, { useState, useContext, useEffect } from 'react';
-import Button from 'react-bootstrap/Button';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import PageTitle from '../components/pagetitle/PageTitle';
 import { Link } from 'react-router-dom';
-import { createPortal } from 'react-dom';
 import img from '../assets/images/BATTERIE.jpg'
-
-//import avt from '../assets/images/logo1.png'
-
 import axios from 'axios';
-
 import Swal from 'sweetalert2';
 import AddEventForm from './EventAdd';
 import UpdateEventForm from './EventUpdate';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
-import { Dialog, DialogContent, DialogTitle } from '@mui/material';
-import Modal from 'react-bootstrap/Modal';
 import Dashboard from './Dashboard';
-import CardModal from '../components/layouts/CardModal';
-import EventTest from './EventTest'
-
 
 
 
@@ -131,16 +119,7 @@ function ViewQuestion(props) {
     marginLeft: "15px",
     marginBottom: "5px",
   };
-  const dialogContentStyle = {
-    padding: '20px',
-    borderRadius: '10px',
-    border: '1px solid #ccc',
-    // background: `url('https://thumbs.dreamstime.com/z/notes-de-musique-7544001.jpg?w=576 576w')` , // Adjust the path to your image
-    backgroundSize: 'cover',
-    backdropFilter: 'blur(5px)', // Adjust the blur amount as needed
-    transition: 'box-shadow 0.3s',
-  };
-
+  
   const [selectedItem, setSelectedItem] = useState(null);
 
   const handleOpenPopupUp = (item) => {
@@ -158,11 +137,11 @@ function ViewQuestion(props) {
   const [isPopupOpenUp, setIsPopupOpenUp] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(5); // Modifié pour démarrer à 5 par défaut
+  const [itemsPerPage, setItemsPerPage] = useState(5); 
   const [data, setData] = useState([]);
+ 
   useEffect(() => {
     if (!isPopupOpenUp && !isPopupOpen) {
-      // Fetch data from your API endpoint when the popup is closed
       axios.get('http://localhost:4000/events/')
         .then((response) => {
           setData(response.data);
@@ -174,13 +153,7 @@ function ViewQuestion(props) {
     }
   }, [isPopupOpenUp, isPopupOpen]);
 
-  const handleClosePopupUp = () => {
-    setIsPopupOpenUp(false);
-  };
-
-  const handleClosePopup = () => {
-    setIsPopupOpen(false);
-  };
+ 
 
   const handleChangeItemsPerPage = (e) => {
     setItemsPerPage(parseInt(e.target.value));

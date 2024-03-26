@@ -8,7 +8,16 @@ export const commentsApi = rootApi.injectEndpoints({
             query: (eventId) => `/comment/${eventId}/comments`,
             providesTags: ['Comment']
         }),
+        fetchAllComments: builder.query({
+            query: () => `/comment/`,
+            providesTags: ['Comment']
+        }),
 
+        getCommentId: builder.query({
+            query: (id) => `/comment/${id}`,
+            providesTags: ['Comment']
+        }),
+        
         addComment: builder.mutation({
             query: ({ eventId, data }) => ({
                 url: `/comment/${eventId}/createComment`,
@@ -63,4 +72,4 @@ export const commentsApi = rootApi.injectEndpoints({
     })
 });
 
-export const { useFetchCommentsQuery, useAddCommentMutation, useAddReplyMutation, useDeleteReplyMutation ,useDeleteCommentMutation,useUpdateCommentMutation , useUpdateReplyMutation } = commentsApi;
+export const {useGetCommentIdQuery,useFetchAllCommentsQuery, useFetchCommentsQuery, useAddCommentMutation, useAddReplyMutation, useDeleteReplyMutation ,useDeleteCommentMutation,useUpdateCommentMutation , useUpdateReplyMutation } = commentsApi;

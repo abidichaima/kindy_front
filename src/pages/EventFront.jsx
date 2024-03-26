@@ -2,23 +2,15 @@ import React, { useState, useContext, useEffect } from 'react';
 import PageTitle from '../components/pagetitle/PageTitle';
 import EventAuctions from './EventAuctions'
 import axios from 'axios';
+import { useFetchEventsQuery } from './redux/slices/eventsApi';
 
 EventFront.propTypes = {
 
 };
 
 function EventFront(props) {
-    const [dataE, setDataE] = useState([]);
+    let { data: dataE } = useFetchEventsQuery() || {};
 
-    useEffect(() => {
-        axios.get('http://localhost:4000/events/')
-            .then((response) => {
-                setDataE(response.data);
-            })
-            .catch((error) => {
-                console.error('Error fetching data:', error);
-            });
-    }, []);
 
     return (
         <div className='page-liveauction'>
