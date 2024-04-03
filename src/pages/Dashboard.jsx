@@ -1,41 +1,15 @@
-import React , {useState,useContext} from 'react';
-import Button from 'react-bootstrap/Button';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import { Link, Route, Routes } from 'react-router-dom';
-
-import { createPortal } from 'react-dom';
-import img from '../assets/images/background/thumb-pagetitle.jpg'
+import React  from 'react';
+import { Tab, TabList,  } from 'react-tabs';
+import { Link } from 'react-router-dom';
 import img1 from '../assets/images/logo.png'
 
-
-//import avt from '../assets/images/logo1.png'
-
-import ViewUser from './viewUser';
-import AddQuestionForm from './addQuestion';
-import UpdateQuestionForm from './updateQuestion';
-import Swal from 'sweetalert2';
-
-import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
-import {
- 
-    Dialog,
-    DialogContent,
-    DialogTitle,
-    
-  } from '@mui/material';
-
-
-
-
 function Dashboard(props) {
-    
 
     return (
 
-       
         <div>
-            
-<div className="dashboard-user">
+  
+                                <div className="dashboard-user">
                                     <div className="dashboard-infor">
                                         <div className="avatar">
                                             <img src={img1} alt="images" />
@@ -128,6 +102,36 @@ width="20"
 <path d="M3.5 0a.5.5 0 01.5.5V1h8V.5a.5.5 0 011 0V1h1a2 2 0 012 2v11a2 2 0 01-2 2H2a2 2 0 01-2-2V3a2 2 0 012-2h1V.5a.5.5 0 01.5-.5zM2 2a1 1 0 00-1 1v1h14V3a1 1 0 00-1-1H2zm13 3H1v9a1 1 0 001 1h12a1 1 0 001-1V5z" />
 <path d="M11 7.5a.5.5 0 01.5-.5h1a.5.5 0 01.5.5v1a.5.5 0 01-.5.5h-1a.5.5 0 01-.5-.5v-1zm-3 0a.5.5 0 01.5-.5h1a.5.5 0 01.5.5v1a.5.5 0 01-.5.5h-1a.5.5 0 01-.5-.5v-1zm-2 3a.5.5 0 01.5-.5h1a.5.5 0 01.5.5v1a.5.5 0 01-.5.5h-1a.5.5 0 01-.5-.5v-1zm-3 0a.5.5 0 01.5-.5h1a.5.5 0 01.5.5v1a.5.5 0 01-.5.5h-1a.5.5 0 01-.5-.5v-1z" />
 </svg></a><Link to="/calendar">Calendar</Link></Tab>
+<Tab><a > <svg
+fill="currentColor"
+viewBox="0 0 16 16"
+height="20"
+width="20"
+{...props}
+>
+<path d="M3.5 0a.5.5 0 01.5.5V1h8V.5a.5.5 0 011 0V1h1a2 2 0 012 2v11a2 2 0 01-2 2H2a2 2 0 01-2-2V3a2 2 0 012-2h1V.5a.5.5 0 01.5-.5zM2 2a1 1 0 00-1 1v1h14V3a1 1 0 00-1-1H2zm13 3H1v9a1 1 0 001 1h12a1 1 0 001-1V5z" />
+<path d="M11 7.5a.5.5 0 01.5-.5h1a.5.5 0 01.5.5v1a.5.5 0 01-.5.5h-1a.5.5 0 01-.5-.5v-1zm-3 0a.5.5 0 01.5-.5h1a.5.5 0 01.5.5v1a.5.5 0 01-.5.5h-1a.5.5 0 01-.5-.5v-1zm-2 3a.5.5 0 01.5-.5h1a.5.5 0 01.5.5v1a.5.5 0 01-.5.5h-1a.5.5 0 01-.5-.5v-1zm-3 0a.5.5 0 01.5-.5h1a.5.5 0 01.5.5v1a.5.5 0 01-.5.5h-1a.5.5 0 01-.5-.5v-1z" />
+</svg></a><Link to="/freetime">freetime</Link></Tab>
+<Tab><a > <svg
+fill="currentColor"
+viewBox="0 0 16 16"
+height="20"
+width="20"
+{...props}
+>
+<path d="M3.5 0a.5.5 0 01.5.5V1h8V.5a.5.5 0 011 0V1h1a2 2 0 012 2v11a2 2 0 01-2 2H2a2 2 0 01-2-2V3a2 2 0 012-2h1V.5a.5.5 0 01.5-.5zM2 2a1 1 0 00-1 1v1h14V3a1 1 0 00-1-1H2zm13 3H1v9a1 1 0 001 1h12a1 1 0 001-1V5z" />
+<path d="M11 7.5a.5.5 0 01.5-.5h1a.5.5 0 01.5.5v1a.5.5 0 01-.5.5h-1a.5.5 0 01-.5-.5v-1zm-3 0a.5.5 0 01.5-.5h1a.5.5 0 01.5.5v1a.5.5 0 01-.5.5h-1a.5.5 0 01-.5-.5v-1zm-2 3a.5.5 0 01.5-.5h1a.5.5 0 01.5.5v1a.5.5 0 01-.5.5h-1a.5.5 0 01-.5-.5v-1zm-3 0a.5.5 0 01.5-.5h1a.5.5 0 01.5.5v1a.5.5 0 01-.5.5h-1a.5.5 0 01-.5-.5v-1z" />
+</svg></a><Link to="/holidays">holidays</Link></Tab>
+<Tab><a > <svg
+fill="currentColor"
+viewBox="0 0 16 16"
+height="20"
+width="20"
+{...props}
+>
+<path d="M3.5 0a.5.5 0 01.5.5V1h8V.5a.5.5 0 011 0V1h1a2 2 0 012 2v11a2 2 0 01-2 2H2a2 2 0 01-2-2V3a2 2 0 012-2h1V.5a.5.5 0 01.5-.5zM2 2a1 1 0 00-1 1v1h14V3a1 1 0 00-1-1H2zm13 3H1v9a1 1 0 001 1h12a1 1 0 001-1V5z" />
+<path d="M11 7.5a.5.5 0 01.5-.5h1a.5.5 0 01.5.5v1a.5.5 0 01-.5.5h-1a.5.5 0 01-.5-.5v-1zm-3 0a.5.5 0 01.5-.5h1a.5.5 0 01.5.5v1a.5.5 0 01-.5.5h-1a.5.5 0 01-.5-.5v-1zm-2 3a.5.5 0 01.5-.5h1a.5.5 0 01.5.5v1a.5.5 0 01-.5.5h-1a.5.5 0 01-.5-.5v-1zm-3 0a.5.5 0 01.5-.5h1a.5.5 0 01.5.5v1a.5.5 0 01-.5.5h-1a.5.5 0 01-.5-.5v-1z" />
+</svg></a><Link to="/mycalendar">My Calendar</Link></Tab>
 <Tab><a > <svg
 fill="currentColor"
 viewBox="0 0 16 16"

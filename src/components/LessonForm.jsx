@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import Select from 'react-select';
 
 function LessonsForm({ show, selectedRange, selectedEvent, onClose, onSubmit }) {
-  const [selectedTeacher, setSelectedTeacher] = useState('');
-  const [selectedCourse, setSelectedCourse] = useState('');
+  const [selectedTeacher, setSelectedTeacher] = useState(null);
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [selectedStudents, setSelectedStudents] = useState(null);
 
-  const [students, setStudents] = useState([]);
   const [startLessonDate, setStartLessonDate] = useState('');
   const [endLessonDate, setEndLessonDate] = useState('');
   const [typeLesson, setTypeLesson] = useState('');
@@ -18,8 +19,8 @@ function LessonsForm({ show, selectedRange, selectedEvent, onClose, onSubmit }) 
     const fetchData = async () => {
       try {
         const [studentsResponse, teachersResponse, coursesResponse] = await Promise.all([
-          fetch('http://localhost:4000/users/role/student'),
-          fetch('http://localhost:4000/users/role/teacher'),
+          fetch('http://localhost:4000/user/users/role/student'),
+          fetch('http://localhost:4000/user/users/role/teacher'),
           fetch('http://localhost:4000/api/course/get'),
         ]);
 
@@ -27,9 +28,9 @@ function LessonsForm({ show, selectedRange, selectedEvent, onClose, onSubmit }) 
         const teachersData = await teachersResponse.json();
         const coursesData = await coursesResponse.json();
 
-        setAllStudents(studentsData);
-        setAllTeachers(teachersData);
-        setAllCourses(coursesData);
+        setAllStudents(studentsData.map(teacher => ({ value: teacher._id, label: `${teacher.firstName} ${teacher.lastName}` })));
+        setAllTeachers(teachersData.map(teacher => ({ value: teacher._id, label: `${teacher.firstName} ${teacher.lastName}` })));
+        setAllCourses(coursesData.map(course => ({ value: course._id, label: course.name })));
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -54,17 +55,17 @@ function LessonsForm({ show, selectedRange, selectedEvent, onClose, onSubmit }) 
 
   useEffect(() => {
     if (selectedEvent) {
-      setSelectedTeacher(selectedEvent.extendedProps.teacher._id);
-      setSelectedCourse(selectedEvent.extendedProps.course._id);
-      //setStudents(selectedEvent.extendedProps.students.map((student) => student._id));
+      setSelectedTeacher({ value: selectedEvent.extendedProps.teacher._id, label: `${selectedEvent.extendedProps.teacher.firstName} ${selectedEvent.extendedProps.teacher.lastName}` });
+      setSelectedCourse({ value: selectedEvent.extendedProps.course._id, label: selectedEvent.extendedProps.course.name });
+      setSelectedStudents(selectedEvent.extendedProps.students.map(student => ({ value: student._id, label: `${student.firstName} ${student.lastName}` })));
       setStartLessonDate(formatDate(selectedEvent.start));
       setEndLessonDate(formatDate(selectedEvent.end));
       setTypeLesson(selectedEvent.title.split(' - ')[0]);
       setClassRoom(selectedEvent.extendedProps.classroom);
     } else {
-      setSelectedTeacher('');
-      setSelectedCourse('');
-      //setStudents([]);
+      setSelectedTeacher(null);
+      setSelectedCourse(null);
+      setSelectedStudents([]);
       setStartLessonDate('');
       setEndLessonDate('');
       setTypeLesson('');
@@ -76,11 +77,11 @@ function LessonsForm({ show, selectedRange, selectedEvent, onClose, onSubmit }) 
     e.preventDefault();
 
     const lessonData = {
-      teacher: selectedTeacher,
-      students,
+      teacher: selectedTeacher.value,
+      students: selectedStudents.map(student => student.value),
       startLessonDate: startLessonDate ? new Date(startLessonDate) : null,
       endLessonDate: endLessonDate ? new Date(endLessonDate) : null,
-      course: selectedCourse,
+      course: selectedCourse.value,
       typeLesson,
       classRoom,
     };
@@ -98,11 +99,11 @@ function LessonsForm({ show, selectedRange, selectedEvent, onClose, onSubmit }) 
 
         if (response.ok) {
           console.log('Lesson updated successfully');
-          selectedEvent.setProp('title', `${typeLesson} - ${selectedCourse}`);
+          selectedEvent.setProp('title', `${typeLesson} - ${selectedCourse.label}`);
           selectedEvent.setStart(new Date(startLessonDate));
           selectedEvent.setEnd(new Date(endLessonDate));
           selectedEvent.setExtendedProp('teacher', selectedTeacher);
-          selectedEvent.setExtendedProp('students', students);
+          selectedEvent.setExtendedProp('students', selectedStudents);
           selectedEvent.setExtendedProp('classroom', classRoom);
           selectedEvent.setExtendedProp('course', selectedCourse);
         } else {
@@ -129,14 +130,8 @@ function LessonsForm({ show, selectedRange, selectedEvent, onClose, onSubmit }) 
     }
   };
 
-  const handleStudentChange = (studentId) => {
-    setStudents((prevStudents) => {
-      if (prevStudents.includes(studentId)) {
-        return prevStudents.filter((id) => id !== studentId);
-      } else {
-        return [...prevStudents, studentId];
-      }
-    });
+  const handleStudentChange = (selectedOptions) => {
+    setSelectedStudents(selectedOptions);
   };
 
   const handleDeleteLesson = async () => {
@@ -171,76 +166,66 @@ function LessonsForm({ show, selectedRange, selectedEvent, onClose, onSubmit }) 
         <form onSubmit={handleSubmit}>
           <label>
             Teacher:
-            <select
+            <Select
               value={selectedTeacher}
-              onChange={(e) => setSelectedTeacher(e.target.value)}
+              onChange={setSelectedTeacher}
+              options={allTeachers}
               required
-            >
-              <option value="">Select a teacher</option>
-              {allTeachers.map((teacher) => (
-                <option key={teacher._id} value={teacher._id}>
-                  {teacher.firstName} {teacher.lastName}
-                </option>
-              ))}
-            </select>
+            />
           </label>
           <br />
           <label>
   Students:
-  <div style={{
-    maxHeight: '200px',
-    overflowY: 'scroll',
-    scrollbarWidth: 'thin',
-    scrollbarColor: '#888 #f5f5f5',
-  }}>
-    {allStudents.map((student) => (
-      <div key={student._id}>
-        <input
-          type="checkbox"
-          id={student._id}
-          checked={students.includes(student._id)}
-          onChange={() => handleStudentChange(student._id)}
-        />
-        <label htmlFor={student._id}>{student.firstName} {student.lastName}</label>
-      </div>
-    ))}
-  </div>
+  <Select
+    value={selectedStudents}
+    onChange={handleStudentChange}
+    options={allStudents}
+    isMulti
+    required
+  />
 </label>
           <br />
           <label>
             Start Date:
             <input type="datetime-local" value={startLessonDate} onChange={(e) => setStartLessonDate(e.target.value)} required />
           </label>
-          <br />
-          <label>
+          <br /><label>
             End Date:
-            <input type="datetime-local" value={endLessonDate} onChange={(e) => setEndLessonDate(e.target.value)} required />
+            <input
+              type="datetime-local"
+              value={endLessonDate}
+              onChange={(e) => setEndLessonDate(e.target.value)}
+              required
+            />
           </label>
           <br />
           <label>
             Course:
-            <select
+            <Select
               value={selectedCourse}
-              onChange={(e) => setSelectedCourse(e.target.value)}
+              onChange={setSelectedCourse}
+              options={allCourses}
               required
-            >
-              <option value="">Select a Course</option>
-              {allCourses.map((course) => (
-                <option key={course._id} value={course._id}>
-                  {course.name}
-                </option>
-              ))}
-            </select>
+            />
           </label>
           <br />
           <label>
             Lesson Type:
-            <input type="text" value={typeLesson} onChange={(e) => setTypeLesson(e.target.value)} required />
+            <input
+              type="text"
+              value={typeLesson}
+              onChange={(e) => setTypeLesson(e.target.value)}
+              required
+            />
           </label>
           <br />
           <label>
             Classroom:
-            <input type="text" value={classRoom} onChange={(e) => setClassRoom(e.target.value)} />
+            <input
+              type="text"
+              value={classRoom}
+              onChange={(e) => setClassRoom(e.target.value)}
+            />
           </label>
           <br />
           <button type="submit">{selectedEvent ? 'Update' : 'Save'}</button>

@@ -1,10 +1,8 @@
-
 import React , {useState,useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import img from '../assets/images/BATTERIE.jpg'
 
 import Dashboard from './Dashboard';
-import { getAllLessons,deleteLesson,updateLesson,getLesson,createLesson} from '../services/lesson';
 import { formatDate } from '@fullcalendar/core';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -18,7 +16,7 @@ function ViewCalendar(props) {
   const [weekendsVisible, setWeekendsVisible] = useState(true);
   const [currentEvents, setCurrentEvents] = useState([]);
   const [initialEvents, setInitialEvents] = useState([]);
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(true);
   const [selectedRange, setSelectedRange] = useState(null);
   const [selectedEvent, setSelectedEvent] = useState(null);
   
@@ -35,6 +33,9 @@ function ViewCalendar(props) {
           students: lesson.students,
           classroom: lesson.classRoom,
           course: lesson.course,
+          teacherfistname: lesson.teacher.firstName,
+          teacherlastname: lesson.teacher.lastName ,
+          
         }));
         setInitialEvents(events);
       })
@@ -68,75 +69,7 @@ function ViewCalendar(props) {
     setSelectedRange(null);
     setSelectedEvent(null);
   }
-const btnAdd = {
-    marginLeft: "800px",
-    backgroundColor: "#076fb9",
-    borderRadius: "10px",
-    display: 'flex', 
-alignItems: 'center', 
-justifyContent: 'center', 
-textAlign:'center',
 
-};
-const btnupdate = {
-    backgroundColor: "#28a745",
-    borderRadius: "25px",
-    border: "none",
-    cursor: "pointer",
-    padding: "5px", // Ajustez le padding pour réduire l'espace autour de l'icône
-    outline: "none",
-    transition: "background-color 0.3s",
-    marginRight: "5px",
-  };
-
-const btndelete = {
-    backgroundColor: "#dc3545",
-    borderRadius: "25px",
-    border: "none",
-    cursor: "pointer",
-    padding: "5px",
-    outline: "none",
-    transition: "background-color 0.3s",
-   
-  };
-  const btnshow = {
-    backgroundColor: "#ffc107",
-    borderRadius: "25px",
-    border: "none",
-    cursor: "pointer",
-    padding: "5px",
-    outline: "none",
-    transition: "background-color 0.3s",
-    marginRight: "5px",
-  };
-const btnStyles = {
-    backgroundColor: "transparent",
-    border: "none",
-    cursor: "pointer",
-    padding: "5px",
-    outline: "none",
-    transition: "background-color 0.3s",
-  };
-  
-  const iconStyles = {
-    fontSize: "1.5rem",
-    color: "#333",
-  };
-  const btnHoverStyles = {
-    boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.3)", 
-    backgroundColor: "grey",
-  };
-  const selectStyle = {
-    padding: '5px', 
-    borderRadius: '5px',
-    border: '1px solid #ccc', 
-    backgroundColor: '#fff', 
-    transition: 'box-shadow 0.3s', 
-    marginLeft:"15px",
-    marginBottom:"5px",
-  };
-
-  
 
 return (
 
@@ -205,6 +138,8 @@ return (
                   eventClick={handleEventClick}
                   eventsSet={handleEvents}
                   contentHeight="auto"
+                  slotMinTime="08:00:00"
+                  slotMaxTime="20:00:00"
                 />
               </div>
               
@@ -228,7 +163,7 @@ return (
 function renderEventContent(eventInfo) {
   return (
     <>
-      {/*<b>{`${eventInfo.event.extendedProps.teacher.firstName} ${eventInfo.event.extendedProps.teacher.lastName}`}</b> */}
+      <b>{`${eventInfo.event.extendedProps.teacherfistname} ${eventInfo.event.extendedProps.teacherfistname}`}</b> <br />
          {/*   <b>{`${eventInfo.event.extendedProps.teacher}`}</b> 
 
       <br />

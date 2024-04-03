@@ -37,7 +37,7 @@ const Login = () => {
     
    
     try {
-      const url = 'http://localhost:4000/user/auth';
+      const url = 'http://localhost:4000/user';
       const response = await axios.post(url, values, {
         headers: {
           'Content-Type': 'application/json',

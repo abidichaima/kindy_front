@@ -33,6 +33,9 @@ import Cookies from 'js-cookie';
 import ViewLesson from "./viewLesson";
 import ViewCalendar from "./ViewCalendar";
 import './index.css';
+import ViewFreeTime from "./viewFreeTime";
+import Holidays from "./viewHolidays";
+import ViewCalendarTeacher from "./ViewCalendarTeacher";
 
 function getUserInfoFromCookie() {
   // Obtenez la valeur du cookie actuel (vous pouvez remplacer document.cookie par la méthode que vous utilisez pour récupérer les cookies)
@@ -120,7 +123,9 @@ const routes = [
 
   { path: '/lesson', component: <ViewLesson />},
   { path: '/calendar', component: <ViewCalendar />},
-
+  { path: '/freetime', component: <ViewFreeTime />},
+  { path: '/holidays', component: <Holidays />},
+  { path: '/mycalendar', component: <ViewCalendarTeacher />},
 
 ]
 

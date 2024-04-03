@@ -44,6 +44,7 @@ b { /* used for event dates/times */
 }
 
 .fc { /* the calendar root */
+  max-width: 1100px;
   margin: 0 auto;
 }
 
@@ -61,6 +62,7 @@ b { /* used for event dates/times */
 .demo-app-sidebar {
   flex: 0 0 220px;
   padding: 0.5em;
+  background-color: #f4f4f4;
   border-radius: 5px;
   margin-left: 0.5em;
 }
@@ -89,23 +91,16 @@ b { /* used for event dates/times */
 .fc-event {
   cursor: pointer;
   padding: 0.25em;
+  margin-right: 0.25em;
   border-radius: 5px;
   font-size: 0.85em;
   background-color: #f5af5a;
   font-size: 13;
-  display: block;
+  display: inline-block;
   
 }
 
 .fc-event:hover {
   background-color: #fd9606;
-}
-
-.fc .fc-toolbar-chunk .fc-button-primary,
-.fc-timeGridDay-button.fc-button-primary,
-.fc-timeGridWeek-button.fc-button-primary,
-.fc-dayGridMonth-button,
-.fc-timeGridMonth-button.fc-button-primary {
-  background-color: rgb(7, 114, 186);
 }
 
