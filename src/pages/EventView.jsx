@@ -119,7 +119,7 @@ function ViewQuestion(props) {
     marginLeft: "15px",
     marginBottom: "5px",
   };
-  
+
   const [selectedItem, setSelectedItem] = useState(null);
 
   const handleOpenPopupUp = (item) => {
@@ -137,9 +137,9 @@ function ViewQuestion(props) {
   const [isPopupOpenUp, setIsPopupOpenUp] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(5); 
+  const [itemsPerPage, setItemsPerPage] = useState(5);
   const [data, setData] = useState([]);
- 
+
   useEffect(() => {
     if (!isPopupOpenUp && !isPopupOpen) {
       axios.get('http://localhost:4000/events/')
@@ -153,7 +153,7 @@ function ViewQuestion(props) {
     }
   }, [isPopupOpenUp, isPopupOpen]);
 
- 
+
 
   const handleChangeItemsPerPage = (e) => {
     setItemsPerPage(parseInt(e.target.value));
@@ -172,18 +172,26 @@ function ViewQuestion(props) {
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = Math.min(startIndex + itemsPerPage, data.length);
-
+  const close = () => {
+    setAddShow(false);
+    setUpdateShow(false)
+    axios.get('http://localhost:4000/events/')
+      .then((response) => {
+        setData(response.data);
+      })
+  }
   return (
 
 
     <div>
 
-      
+
 
 
       <AddEventForm
         show={addShow}
-        onHide={() => setAddShow(false)}
+        //onHide={() => setAddShow(false)}
+        onHide={close}
       />
 
       <section class="tf-page-title ">
@@ -290,7 +298,9 @@ function ViewQuestion(props) {
                                   <UpdateEventForm
                                     show={updateShow}
                                     initialValues={selectedItem}
-                                    onHide={() => setUpdateShow(false)}
+                                    //  onHide={() => setUpdateShow(false)}
+                                    onHide={close}
+
                                   />
                                 )}
                               </div>

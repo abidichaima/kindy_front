@@ -1,7 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import PageTitle from '../components/pagetitle/PageTitle';
-import EventAuctions from './EventAuctions'
-import axios from 'axios';
+
 import { useSelector, useDispatch } from 'react-redux';
 import { unselectTicket } from './redux/slices/ticketsSlice'
 

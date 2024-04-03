@@ -2,12 +2,9 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom'
 import { Modal } from "react-bootstrap";
 import axios from 'axios';
-import { addTicketReducer } from './redux/slices/ticketsSlice'; // Update the path
+import { addTicketReducer,selectTicket } from './redux/slices/ticketsSlice'; 
 import { useSelector, useDispatch } from "react-redux";
-import EventSuccess from './EventSuccess';
-import { Provider } from "react-redux";
-import { persistor, store } from "./redux/store.js";
-import { PersistGate } from "redux-persist/integration/react";
+
 
 
 const CardModal = (props) => {
@@ -47,8 +44,9 @@ const CardModal = (props) => {
 
         axios.post('http://localhost:4000/api/payment', payload)
             .then((res) => {
-
                 const { result } = res.data;
+
+                dispatch(selectTicket(payload));
                 dispatch(addTicketReducer(payload));
                 console.log('Ticket after dispatch:', payload);
                 window.location.href = result.link;

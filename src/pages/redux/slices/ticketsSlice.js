@@ -16,9 +16,7 @@ const ticketsSlice = createSlice({
     selectTicket(state, action) {
       state.selectedTicket = action.payload;
     },
-    /*unselectTicket(state) {
-      state.selectedTicket = null;
-    },*/
+   
     unselectTicket(state) {
       state.selectedTicket = null;
     },
@@ -39,7 +37,7 @@ const ticketsSlice = createSlice({
         state.tickets[index] = payload;
       }
     },
-  
+
     addTicketReducer: (state, action) => {
       const payload = action.payload;
       state.tickets.push(payload);

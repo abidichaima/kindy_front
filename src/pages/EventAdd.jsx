@@ -6,16 +6,11 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { Link } from 'react-router-dom'
 import { Modal } from "react-bootstrap";
 import {
-  MDBBtn,
   MDBContainer,
   MDBRow,
   MDBCol,
-  MDBCard,
-  MDBCardBody,
   MDBInput,
-  MDBTextArea,
   MDBFile,
-  MDBInputGroup
 }
   from 'mdb-react-ui-kit';
 

@@ -189,7 +189,8 @@ function UpdateEventForm(props) {
       .then(response => {
         console.log('Event updated successfully:', response.data);
         alert('Event updated successfully');
-       
+        handleModalClose();
+
 
       })
       .catch(error => {
@@ -200,7 +201,20 @@ function UpdateEventForm(props) {
   }
 
 
+  const handleModalClose = () => {
+    setTitle('');
+    setPrice('');
+    setMaxPeople('');
+    setDesc('');
+    setOrganizer('');
+    setLocation('');
+    setImage('');
+    setDate(new Date());
 
+    if (props.onHide) {
+      props.onHide();
+    }
+  };
 
 
   return (
