@@ -108,7 +108,7 @@ const Login = () => {
 
     <div style={styles.header}>
 
- 
+
     <div className="login-page">
       <div className="container">
         <div className="row">
@@ -150,11 +150,14 @@ const Login = () => {
             }
             
           />
-          <div className="inputgrouptextbtnshowpass" onClick={() => setPasswordVisible(!passwordVisible)}>
-            <FontAwesomeIcon icon={passwordVisible ? faEyeSlash : faEye} />
-            </div>
-
-        </div>
+           <div className="input-group-append">
+    <span
+      className="input-group-text password-toggle"
+      onClick={() => setPasswordVisible(!passwordVisible)}
+    >
+      <FontAwesomeIcon icon={passwordVisible ? faEyeSlash : faEye} style={{marginTop:'15px' , marginLeft: '10px' , height:'25px'  }} /> {/* Increase the size of the icon */}
+    </span>
+  </div> </div>
       </div>
     </div>
               <div className="row justify-content-center">

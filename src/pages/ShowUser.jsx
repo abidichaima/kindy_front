@@ -163,7 +163,7 @@ function ShowUser(props) {
 
     <TabPanel>
       <div className="tab-details">
-        <p> {data.speciality}</p>
+        <p> {data.speciality.join(', ')}</p>
       </div>
     </TabPanel>
   </Tabs>
