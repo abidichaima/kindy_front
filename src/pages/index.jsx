@@ -1,3 +1,5 @@
+import  { useState } from 'react';
+
 import Blog01 from "./Blog01";
 import Blog02 from "./Blog02";
 import BlogDetails01 from "./BlogDetails01";
@@ -16,16 +18,16 @@ import Home01 from "./Home01";
 import ShowUser from "./ShowUser";
 import ItemDetails01 from "./ItemDetails01";
 import ItemDetails02 from "./ItemDetails02";
-import LiveAutions01 from "./LiveAutions01";
+//import LiveAutions01 from "./LiveAutions01";
 import LiveAutions02 from "./LiveAutions02";
 import Login from "../components/Login/Login";
 import Ranking from "./Ranking";
 import Register from "../components/Register/Register"
 import Wallet from "./Wallet";
 import ViewUser from "./viewUser";
-//import ViewQuestion from "./viewQuestion";
+import ViewQuestion from "./viewQuestion";
 import Dash from "./Dash";  
-//import Profile from "./Profile";
+import Profile from "./profile";
 import { useCookies } from "react-cookie";
 import { Link, useNavigate } from "react-router-dom";
 import React, { useEffect } from 'react';
@@ -36,7 +38,25 @@ import './index.css';
 import ViewFreeTime from "./viewFreeTime";
 import Holidays from "./viewHolidays";
 import ViewCalendarTeacher from "./ViewCalendarTeacher";
+import EventView from "./EventView"
+import EventDetail from "./EventDetail";
+import EFrontDetail from "./EFrontDetail";
+import EventSuccess from "./EventSuccess";
+import EventFail from "./EventFail";
+import EventTickets from "./EventTickets";
+import EventTest from './EventTest'
+import EventsDashComments from "./EventsDashComments";
+import EventsDashReplies from "./EventDashReplies";
+import ViewQuizz from "./ViewQuizz";
+import QuizzComp from "./QuizzComp";
+import QuestionDetail from "./QuestionDetail";
+import QuizzDetail from "./QuizzDetail";
+import ViewResult from "./ViewResult";
+import Quiz from "./Quiz";
+import ResultDetail from "./ResultDetail";
+import QuizzValide from "./QuizzValide";
 
+   
 function getUserInfoFromCookie() {
   // Obtenez la valeur du cookie actuel (vous pouvez remplacer document.cookie par la méthode que vous utilisez pour récupérer les cookies)
   var cookieValue = document.cookie.match(/(?:^|;) ?user=([^;]*)(?:;|$)/);
@@ -98,7 +118,7 @@ const routes = [
   { path: '/explore-v3', component: <Explore03 />},
   { path: '/explore-v4', component: <Explore04 />},
   { path: '/collection', component: <Collection />},
-  { path: '/live-auctions-v1', component: <LiveAutions01 />},
+//  { path: '/live-auctions-v1', component: <LiveAutions01 />},
   { path: '/live-auctions-v2', component: <LiveAutions02 />},
   { path: '/item-details-v1', component: <ItemDetails01 />},
   { path: '/item-details-v2', component: <ItemDetails02 />},
@@ -138,6 +158,15 @@ const routes = [
   { path: '/resultDetail/:id', component: <ResultDetail />},
   { path: '/quizz/:id', component: <Quiz />},
   { path: '/quizz/validation/:id', component: <QuizzValide />},
+  { path: '/event', component: <EventView />},
+  { path: '/eventDetail/:id', component: <EventDetail />},
+  { path: '/FronteventDetail/:id', component: <EFrontDetail />},
+  { path: '/success', component: <EventSuccess />},
+  { path: '/fail', component: <EventFail />},
+  { path: '/ticket', component: <EventTickets />},
+  { path: '/testEvent', component: <EventTest />},
+  { path: '/comments', component: <EventsDashComments />},
+  { path: '/replies/:id', component: <EventsDashReplies />},
 ]
 
 export default routes;

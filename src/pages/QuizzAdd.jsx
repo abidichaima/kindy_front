@@ -342,7 +342,7 @@ console.log("dddd",quizzItem);
     <select className='form-control form-control-lg' style={{ border: '1px solid', borderRadius: '20px' }} name='level' value={quizzItem.level} onChange={(e) => {
       setquizzItem({ ...quizzItem, level: e.target.value });
     }}>
-       <option value="non precise level">non precise level </option>
+       <option value="nonpreciselevel">non precise level </option>
       <option value="gradelevel1">gradelevel1</option>
       <option value="gradelevel2">gradelevel2</option>
       <option value="gradelevel3">gradelevel3</option>

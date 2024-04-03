@@ -213,17 +213,24 @@ const updateQuizz = async () => {
       title: 'Quizz updated successfully!',
       showConfirmButton: false,
       timer: 1500 
+    }).then(() => {
+      if (props.onHide) {
+        handleModalClose();
+      }
     });
   }
 };
-   
+const handleModalClose = () => {
+  if (props.onHide) {
+    props.onHide();
+  }
+};
   return (
 
     
     <Modal
     show={props.show}
-    onHide={props.onHide}
-  >
+    onHide={handleModalClose}    > 
 
 
       <Modal.Header closeButton></Modal.Header>

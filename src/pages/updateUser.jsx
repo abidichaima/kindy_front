@@ -375,14 +375,14 @@ const setFileToBase = (file) => {
       value={level}
       onChange={(e) => setLevel(e.target.value)}
     >
-      <option value="gradeLevel1">Grade Level 1</option>
-      <option value="gradeLevel2">Grade Level 2</option>
-      <option value="gradeLevel3">Grade Level 3</option>
-      <option value="gradeLevel4">Grade Level 4</option>
-      <option value="gradeLevel5">Grade Level 5</option>
-      <option value="gradeLevel6">Grade Level 6</option>
-      <option value="gradeLevel7">Grade Level 7</option>
-      <option value="non precise level">Non Precise Level</option>
+      <option value="gradelevel1">Grade Level 1</option>
+      <option value="gradelevel2">Grade Level 2</option>
+      <option value="gradelevel3">Grade Level 3</option>
+      <option value="gradelevel4">Grade Level 4</option>
+      <option value="gradelevel5">Grade Level 5</option>
+      <option value="gradelevel6">Grade Level 6</option>
+      <option value="gradelevel7">Grade Level 7</option>
+      <option value="nonpreciselevel">Non Precise Level</option>
     </select>
   </MDBCol>
 

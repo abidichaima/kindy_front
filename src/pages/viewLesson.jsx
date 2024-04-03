@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import img from '../assets/images/BATTERIE.jpg'
 import Swal from 'sweetalert2';
 import AddLessonForm from './addLesson';
-import UpdateQuestionForm from './updateQuestion';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import {Dialog, DialogContent,DialogTitle} from '@mui/material';
 import Dashboard from './Dashboard';
@@ -156,18 +155,8 @@ return (
 
    
     <div>
-<Dialog open={isPopupOpen} onClose={handleClosePopup}>
-  <DialogTitle>Add Question</DialogTitle>
-  <DialogContent>
-    <AddLessonForm onClose={handleClosePopup} />
-  </DialogContent>
-</Dialog>
-<Dialog open={isPopupOpenUp} onClose={handleClosePopupUp}>
-  <DialogTitle>Update Question</DialogTitle>
-  <DialogContent>
-    <UpdateQuestionForm onClose={handleClosePopupUp} />
-  </DialogContent>
-</Dialog>
+
+
         <section class="tf-page-title ">    
             <div class="tf-container">
                 <div class="row">

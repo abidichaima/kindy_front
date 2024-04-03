@@ -23,7 +23,7 @@ import {
   MDBInputGroup
 }
   from 'mdb-react-ui-kit';
-import ViewQuestion from './ViewQuestion';
+import ViewQuestion  from "./viewQuestion";
 const styles = {
     popup: {
         

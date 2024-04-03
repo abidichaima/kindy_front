@@ -4,15 +4,24 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import './App.scss'
 import ScrollToTop from "./ScrollToTop";
+import { Provider } from "react-redux";
+import { persistor, store } from "./pages/redux/store";
+import { PersistGate } from "redux-persist/integration/react";
 
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
     <React.Fragment>
-        <BrowserRouter>
-            <ScrollToTop />
-            <App />
-        </BrowserRouter>
+
+        <Provider store={store}>
+            <PersistGate loading={null} persistor={persistor}>
+                <BrowserRouter>
+                    <ScrollToTop />
+                    <App />
+                </BrowserRouter>
+            </PersistGate>
+        </Provider>
+
     </React.Fragment>
 );
 

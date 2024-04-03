@@ -37,6 +37,11 @@ const menus = [
     name: 'Contact',
     links: '/contact',
   },
+  {
+    id: 7,
+    name: 'Tickets',
+    links: '/testEvent',
+},
 ];
 
 

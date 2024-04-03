@@ -94,13 +94,13 @@ function AddUserForm( props ) {
  const levelOptions = [
   'nonpreciselevel',
 
-  'level1',
-  'level2',
-  'level3',
-  'level4',
-  'level5',
-  'level6',
-  'level7',
+  'gradelevel1',
+  'gradelevel2',
+  'gradelevel3',
+  'gradelevel4',
+  'gradelevel5',
+  'gradelevel6',
+  'gradelevel7',
  
 ];
  const specialiteOptions = [
@@ -410,15 +410,14 @@ const handleModalClose = () => {
       value={level}
       onChange={(e) => setLevel(e.target.value)}
     >
-
-            <option value="nonpreciselevel">non precise level </option>
-      <option value="level1">gradelevel1</option>
-      <option value="level2">gradelevel2</option>
-      <option value="level3">gradelevel3</option>
-      <option value="level4">gradelevel4</option>
-      <option value="level5">gradelevel5</option>
-      <option value="level6">gradelevel6</option>
-      <option value="level7">gradelevel7</option>
+       <option value="nonpreciselevel">non precise level </option>
+<option value="gradelevel1">grade level 1</option>
+      <option value="gradelevel2">grade level 2</option>
+      <option value="gradelevel3">grade level 3</option>
+      <option value="gradelevel4">grade level 4</option>
+      <option value="gradelevel5">grade level 5</option>
+      <option value="gradelevel6">grade level 6</option>
+      <option value="gradelevel7">grade level 7</option>
     </select>
   </MDBCol>
   </MDBRow>

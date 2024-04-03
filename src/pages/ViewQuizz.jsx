@@ -175,13 +175,14 @@ fetchQuizzs();
  
   const handleHide = async () => {
     setAddShow(false);
-    try {
+    setUpdateShow(false);
+
+    
       const quizzResult= await getAllquizzs();
       setquizzList(quizzResult.data);
-    } catch (error) {
-      console.error('Error fetching questions:', error);
-    }
+    
   };
+  
 return (
 
    
@@ -196,8 +197,8 @@ style={{ backgroundColor: 'white' }}
       <QuizzUpdate
        show={updateShow}
       initialValues={selectedItem}
-        onHide={() => setUpdateShow(false)}
-          />
+      onHide={handleHide}
+      />
                                 )}
      
         <section class="tf-page-title ">    

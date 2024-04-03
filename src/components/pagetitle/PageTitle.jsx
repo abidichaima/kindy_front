@@ -19,8 +19,8 @@ function PageTitle(props) {
                         <div className="col-md-12">
 
                             <ul className="breadcrumbs">
-                                <li><Link to="/">Home</Link></li>
-                                <li className={none}><Link to="/explore-v1">{sub}</Link></li>
+                                <li><Link to="/dash">Home</Link></li>
+                                <li className={none}><Link to="/event">{sub}</Link></li>
                                 <li>{title}</li>
                             </ul>
 
