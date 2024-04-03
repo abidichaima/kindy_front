@@ -295,20 +295,7 @@ Add</button>
         </select>
       </div>
     </div>
-    <div style={{ position: 'relative', marginLeft: '90px'  , marginRight: '0px' }}>
-    <input
-  className="search__input"
-  style={{ padding: '10px', fontSize: '3rem', width: '250px' }}
-  type="text"
-  id="search"
-  value={email}
-  onChange={(e) => setEmail(e.target.value)} // Mettre à jour l'état de l'e-mail lors de la modification du champ de recherche
-/>
-
-      <button className="search__button" style={{ position: 'absolute', right: '5px', top: '50%', transform: 'translateY(-50%)', padding: '7px', fontSize: '2rem' }} onClick={handleSearch}>
-  <FontAwesomeIcon icon={faMagnifyingGlass} />
-</button>
-    </div>
+ 
   
   </div>
 

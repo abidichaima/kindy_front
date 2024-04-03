@@ -206,7 +206,7 @@ function AddUserForm( props ) {
         firstName,
         lastName,
         phoneNumber,
-        level: 'non precise level',
+        level,
         role: role || 'student',
         specialite,
         image,
@@ -240,7 +240,7 @@ function AddUserForm( props ) {
       .catch(error => {
         console.error('There was a problem with the fetch operation:', error);
         Swal.fire({
-          title: 'Error saving User !',
+          title: 'Error saving User , or email used!',
           icon: 'warning',
           showConfirmButton: false,
           timer: 1500, // Close after 1.5 seconds

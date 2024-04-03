@@ -304,7 +304,7 @@ const setFileToBase = (file) => {
               <h11 className="mb-0">email</h11>
             </MDBCol>
             <MDBCol md='9' className='pe-5'>
-              <MDBInput size='lg' id='email' type='text' value={email}
+              <MDBInput size='lg' id='email' type='text' value={email} readOnly
                 onChange={(e) => {setEmail(e.target.value) ; setErrEmail('')} }/>
             </MDBCol>
           </MDBRow>
