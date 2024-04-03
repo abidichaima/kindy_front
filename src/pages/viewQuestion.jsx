@@ -182,13 +182,10 @@ fetchQuestions();
   const handleHide = async () => {
     setAddShow(false);
     setUpdateShow(false);
-    try {
       const questionResult = await getAllquestions();
-      setquestionList(questionResult.data);
-    } catch (error) {
-      console.error('Error fetching questions:', error);
-    }
+      setquestionList(questionResult.data); 
   };
+ 
 return (   
     <div>
 <QuestionAdd
@@ -198,6 +195,7 @@ return (
         style={{ backgroundColor: 'white' }}
    
       />
+  
         <section class="tf-page-title ">    
             <div class="tf-container">
                 <div class="row">
@@ -301,8 +299,8 @@ Add</button>
                                   <QuestionUpdate
                                     show={updateShow}
                                     initialValues={selectedItem}
-                                    onHide={() => setUpdateShow(false)}
-                                  />
+                                    onHide={handleHide}
+                                    />
                                 )}
 
 <Link to={`/questionDetail/${item._id}`}>

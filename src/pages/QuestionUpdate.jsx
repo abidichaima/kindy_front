@@ -112,8 +112,12 @@ function QuestionUpdate(props) {
         title: 'Question updated successfully!',
         showConfirmButton: false,
         timer: 1500 
+      }).then(() => {
+        if (props.onHide) {
+          handleModalClose();
+        }
       });
-     }
+    }
   };
 
   const previewFiles = (file) => {
@@ -149,12 +153,16 @@ function QuestionUpdate(props) {
       return updatedResponses;
     });
   };
+  const handleModalClose = () => {
+    if (props.onHide) {
+      props.onHide();
+    }
+  };
 
   return (
     <Modal
       show={props.show}
-      onHide={props.onHide}
-    >
+      onHide={handleModalClose}    >
       <Modal.Header closeButton></Modal.Header>
       <div className="modal-body space-y-20 pd-40">
         <h3>Update Question</h3>
