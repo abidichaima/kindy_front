@@ -12,3 +12,21 @@
 .header{
 	margin-top: 100px;
 }
+.password-input-container {
+	position: relative;
+  }
+  
+  .password-toggle-icon {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	right: 10px;
+	cursor: pointer;
+  }
+  .password-eye {
+	position: absolute;
+	top: 50%;
+	right: 10px; /* Adjust positioning as needed */
+	transform: translateY(-50%);
+	cursor: pointer;
+  }

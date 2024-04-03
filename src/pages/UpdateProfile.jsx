@@ -1,6 +1,9 @@
 import React, { useState , useEffect } from 'react';
 import { Button, TextField, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import axios  from 'axios';
+import Cookies from 'js-cookie';
+import { jwtDecode } from "jwt-decode";
+
 import {
   MDBBtn,
   MDBContainer,
@@ -107,6 +110,7 @@ function UpdateProfile(props ) {
  const [errImage, setErrImage] = useState('');
  const [showErrImage, setShowErrImage] = useState(false);
 
+  const [refreshToken, setRefreshToken] = useState('');
 
  const [errRole, setErrRole] = useState('');
  const [showErrRole, setShowErrRole] = useState(false);
@@ -220,14 +224,37 @@ function UpdateProfile(props ) {
       .then(response => {
         console.log('user updated successfully:', response.data);
         console.log('User ID for update:', userId);
+        if (response.status >= 200 && response.status < 300) {
+          // Récupérer les nouvelles informations utilisateur des cookies de session
+          const updatedUser = {
+            email: email,
+            firstName: firstName,
+            lastName: lastName,
+            level: level,
+            phoneNumber: phoneNumber,
+            role: role,
+            verified: verified,
+            speciality: speciality,
+            image: image,
+          };
+       
+          const decodedToken = jwtDecode(response.data.data);
 
-        Swal.fire({
+          // Store user information in cookies
+   // Accessing user information
+  
+   // Store user information in cookies
+   Cookies.set('user', JSON.stringify(decodedToken ), { expires: 7 }); 
+          console.log('Updated user in cookies:', updatedUser);
+          Swal.fire({
           title: 'Success',
-          text: 'login again to see modifications ',
+          text: 'login again to see modifications',
           icon: 'success',
           confirmButtonText: 'OK'
         });
-      })
+        Cookies.set('user', JSON.stringify(updatedUser));
+
+      }})
       .catch(error => {
         console.error('Error updating user:', error);
         if (error.response) {
@@ -242,7 +269,7 @@ function UpdateProfile(props ) {
           confirmButtonText: 'OK'
         });
       });
- 
+
 
 }
 const handleImage = (e) => {
@@ -268,7 +295,7 @@ const setFileToBase = (file) => {
 
     <Modal.Header closeButton></Modal.Header>
     <div className="modal-body space-y-20 pd-40">
-      <h3>Update User</h3>
+      <h3>Profile</h3>
     
       <MDBContainer fluid>
 

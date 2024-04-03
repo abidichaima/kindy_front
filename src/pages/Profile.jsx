@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import PageTitle from '../components/pagetitle/PageTitle';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom'; // Import Navigate from react-router-dom
 import Cookies from 'js-cookie';
 import img from '../assets/images/BATTERIE.jpg'
 
@@ -13,28 +13,23 @@ import UpdateProfile from './UpdateProfile';
 
 
 function Profile(props) {
+  const [currentUser, setCurrentUser] = useState(null);
 
-    function getUserInfoFromCookie() {
-        // Obtenez la valeur du cookie actuel (vous pouvez remplacer document.cookie par la méthode que vous utilisez pour récupérer les cookies)
-        var cookieValue = document.cookie.match(/(?:^|;) ?user=([^;]*)(?:;|$)/);
-      
-        if (cookieValue) {
-          // Décodez la chaîne JSON
-          var decodedValue = decodeURIComponent(cookieValue[1].replace(/\+/g, ' '));
-      
-          // Convertissez la chaîne JSON en objet JavaScript
-          var userObject = JSON.parse(decodedValue);
-      
-          // Retournez l'objet utilisateur
-          return userObject;
-        } else {
-          // Retournez null si le cookie n'est pas trouvé
-          return null;
-        }
+  useEffect(() => {
+    const getUserInfoFromCookie = () => {
+      const cookieValue = document.cookie.match(/(?:^|;)?\s*user\s*=\s*([^;]+)(?:;|$)/);
+      if (cookieValue) {
+        const decodedValue = decodeURIComponent(cookieValue[1]);
+        const userObject = JSON.parse(decodedValue);
+        setCurrentUser(userObject);
+      } else {
+        // Redirect to 404 page if user data is not found in cookies
+        return <Navigate to="/404" replace />;
       }
-      
-      // Utilisez la fonction pour obtenir les informations de l'utilisateur
-      var currentUser = getUserInfoFromCookie();
+    };
+
+    getUserInfoFromCookie();
+  }, []);
       
       // Vérifiez si les informations de l'utilisateur existent
       if (currentUser) {
@@ -92,8 +87,9 @@ function Profile(props) {
   const [selectedItem, setSelectedItem] = useState(null);
    
 return (
+ <>
+  {currentUser ? (
 
-   
     <div>
 
         <section class="tf-page-title ">    
@@ -167,6 +163,7 @@ return (
         <Link to="#">actions</Link>
       </Tab>
     </TabList>
+    
     <TabPanel>
       <div className="tab-details">
         <p>{currentUser.firstName} </p>
@@ -256,7 +253,12 @@ onClick={() => {
                 </div>
             </section>
         </div>
+
+) : (
+  // If user data is not available, show loading or error message
+  <div>404 NOT FOUND</div> // You can customize this message as needed
+)}
+</>
 );
 }
-
 export default Profile;

@@ -79,8 +79,7 @@ const DashWrapper = () => {
 
   useEffect(() => {
     if (currentUser.role === 'student' || currentUser.role === 'teacher') {
-      Cookies.remove('user');
-      navigate('/login');
+      navigate('/404');
     }
   }, [currentUser.role, navigate]);
 

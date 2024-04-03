@@ -4,6 +4,9 @@ import Swal from 'sweetalert2';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { Dialog, DialogTitle, DialogContent } from '@material-ui/core';
 import { Tabs, TabPanel } from 'react-tabs';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+
 import UpdateUserForm from './updateUser';
 import AddUserForm from './addUser';
 import Dashboard from './Dashboard';
@@ -118,6 +121,7 @@ const DeleteConfirmation = (userId) => {
     alignItems: 'center',
     justifyContent: 'center',
     textAlign: 'center',
+    width :'250px'
   };
 
   const btnupdate = {
@@ -198,10 +202,27 @@ const DeleteConfirmation = (userId) => {
   };
 
   const pageCount = Math.ceil(users.length / itemsPerPage);
-
+const [searchResults, setSearchResults] = useState([]);
+  const [email, setEmail] = useState('');
+  const [lastName, setLastName] = useState('');
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = Math.min(startIndex + itemsPerPage, userList.length);
-  
+  const handleSearch = async () => {
+    try {
+      const response = await fetch(`http://localhost:4000/user/users/search/${email}`);
+      if (response.ok) {
+        const data = await response.json();
+        setSearchResults(data);
+        console.log(data)
+        console.log(response)
+
+      } else {
+        console.error('Failed to search users:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error searching users:', error);
+    }
+  };
 
   return (
     <div>
@@ -262,16 +283,39 @@ Add</button>
 <div>
 <div className="inner-content inventory">
   <h4 className="title-dashboard">Users</h4>
+  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+    <div style={{ flex: 1 }}>
+      <div className="pagination-controls" style={{ marginBottom: '20px' }}>
+        <select id="itemsPerPage" value={itemsPerPage} onChange={handleChangeItemsPerPage} style={selectStyle}>
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="15">15</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+      </div>
+    </div>
+    <div style={{ position: 'relative', marginLeft: '90px'  , marginRight: '0px' }}>
+    <input
+  className="search__input"
+  style={{ padding: '10px', fontSize: '3rem', width: '250px' }}
+  type="text"
+  id="search"
+  value={email}
+  onChange={(e) => setEmail(e.target.value)} // Mettre à jour l'état de l'e-mail lors de la modification du champ de recherche
+/>
+
+      <button className="search__button" style={{ position: 'absolute', right: '5px', top: '50%', transform: 'translateY(-50%)', padding: '7px', fontSize: '2rem' }} onClick={handleSearch}>
+  <FontAwesomeIcon icon={faMagnifyingGlass} />
+</button>
+    </div>
   
-  <div className="pagination-controls" style={{ marginBottom: '20px' }}>
-    <select id="itemsPerPage" value={itemsPerPage} onChange={handleChangeItemsPerPage} style={selectStyle}>
-      <option value="5">5</option>
-      <option value="10">10</option>
-      <option value="15">15</option>
-      <option value="50">50</option>
-    </select>
   </div>
 
+
+<div style={{ marginTop: '100px' }}>
+
+</div>
   <div className="table-ranking top">
     <div className="title-ranking">
     <div className="col-rankingg"><Link to="#">Image</Link></div>
@@ -279,7 +323,8 @@ Add</button>
       <div className="col-rankingg"><Link to="#">LastName</Link></div>
       <div className="col-rankingg"><Link to="#">FirstName</Link></div>
       <div className="col-rankingg"><Link to="#">Email</Link></div>
- 
+      <div className="col-rankingg"><Link to="#"></Link></div>
+
 
       <div className="col-rankingg"><Link to="#">Actions</Link></div>
     </div>
@@ -301,7 +346,8 @@ Add</button>
         <div className="col-rankingg">{item.firstName}</div>
         <div className="col-rankingg">{item.email}</div>
      
-      
+        <div className="col-rankingg"></div>
+
    
 
 
@@ -384,6 +430,7 @@ onClick={() => {
 
   <span style={{ marginLeft:'10px'}}>{userList.length}</span>
 </div>
+
 </div>
 </TabPanel>
 
