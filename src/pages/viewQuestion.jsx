@@ -4,16 +4,10 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import PageTitle from '../components/pagetitle/PageTitle';
 import { Link, useParams } from 'react-router-dom';
 import { createPortal } from 'react-dom';
-import img from '../assets/images/BATTERIE.jpg'
-//import img from '../assets/images/externe piano.jpg'
-//import { useNavigate } from "react-router-dom";
-//import avt from '../assets/images/logo1.png'
-
-
+import img from '../assets/images/BATTERIE.jpg';
+import 'sweetalert2/dist/sweetalert2.min.css';
 
 import Swal from 'sweetalert2';
-import AddQuestionForm from './AddQuestion';
-import UpdateQuestionForm from './UpdateQuestion';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import {Dialog, DialogContent,DialogTitle} from '@mui/material';
 import Modal from 'react-bootstrap/Modal';
@@ -48,32 +42,38 @@ const handleOpenPopupUp = (item) => {
 
 };
 
-  const DeleteConfirmation = async (id) => {
-    try {
+const DeleteConfirmation = async (id) => {
+  try {
       const result = await Swal.fire({
-        title: 'Are you sure?',
-        text: 'You will not be able to recover this item!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#dc3545',
-        cancelButtonColor: '#6c757d',
-        confirmButtonText: 'Yes, delete it!'
+          title: 'Are you sure?',
+          text: 'You will not be able to recover this item!',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#dc3545',
+          cancelButtonColor: '#6c757d',
+          confirmButtonText: 'Yes, delete it!'
       });
-  
-      if (result.isConfirmed) {
-        await deleteQuestion(id);
-        
-      }
 
-    } catch (error) {
+      if (result.isConfirmed) {
+          await deleteQuestion(id);
+          Swal.fire(
+              'Deleted!',
+              'Your question has been deleted.',
+              'success'
+          );
+          const questionResult= await getAllquestions();
+setquestionList(questionResult.data);
+      }
+  } catch (error) {
       console.error('Error deleting item:', error);
       Swal.fire(
-        'Error',
-        'Failed to delete the item.',
-        'error'
+          'Error',
+          'Failed to delete the question.',
+          'error'
       );
-    }
-  };
+  }
+};
+
 
 const btnAdd = {
     marginLeft: "800px",
@@ -179,14 +179,23 @@ fetchQuestions();
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = Math.min(startIndex + itemsPerPage, questionList.length);
  
-
+  const handleHide = async () => {
+    setAddShow(false);
+    try {
+      const questionResult = await getAllquestions();
+      setquestionList(questionResult.data);
+    } catch (error) {
+      console.error('Error fetching questions:', error);
+    }
+  };
 return (
 
    
     <div>
 <QuestionAdd
  show={addShow}
- onHide={() => setAddShow(false)}
+ onHide={handleHide}
+
         style={{ backgroundColor: 'white' }}
    
       />
@@ -253,6 +262,8 @@ Add</button>
   <div className="table-ranking top">
     <div className="title-ranking">
       <div className="col-rankingg"><Link to="#">Ennonce</Link></div>
+      <div className="col-rankingg"><Link to="#">Point</Link></div>
+
       <div className="col-rankingg"><Link to="#">Image</Link></div>
       <div className="col-rankingg"><Link to="#">Action</Link></div>
     </div>
@@ -264,9 +275,15 @@ Add</button>
     {questionList.slice(startIndex, endIndex).map((item, index) => (
       <div className="content-ranking" key={index}> 
         <div className="col-rankingg">{item.ennonce}</div>
+        <div className="col-rankingg">{item.point}</div>
+
         <div className="col-rankingg">  {item.image && item.image.url &&
-    <img src={item.image.url} alt="Cloudinary Image" />
+    <img src={item.image.url} alt="Cloudinary Image"  height={150} width={150}/>
   }</div>
+      {/* Afficher toutes les réponses pour cette question */}
+      {item.responses.map((response, responseIndex) => (
+        <div key={responseIndex}></div>
+      ))}
         <button type='submit'  style={btnupdate} onClick={() => {
                       handleOpenPopupUp(item);
                                     setUpdateShow(true);

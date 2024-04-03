@@ -5140,7 +5140,7 @@ body[data-magic-cursor=hide] .mouse-cursor {
   background: url("./../../assets/images/background/bg-sale-1.png");
 }
 .is_dark .section-sale::before {
-  background: #18191d;
+  background: z#18191d;
 }
 
 .is_dark .buy-crypto .buy-crypto__main .main.details form .group-button button.cancel {

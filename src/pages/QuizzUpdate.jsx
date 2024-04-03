@@ -1,15 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState ,useEffect} from 'react';
 import { Button, TextField } from '@mui/material';
-import { Link } from 'react-router-dom';
-import { useNavigate } from "react-router-dom";
-import axios from 'axios';
 import { Modal } from "react-bootstrap";
+import { Link } from 'react-router-dom'
+import { editQuizz } from '../services/quizz';
+import { getquizz } from '../services/quizz';
+import 'sweetalert2/dist/sweetalert2.min.css';
 import Swal from 'sweetalert2';
-import {  getAllquestions } from '../services/question';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import Select from 'react-select'; 
-
 import {
   MDBBtn,
   MDBContainer,
@@ -19,49 +15,60 @@ import {
   MDBCardBody,
   MDBInput,
   MDBTextArea,
-  MDBFile,
-  MDBInputGroup
+  MDBFile
 }
   from 'mdb-react-ui-kit';
-import ViewQuizz from './ViewQuestion';
+import axios from 'axios';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import Select from 'react-select'; 
+import {  getAllquestions } from '../services/question';
+
 const styles = {
-    popup: {
-        
-        backgroundColor: 'trasparent',
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-        borderRadius: '8px',
-        
-      },
+  popup: {
+    position: 'fixed',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    backgroundColor: '#fff',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+    borderRadius: '8px',
+    padding: '20px',
+    maxWidth: '500px',
+    width: '80%',
+    zIndex: '9999',
+  },
+  textField: {
+    marginBottom: '20px',
+  },
   buttonS: {
     margin: '10px',
     minWidth: '120px',
-
   },
   buttonC: {
+    //borderRadius: "25px",
     border: "none",
     cursor: "pointer",
     padding: "5px",
     outline: "none",
     transition: "background-color 0.3s",
+    //margin: '10px',
+    //minWidth: '120px',
     backgroundColor: "#6c757d",
-
-
+  },
+  title: {
+    fontSize: '24px',
+    fontWeight: 'bold',
+    marginBottom: '20px',
   },
   footer: {
     textAlign: 'right',
     marginTop: '20px',
   },
-  
-
 
 };
+function QuizzUpdate(props) {
 
-
-function QuizzAdd(props) {
-
-  // ERROR CONSTANT 
-  
-  
   const [titreErr, settitreErr] = useState('');
   const [showtitre, setshowtitre] = useState(false);
  
@@ -76,84 +83,24 @@ function QuizzAdd(props) {
 
   const [debut, setdebut] = useState('');
   const [showdebut, setshowdebut] = useState(false);
-  const [tentative, setTentative] = useState('');
-  const [showtentative, setshowtentative] = useState(false);
-
 
   const [questionsE, setquestionsE] = useState('');
   const [showquestionsE, setshowquestionsE] = useState(false);
-  
-  
-   const [quizzItem, setquizzItem] = useState({
-     titre: "",
-     description: "",
-     duree: "",
-     dateDebut: "",
-     dateFin: "",
-     level: "non precise level",
-     tentative:"",
-     questions:"",
-   });
-  
-   const [questionList, setQuestionList] = useState([]);
-   const [List, setList] = useState([]);
+
+  const [tentativeE, setTentativeE] = useState('');
+  const [showtentative, setshowtentative] = useState(false);
+  const [titre, setTitre] = useState(props.initialValues.titre || '');
+  const [description, setDescription] = useState(props.initialValues.description || '');
+  const [duree, setDuree] = useState(props.initialValues.duree || '');
+  const [dateDebut, setDatedebut] = useState(props.initialValues.dateDebut || '');
+  const [dateFin, setDatefin] = useState(props.initialValues.dateFin || '');
+  const [level, setLevel] = useState(props.initialValues.level || '');
+  const [tentative, settentative] = useState(props.initialValues.tentative || '');
+
+  const [questions, setQuestions] = useState(props.initialValues.questions || '');
 
   const [selectedOptions, setSelectedOptions] = useState([]);
-
-  useEffect(() => {
-    const fetchQuestions = async () => {
-      try {
-        const questionResult = await getAllquestions();
-        setQuestionList(questionResult.data.map(question => ({
-          label: question.ennonce, 
-          value: question._id 
-        })));
-      } catch (error) {
-        console.error('Error fetching questions:', error);
-      }
-    };
-
-    fetchQuestions();
-  }, []);
-
-  function handleSelect(data) {
-    setSelectedOptions(data);
-    setquizzItem(quizzItem => ({
-      ...quizzItem,
-      questions: data
-    }));
-    setquestionsE('');
-  }
-   const navigate = useNavigate();
-
-   const onValueChange = (e, index) => {
-     const { name, value } = e.currentTarget; 
-     setquizzItem({ ...quizzItem });
-   };
- 
-   const handleModalClose = () => {
-    setquizzItem({
-      titre: "",
-      description: "",
-      duree: "",
-      dateDebut: "",
-      dateFin: "",
-      level: "",
-      tentative:"",
-      questions:"",
-    });
-    settitreErr('');
-    setdescriptionErr('');
-    setdureeErr('');
-    setdebut('');
-    setfin('');
-    setquestionsE('');
-    setTentative('');
-
-    if (props.onHide) {
-      props.onHide();
-    }
-  };
+  const [questionList, setQuestionList] = useState([]);
 
   const customStyles = {
     option: (provided, state) => ({
@@ -166,89 +113,122 @@ function QuizzAdd(props) {
       border: '1px solid #ced4da',
     }),
   };
-  const url = "http://localhost:4000/quizz";
- 
-   const AddQuizz = async (e) => {
-    if (!quizzItem.titre) {
-      settitreErr('Please fill in the title');
-      setshowtitre(true) }
-      if (!quizzItem.description) {
-        setdescriptionErr('Please fill in the description');
-        setshowdescription(true) }
-      if (!quizzItem.duree) {
-          setdureeErr('Please fill in the duration');
-          setshowduree(true) }
-          if (quizzItem.duree<=0) {
-            setdureeErr('Please fill in the duration >= 0 ');
-            setshowduree(true) ;return;
-          }
-          if (!quizzItem.dateDebut) {
-            setdebut('Please fill in the start date');
-            setshowdebut(true) }
-            if (!quizzItem.dateFin) {
-              setfin('Please fill in the end date');
-              setshowfin(true) }
-              if (!quizzItem.tentative) {
-                setTentative('Please fill in the tent');
-                setshowtentative(true) }
-                if (quizzItem.tentative<=0) {
-                  setTentative('Please fill in the attempt >= 0');
-                  setshowtentative(true);return;
-              }
-              if (!quizzItem.questions) {
-                setquestionsE('Please fill in the questions');
-                setshowquestionsE(true) ;
-             }
+  
+const  quizz={
+  titre,
+  description,
+  duree,
+  dateDebut,
+  dateFin,
+  level,
+  tentative,
+ questions,
+};
 
-     e.preventDefault();
-     
-     try {
-      const formData = new FormData();
-       formData.append("titre", quizzItem.titre);
-       formData.append("description", quizzItem.description);
-       formData.append("duree", quizzItem.duree);
-       formData.append("dateDebut", quizzItem.dateDebut);
-       formData.append("dateFin", quizzItem.dateFin);
-       formData.append("level", quizzItem.level);
-       formData.append("tentative", quizzItem.tentative);
+useEffect(() => {
+  const fetchQuestions = async () => {
+    try {
+      const quizzResult = await getquizz(props.initialValues._id);
+      const questionsFromQuizz = quizzResult.data.quizz.questions;
+      const selectedQuestions = questionsFromQuizz.map(question => ({
+        value: question._id,
+        label: question.ennonce
+      }));
+      const questionResult = await getAllquestions();
+      const allQuestions = questionResult.data.map(question => ({
+        label: question.ennonce,
+        value: question._id
+      }));
 
-       formData.append("questions", JSON.stringify(quizzItem.questions));
-      // console.log(formData.);
-      formData.forEach(function(value, key){
-       console.log(key + ': ' + value);
-   });  
-console.log("dddd",quizzItem);
-       const result = await axios.post(`${url}/add`, quizzItem);
-       console.log("dddd222",result);
+      let availableQuestions = allQuestions.filter(question => {
+        return !selectedQuestions.find(selected => selected.value === question.value);
+      });
 
-       if (result.status === 201) {
-        Swal.fire({
-          icon: 'success',
-          title: 'Quizz added successfully!',
-          showConfirmButton: false,
-          timer: 1500 
-        }).then(() => {
-          if (props.onHide) {
-           handleModalClose();
-          }
-         
-        });
-               }
-     } catch (error) {
-       console.log(error);
-     }
-   };
+      setSelectedOptions(selectedQuestions);
+      setQuestionList(availableQuestions);
+    } catch (error) {
+      console.error("Erreur lors de la récupération des questions et du quizz:", error);
+    }
+  };
+
+  fetchQuestions();
+}, [props.initialValues._id]);
+
+const handleSelect = (selected) => {
+  setSelectedOptions(selected);
+};
+const handleQuestionDeselect = (removedOption) => {
+  const newSelectedOptions = selectedOptions.filter(option => option !== removedOption);
+  setSelectedOptions(newSelectedOptions);
+};
+const updateQuizz = async () => {
+  if (!quizz.titre) {
+    settitreErr('Please fill in the title');
+    setshowtitre(true);
+    return;  }
+    if (!quizz.description) {
+      setdescriptionErr('Please fill in the description');
+      setshowdescription(true) ;
+      return; }
+    if (!quizz.duree) {
+        setdureeErr('Please fill in the duration');
+        setshowduree(true);
+        return;  }
+        if (!quizz.dateDebut) {
+          setdebut('Please fill in the start date');
+          setshowdebut(true);
+          return;  }
+          if (!quizz.dateDebut) {
+            setfin('Please fill in the end date');
+            setshowfin(true);
+            return;  }
+            if (!quizz.tentative) {
+             setTentativeE('Please fill in the attempts');
+              setshowtentative(true);
+              return;  }
+            if (!quizz.questions) {
+              setquestionsE('Please fill in the questions');
+              setshowquestionsE(true) ;
+              return; }
+  const updatedQuizz = {
+    _id: props.initialValues._id,
+    titre,
+    description,
+    duree,
+    dateDebut,
+    dateFin,
+    level,
+    tentative,
+    questions: [...questions, ...selectedOptions.map(option => option.value)],
+  };
+  
+  console.log("vvv",updatedQuizz);
+  const result = await editQuizz(props.initialValues._id, updatedQuizz);
+  console.log("result",result);
+
+  if (result) {
+    console.log("Quizz updated successfully");
+    Swal.fire({
+      icon: 'success',
+      title: 'Quizz updated successfully!',
+      showConfirmButton: false,
+      timer: 1500 
+    });
+  }
+};
    
   return (
 
-    <Modal style={styles.popup}
+    
+    <Modal
     show={props.show}
-    onHide={handleModalClose}
-    >
+    onHide={props.onHide}
+  >
+
 
       <Modal.Header closeButton></Modal.Header>
       <div className="modal-body space-y-20 pd-40">
-        <h3>Add Quizz</h3>
+        <h3>Update Quizz</h3>
 
         <MDBContainer fluid>
 
@@ -257,11 +237,10 @@ console.log("dddd",quizzItem);
               <h11 className="mb-0">Title</h11>
             </MDBCol>
             <MDBCol md='9' className='pe-5'>
-              <MDBInput size='lg' name='titre' type='text' value={quizzItem.titre}
-                onChange={(e) => {
-                    setquizzItem({ ...quizzItem, titre: e.target.value });
-                   settitreErr('');
-                }} />
+              <MDBInput size='lg' name='titre' type='text' value={titre}
+                  onChange={(e) => { setTitre(e.target.value); 
+                    settitreErr(''); }}
+               />
             </MDBCol>
           </MDBRow>
           {showtitre && (
@@ -278,8 +257,8 @@ console.log("dddd",quizzItem);
     <h11 className="mb-0">Description</h11>
   </MDBCol>
   <MDBCol md='9' className='pe-5'>
-    <textarea className='form-control form-control-lg' style={{ border: '1px solid', borderRadius: '20px' }}  name='description' value={quizzItem.description} onChange={(e) => {
-      setquizzItem({ ...quizzItem, description: e.target.value });
+    <textarea className='form-control form-control-lg' style={{ border: '1px solid', borderRadius: '20px' }}  name='description' value={description} 
+      onChange={(e) => { setDescription(e.target.value); 
       setdescriptionErr('');
     }} />
   </MDBCol>
@@ -298,9 +277,9 @@ console.log("dddd",quizzItem);
               <h11 className="mb-0">Duration(minute)</h11>
             </MDBCol>
             <MDBCol md='9' className='pe-5'>
-              <MDBInput size='lg' name='duree' type='number' value={quizzItem.duree}
+              <MDBInput size='lg' name='duree' type='number' value={duree}
                 onChange={(e) => {
-                  setquizzItem({ ...quizzItem, duree: e.target.value });
+                  setDuree(  e.target.value );
                    setdureeErr('');
                 }} />
             </MDBCol>
@@ -316,13 +295,13 @@ console.log("dddd",quizzItem);
             </MDBRow>)}
             <MDBRow className='align-items-center pt-4 pb-3'>
             <MDBCol md='3' className='ps-5 '>
-              <h11 className="mb-0">Tentatives</h11>
+              <h11 className="mb-0">Tentt</h11>
             </MDBCol>
             <MDBCol md='9' className='pe-5'>
-              <MDBInput size='lg' name='duree' type='number' value={quizzItem.tentative}
+              <MDBInput size='lg' name='tentative' type='number' value={tentative}
                 onChange={(e) => {
-                  setquizzItem({ ...quizzItem, tentative: e.target.value });
-                   setTentative('');
+                  settentative(  e.target.value );
+                   setTentativeE('');
                 }} />
             </MDBCol>
           </MDBRow>
@@ -332,7 +311,7 @@ console.log("dddd",quizzItem);
                 <h1 className="mb-0" style={{ color: 'red' }}>   </h1>
               </MDBCol>
               <MDBCol md='9' className='pe-5'>
-                <p style={{ color: 'red' }}>{tentative}</p>
+                <p style={{ color: 'red' }}>{tentativeE}</p>
               </MDBCol>
             </MDBRow>)}
         <MDBRow className='align-items-center pt-4 pb-3'>
@@ -340,8 +319,8 @@ console.log("dddd",quizzItem);
     <h11 className="mb-0">Level</h11>
   </MDBCol>
   <MDBCol md='9' className='pe-5'>
-    <select className='form-control form-control-lg' style={{ border: '1px solid', borderRadius: '20px' }} name='level' value={quizzItem.level} onChange={(e) => {
-      setquizzItem({ ...quizzItem, level: e.target.value });
+    <select className='form-control form-control-lg' style={{ border: '1px solid', borderRadius: '20px' }} name='level' value={level} onChange={(e) => {
+      setLevel( e.target.value );
     }}>
        <option value="non precise level">non precise level </option>
       <option value="gradelevel1">gradelevel1</option>
@@ -360,9 +339,10 @@ console.log("dddd",quizzItem);
             </MDBCol>
             <MDBCol md='9' className='pe-5'>
             <DatePicker
-      selected={quizzItem.dateDebut} 
+
+      selected={dateDebut? new Date(dateDebut) : null} 
       onChange={(dateD) => { 
-        setquizzItem({ ...quizzItem, dateDebut: dateD });
+        setDatedebut(dateD);
         setdebut('');
       }}
      
@@ -392,9 +372,9 @@ console.log("dddd",quizzItem);
             </MDBCol>
             <MDBCol md='9' className='pe-5'>
             <DatePicker
-      selected={quizzItem.dateFin} 
+      selected={dateFin? new Date(dateFin) : null} 
       onChange={(dateF) => { 
-        setquizzItem({ ...quizzItem, dateFin: dateF });
+        setDatefin(dateF);        
         setfin('');
       }}
       name='dateFin'
@@ -419,18 +399,16 @@ console.log("dddd",quizzItem);
     
     
           <div className="app">
-      <h3>Choose your questions</h3>
-      <div className="dropdown-container">
-        <Select
-          styles={customStyles}
-          options={questionList}
-          placeholder="Select questions"
-          value={selectedOptions}
-          onChange={handleSelect}
-          isSearchable={true}
-          isMulti
-        />
-        {console.log(selectedOptions)}
+          <h3>Choose your questions</h3>
+          <div className="dropdown-container">
+          <Select
+              options={questionList}
+              value={selectedOptions}
+              onChange={handleSelect}
+              isSearchable={true}
+              isMulti
+            />
+              {console.log("r",selectedOptions)}
 
       </div>
     </div>
@@ -445,7 +423,7 @@ console.log("dddd",quizzItem);
               </MDBCol>
             </MDBRow>)}
           <div style={styles.footer}>
-  <button  className="button-popup" onClick={AddQuizz} style={{ width: '100px', marginLeft: '450px' }} >Save</button>
+  <button  className="button-popup" onClick={updateQuizz} style={{ width: '100px', marginLeft: '450px' }} >Save</button>
 </div>
         </MDBContainer>
       </div>
@@ -453,4 +431,4 @@ console.log("dddd",quizzItem);
   );
 }
 
-export default QuizzAdd;
+export default QuizzUpdate;

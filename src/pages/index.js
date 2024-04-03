@@ -36,6 +36,9 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import SelectedQuizz from "./SelectedQuizz";
 import ViewResult from "./ViewResult";
 import ResultDetail from "./ResultDetail";
+import Quiz from "./Quiz";
+import QuizzValide from "./QuizzValide";
+
 const routes = [
   { path: '/', component: <Home01 />},
 
@@ -69,9 +72,13 @@ const routes = [
   { path: '/profile', component: <Profile/>},
   { path: '/questionDetail/:id', component: <QuestionDetail />},
   { path: '/quizzDetail/:id', component: <QuizzDetail />},
-  { path: '/quizz/:id', component: <SelectedQuizz />},
   { path: '/results', component: <ViewResult />},
   { path: '/resultDetail/:id', component: <ResultDetail />},
+  { path: '/quizz/:id', component: <Quiz />},
+  { path: '/quizz/validation/:id', component: <QuizzValide />},
+
+
+
 
   
 

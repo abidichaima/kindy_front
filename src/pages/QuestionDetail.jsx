@@ -69,8 +69,8 @@ function QuestionDetail(props) {
                                                 <div className="col-md-12">
                                                     <div className="tf-item-detail-inner">
                                                         <div className="image">
-                                                        {data && data.image && (
-        <img src={data.image.url} alt="no Image" height="500px" width="500px"/>
+                                                        {data && data.image.url && (
+        <img src={data.image.url}  height="500px" width="500px"/>
     )}                                                        </div>
                                                         <div className="content">
                                                             <Tabs className="tf-tab">
@@ -81,13 +81,13 @@ function QuestionDetail(props) {
                                                                 {data && (
     <div className="tab-details">
         <div>
-            <p>Ennonce: {data.ennonce}</p>
+            <p><strong>Ennonce: </strong>{data.ennonce}</p>
            
-            <p>Responses Data:</p>
+            <p><strong>Responses :</strong></p>
 <ul>
     {data.responsesData.map((response, index) => (
           <li key={index}>
-          Content: {response.content}, Is Correct: {response.isCorrect.toString()}
+        <strong>  Content: </strong>{response.content},  <strong> Is Correct:</strong> {response.isCorrect.toString()}
       </li>
 
     ))}

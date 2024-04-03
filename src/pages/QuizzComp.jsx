@@ -1,32 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import Quiz from 'react-quiz-component';
 import Button from '@material-ui/core/Button';
 import { getAllquizzs } from '../services/quizz';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import PageTitle from '../components/pagetitle/PageTitle';
 import { Link } from 'react-router-dom';
-import img from '../assets/images/BATTERIE.jpg'
+import img from '../assets/images/BATTERIE.jpg';
 import { getuser } from '../services/question';
 import SideProfile from './SideProfile';
-import { duration } from '@mui/material';
-import axios from 'axios';
-function QuizzComp() {
-  const [questionResponses, setQuestionResponses] = useState([]);
-  const [quizResults, setQuizResults] = useState([]);
-  const [selectedQuiz, setSelectedQuiz] = useState(null);
-  const [showQuiz, setShowQuiz] = useState(false);  
-  const [user,setuser] = useState([]);
-  const [quizzList, setQuizzList] = useState([]);
-  const [quizDuration, setQuizDuration] = useState();
-  const [score, setScore] = useState();
+import { FiLogIn } from 'react-icons/fi';
 
-  const [quizResult, setQuizResult] = useState();
+function QuizzComp() {
+  const [user, setUser] = useState({});
+  const [quizzList, setQuizzList] = useState([]);
+
   useEffect(() => {
-    const fetchUser = async () => {
-        const userResult = await getuser("65f104d40b866b69b10b9552"); 
-        setuser(userResult.data);
-    }
-    fetchUser();
+    const fetchUserData = async () => {
+      try {
+        const userResult = await getuser("65f104d40b866b69b10b9552");
+        setUser(userResult.data);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
   }, []);
 
   useEffect(() => {
@@ -35,96 +32,46 @@ function QuizzComp() {
         const quizzResult = await getAllquizzs();
         const filteredQuizzes = quizzResult.data.filter(quiz => quiz.level === user.level);
         setQuizzList(filteredQuizzes);
-        console.log(quizDuration);
       } catch (error) {
         console.error('Error fetching quizzes:', error);
       }
     };
   
     fetchQuizzes();
-  }, [user.level, quizDuration]);
+  }, [user.level]);
 
-  const handleStartQuiz = (quiz) => {
-    // Vérifier si un quiz est sélectionné
-    if (quiz) {
-      const currentDate = new Date();
-      const startDate = new Date(quiz.dateDebut);
-      const endDate = new Date(quiz.dateFin);
-    
-      if (currentDate >= startDate && currentDate <= endDate) {
-        setSelectedQuiz(quiz);
-        setuser(user);
-        setShowQuiz(true);
-        setQuizDuration(quiz.duree);
-        
-      } else {
-        alert('Le quiz n\'est pas encore disponible ou a expiré.');
-      }
-    }
+  const quizzItemStyle = {
+    marginBottom: '20px',
+    border: '1px solid #ccc',
+    borderRadius: '10px',
+    padding: '15px',
+    backgroundColor: '#f9f9f9',
+    boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)',
+    color:'black',
   };
-  const handleQuestionSubmit = (response) => {
-    setQuestionResponses(prevResponses => [...prevResponses, response]);
-    
-  };
-  const sendQuizResult = async (quizResult) => {
-    try {
-      const response = await axios.post('http://localhost:4000/result/add', quizResult, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-      console.log('Réponse de la requête POST:', response.data);
-    } catch (error) {
-      console.error('Erreur lors de l\'envoi de la requête POST:', error);
-    }
-  };
-  
-  const handleQuizCompletion = (result) => {
-    console.log("result", result);
-    // Créer un objet contenant les informations du quiz
-    const quizResult = {
-      userId: result.questions[0].userId._id,
-      quizId: result.questions[0].quizId._id,
-      responses: questionResponses,
-      score: result.correctPoints,
-    };
-    console.log("resultapressss", quizResult);
-    sendQuizResult(quizResult);
-  };
-const generateQuiz = () => {
-  // Vérifier si un quiz est sélectionné
-  if (!selectedQuiz) return null;
 
-  const quizR = selectedQuiz;// Récupérer l'ID du quiz sélectionné
-  const userR = user; // Récupérer l'ID de l'utilisateur
-
-  return {
-    quizTitle: selectedQuiz.titre,
-    quizSynopsis: selectedQuiz.description,
-    questions: selectedQuiz.questions.map(question => {
-      const correctAnswerIndices = question.responses
-        .map((response, index) => response.isCorrect ? index+1 : null)
-        .filter(index => index !== null);
-
-      return {
-        userId: userR, // Ajouter l'ID de l'utilisateur à chaque question
-        quizId: quizR, // Ajouter l'ID du quiz à chaque question
-        questionId:question._id,
-        question: question.ennonce,
-        questionType: "text", 
-        answerSelectionType: "multiple",
-        imageUrl: question.image ? question.image.url : null,
-        answers: question.responses.map(response => response.content),
-        correctAnswer: correctAnswerIndices,
-        messageForCorrectAnswer: "Correct answer. Good job.",
-        messageForIncorrectAnswer: "Incorrect answer, Please try again.",
-        explanation: "Explanation goes here.",
-        point: "10"
-
-      };
-    }),
+  const quizzTitleStyle = {
+    marginBottom: '5px',
+    fontSize: '20px',
+    fontWeight: 'bold',
+    display: 'flex',
+    alignItems: 'center',
   };
-};
+
+  const quizzLinkStyle = {
+    color: '#15a5e6',
+    textDecoration: 'none',
+    marginLeft: '10px',
+  };
+  const title = {
+    fontSize: '24px',
+    fontWeight: 'bold',
+    color: '#333',
+    textAlign: 'center',
+    marginBottom: '20px',
+    //textTransform: 'uppercase',
+    letterSpacing: '2px',
+  };
   return (
     <div>
       <section className="tf-page-title ">    
@@ -158,33 +105,32 @@ const generateQuiz = () => {
                 <div className="dashboard-content inventory content-tab">
                   <section className="tf-item-detail">
                     <div className="tf-container">
-                      <div className="row">
+                      <div className="row justify-content-center">
                         <div className="col-md-12">
                           <div className="tf-item-detail-inner">
-                            <div className="content">
-                              <h2 className="title-detail"></h2>
-                              {quizzList.map((quiz) => (
-                                <div key={quiz.id}>
-                                  <h3>{quiz.titre}</h3>
-                                  <p>{quiz.description}</p>
-                                  <Button onClick={() => handleStartQuiz(quiz)}>Commencer le quiz</Button>
+                            <div className=" col-md-2" ></div>
+                            <div className="content  col-md-6">
+                            <h2 style={title} className="title-detail">Liste des Quiz</h2>
+                              {quizzList && quizzList.map((item, index) => (                             
+                                <div key={index} style={quizzItemStyle}>
+                                  <h3 style={quizzTitleStyle}>
+                                    <svg
+                                      viewBox="0 0 24 24"
+                                      fill="currentColor"
+                                      height="1em"
+                                      width="1em"
+                                    >
+                                      <path d="M20.315 4.319l-8.69 8.719-3.31-3.322-2.069 2.076 5.379 5.398 10.76-10.796zM5.849 14.689L0 19.682h24l-5.864-4.991h-3.2l-1.024.896h3.584l3.072 2.815H3.417l3.072-2.815h2.688l-.896-.896z" />
+                                    </svg>                                   
+                                    <Link to={`/quizz/validation/${item._id}`} style={quizzLinkStyle}>
+                                      {item.titre}
+                                    </Link>
+                                  </h3>
+                                  <p>{item.description}</p>
                                 </div>
                               ))}
-                              {showQuiz && generateQuiz() && <Quiz quiz={generateQuiz()}   shuffle
-        shuffleAnswer
-        showInstantFeedback
-        onComplete={handleQuizCompletion}
-        onQuestionSubmit={handleQuestionSubmit}
-        disableSynopsis
-        timer={quizDuration}
-       // allowPauseTimer
-       // continueTillCorrect
-    />}
-
-
-
-    
                             </div>
+                            <div className=" col-md-4" ></div>
                           </div>
                         </div>
                       </div>
@@ -198,8 +144,6 @@ const generateQuiz = () => {
       </section>
     </div>
   );
-};
+}
 
 export default QuizzComp;
-
-//<Link to={`/quizz/${quiz._id}`}> <Button >Commencer le quiz</Button></Link>

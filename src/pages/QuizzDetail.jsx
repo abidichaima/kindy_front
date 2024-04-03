@@ -64,8 +64,7 @@ function QuizzDetail(props) {
                                         <div className="tf-container">
                                             <div className="row">
                                                 <div className="col-md-12">
-                                                    <div className="tf-item-detail-inner">
-                                                        <div className="image"></div>
+                                                    <div >
                                                         <div className="content">
                                                         <Tabs className="tf-tab">
     <TabList className="menu-tab">
@@ -76,36 +75,34 @@ function QuizzDetail(props) {
         {data && (
             <div className="tab-details">
                 <div>
-                    <p>Titre: {data.titre}</p>
-                    <p>Description: {data.description}</p>
-                    <p>Durée: {data.duree}</p>
-                    <p>Date de début: {data.dateDebut}</p>
-                    <p>Date de fin: {data.dateFin}</p>
+                    <p><strong>Title: </strong> {data.titre}</p>
+                    <p><strong>Description: </strong> {data.description}</p>
+                    <p><strong>Duration:  </strong>{data.duree}</p>
+                    <p><strong>Attempts: </strong> {data.tentative}</p>
+
+                    <p><strong>Start Date : </strong> {new Date(data.dateDebut).toLocaleDateString()} {new Date(data.dateDebut).toLocaleTimeString()}</p>
+                    <p><strong>End Date :  </strong>{new Date(data.dateFin).toLocaleDateString()} {new Date(data.dateFin).toLocaleTimeString()}</p>
                 </div>
             </div>
         )}
     </TabPanel>
     <TabPanel>
-    {data && (
-        <div className="tab-details">
-            {data.questions.map((question, index) => (
-                <div key={index}>
-                    <p>question {index + 1}: {question.ennonce}</p>
-                    {question.image && ( // Vérifiez si question.image existe
-                        <img src={question.image.url} alt="no Image" height="200px" width="200px"/>
-                    )}
-                    <p>Responses:</p>
-                    <ul>
-                        {question.responses.map((response, index) => (
-                            <li key={index}>
-                                Content: {response.content}, is correct: {response.isCorrect.toString()}
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            ))}
-        </div>
-    )}
+  {data && data.questions.map((question, index) => (
+    <div key={index} className="tab-details">
+      <p><strong>Question {index + 1}: </strong>{question.ennonce}</p>
+      {question.image.url && ( // Vérifiez si question.image existe
+        <img src={question.image.url} height="200px" width="200px"  />
+      )}
+      <p><strong>Réponses: </strong></p>
+      <ul>
+        {question.responses.map((response, index) => (
+          <li key={index}>
+            <strong>Contenu :</strong> {response.content}, <strong>est correcte :</strong> {response.isCorrect.toString()}
+          </li>
+        ))}
+      </ul>
+    </div>
+  ))}
 </TabPanel>
 </Tabs>
                                                         </div>

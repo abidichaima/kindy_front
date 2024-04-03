@@ -19,6 +19,8 @@ import { deleteQuestion, getAllquestions } from '../services/question';
 import CardModal from '../components/layouts/CardModal';
 import { addQuizz ,getAllquizzs,deleteQuizz} from '../services/quizz';
 import QuizzAdd from './QuizzAdd';
+import QuizzUpdate from './QuizzUpdate';
+
 
 function ViewQuizz(props) {
 
@@ -31,23 +33,31 @@ function ViewQuizz(props) {
         showCancelButton: true,
         confirmButtonColor: '#dc3545',
         cancelButtonColor: '#6c757d',
-        confirmButtonText: 'Yes, delete it!'
+        confirmButtonText: 'Yes, delete it!',
+        onHide: () => setUpdateShow(false)
     });
   
       if (result.isConfirmed) {
         
         await deleteQuizz(id);
-        Swal.fire('Deleted!', 'Your item has been deleted.', 'success');
-      }
+        Swal.fire(
+          'Deleted!',
+          'Your quizz has been deleted.',
+          'success'
+      );
+      const quizzResult= await getAllquizzs();
+      setquizzList(quizzResult.data);
+    }
 
     } catch (error) {
       console.error('Error deleting item:', error);
       Swal.fire(
         'Error',
-        'Failed to delete the item.',
+        'Failed to delete the quizz.',
         'error'
       );
     }
+    
   };
 
 const [addShow, setAddShow] = useState(false);
@@ -74,7 +84,7 @@ const btnupdate = {
     borderRadius: "25px",
     border: "none",
     cursor: "pointer",
-    padding: "5px", // Ajustez le padding pour réduire l'espace autour de l'icône
+    padding: "5px", 
     outline: "none",
     transition: "background-color 0.3s",
     marginRight: "5px",
@@ -163,17 +173,33 @@ fetchQuizzs();
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = Math.min(startIndex + itemsPerPage, quizzList.length);
  
-
+  const handleHide = async () => {
+    setAddShow(false);
+    try {
+      const quizzResult= await getAllquizzs();
+      setquizzList(quizzResult.data);
+    } catch (error) {
+      console.error('Error fetching questions:', error);
+    }
+  };
 return (
 
    
     <div>
 <QuizzAdd
 show={addShow}
-onHide={() => setAddShow(false)}
-        style={{ backgroundColor: 'white' }}
+onHide={handleHide}
+style={{ backgroundColor: 'white' }}
    
       />
+      {updateShow && (
+      <QuizzUpdate
+       show={updateShow}
+      initialValues={selectedItem}
+        onHide={() => setUpdateShow(false)}
+          />
+                                )}
+     
         <section class="tf-page-title ">    
             <div class="tf-container">
                 <div class="row">
@@ -239,10 +265,14 @@ Add</button>
       <div className="col-rankingg"><Link to="#">Title</Link></div>
       <div className="col-rankingg"><Link to="#">Description</Link></div>
       <div className="col-rankingg"><Link to="#">Duration</Link></div>
+      <div className="col-rankingg"><Link to="#">Attempts</Link></div>
+
       <div className="col-rankingg"><Link to="#">Level</Link></div>
 
       <div className="col-rankingg"><Link to="#">Start Date </Link></div>
       <div className="col-rankingg"><Link to="#">End Date </Link></div>
+      <div className="col-rankingg"><Link to="#">Actions</Link></div>
+
 
     </div>
   </div>
@@ -254,17 +284,20 @@ Add</button>
       <div className="content-ranking" key={index}> 
         <div className="col-rankingg">{item.titre}</div>
         <div className="col-rankingg">{item.description}</div>
-        <div className="col-rankingg">{item.duree}</div>
+        <div className="col-rankingg">{item.duree} minutes</div>
+        <div className="col-rankingg">{item.tentative} </div>
+
         <div className="col-rankingg">{item.level}</div>
 
-        <div className="col-rankingg">{item.dateDebut}</div>
-        <div className="col-rankingg">{item.dateFin}</div>
+        <div className="col-rankingg">{new Date(item.dateDebut).toLocaleDateString()} {new Date(item.dateDebut).toLocaleTimeString()}</div>
+        <div className="col-rankingg">{new Date(item.dateFin).toLocaleDateString()} {new Date(item.dateFin).toLocaleTimeString()}</div>
 
 
         <button type='submit'  style={btnupdate} onClick={() => {
                       handleOpenPopupUp(item);
                                     setUpdateShow(true);
                                   }
+                                  
                                   }>
         <svg fill="none" viewBox="0 0 15 15" height="20px" width="20px" {...props}>
   <path

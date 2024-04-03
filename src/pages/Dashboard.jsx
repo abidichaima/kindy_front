@@ -11,8 +11,6 @@ import img1 from '../assets/images/logo.png'
 //import avt from '../assets/images/logo1.png'
 
 import ViewUser from './viewUser';
-import AddQuestionForm from './AddQuestion';
-import UpdateQuestionForm from './UpdateQuestion';
 import Swal from 'sweetalert2';
 
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';

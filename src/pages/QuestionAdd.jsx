@@ -4,8 +4,11 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { Modal } from "react-bootstrap";
+import 'sweetalert2/dist/sweetalert2.min.css';
 import Swal from 'sweetalert2';
 import {  getAllquestions } from '../services/question';
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import { FaPlusCircle, FaMinusCircle } from 'react-icons/fa';
 
 import {
   MDBBtn,
@@ -34,6 +37,7 @@ const styles = {
     minWidth: '120px',
 
   },
+ 
   buttonC: {
     border: "none",
     cursor: "pointer",
@@ -56,7 +60,6 @@ const styles = {
 
 function QuestionAdd(props) {
 
-  // ERROR CONSTANT 
   
   
   const [ennonceErr, setEnnonceErr] = useState('');
@@ -64,14 +67,19 @@ function QuestionAdd(props) {
  
   const [respErr, setrespErr] = useState('');
   const [showResp, setshowResp] = useState(false);
+
+  const [pointErr, setpointErr] = useState('');
+  const [showPoint, setshowPoint] = useState(false);
   
   
    const [questionItem, setQuestionItem] = useState({
      ennonce: "",
      image: "",
-     responsesData: [{ content: "", isCorrect: false }]
+     point:"",
+     responsesData: [{ content: "", isCorrect: false ,img:""}]
    });
    const [image, setImage] = useState("");
+
    const navigate = useNavigate();
  
    const previewFiles = (file) => {
@@ -87,13 +95,22 @@ function QuestionAdd(props) {
      setImage(image);
      previewFiles(image);
    };
+   
+  
+   const removeResponse = (indexToRemove) => {
+    setQuestionItem(prevQuestionItem => ({
+        ...prevQuestionItem,
+        responsesData: prevQuestionItem.responsesData.filter((_, index) => index !== indexToRemove)
+    }));
+};
+
  
    const onValueChange = (e, index) => {
      const { name, value } = e.currentTarget;
      const updatedResponses = [...questionItem.responsesData];
      updatedResponses[index][name] = name === "isCorrect" ? value === "true" : value;
- 
-     setQuestionItem({ ...questionItem, responsesData: updatedResponses });
+  
+  setQuestionItem({ ...questionItem, responsesData: updatedResponses });
    };
  
    const handleAddResponse = () => {
@@ -106,36 +123,58 @@ function QuestionAdd(props) {
    const url = "http://localhost:4000/question";
  
    const AddQuestion = async (e) => {
-     e.preventDefault();
+
+  questionItem.responsesData.forEach((response, index) => {
+    if (!response.content.trim()) {
+      setrespErr(`Please fill in response `);
+      setshowResp(true);
+    }
+  });
+ 
      if (!questionItem.ennonce  ) {
        setEnnonceErr('Please fill in the question');
        setshowErrE(true) }
-     if (!questionItem.responsesData.content) {
-         setrespErr('Please fill in the responses');
-         setshowResp(true) }
-       
+    
+    if (!questionItem.point) {
+          setpointErr('Please fill in the point');
+          setshowPoint(true) }
+          if (questionItem.point<=0) {
+            setpointErr('Please fill in the point >= 0');
+            setshowPoint(true) ;
+            return;
+          }
  
      try {
-       const formData = new FormData();
-       formData.append("ennonce", questionItem.ennonce);
-       if (image==="") {
-         console.log("none");
-       }
-       else{
-        formData.append("image", image);
-       }
-       formData.append("responsesData", JSON.stringify(questionItem.responsesData));
+      const formData = new FormData();
+formData.append("ennonce", questionItem.ennonce);
+formData.append("point", questionItem.point);
+
+if (image) {
+  formData.append("image", image);
+}
+formData.append("responsesData", JSON.stringify(questionItem.responsesData));
+/*questionItem.responsesData.map((response, index) => {
+  if (response.img) {
+    formData.append(`img[${index}]`, response.img);
+  }
+  formData.append("responsesData", JSON.stringify(questionItem.responsesData[index]));
+ 
+});*/
+
+       
       // console.log(formData.);
-     /* formData.forEach(function(value, key){
+     formData.forEach(function(value, key){
        console.log(key + ': ' + value);
-   });  */
+   });  
+  
        const result = await axios.post(`${url}/add`, formData, {
          headers: {
            'Content-Type': 'multipart/form-data'
          }
        });
-   
+       console.log("result",result);
        if (result.status === 201) {
+       
         Swal.fire({
           icon: 'success',
           title: 'Question added successfully!',
@@ -145,7 +184,7 @@ function QuestionAdd(props) {
           if (props.onHide) {
             handleModalClose();
           }
-          navigate('/question'); // Correction : utilisez la fonction navigate correctement
+          navigate('/question'); 
         });
       }
      } catch (error) {
@@ -157,9 +196,12 @@ function QuestionAdd(props) {
     setQuestionItem({
       ennonce: "",
       image: "",
+      point:"",
       responsesData: [{ content: "", isCorrect: false }]
     });
-    
+    setEnnonceErr('');
+    setpointErr('');
+    setrespErr('');
 
     if (props.onHide) {
       props.onHide();
@@ -202,10 +244,32 @@ function QuestionAdd(props) {
                 <p style={{ color: 'red' }}>{ennonceErr}</p>
               </MDBCol>
             </MDBRow>)}
-    
+
+            <MDBRow className='align-items-center pt-4 pb-3'>
+            <MDBCol md='3' className='ps-5 '>
+              <h11 className="mb-0">Point</h11>
+            </MDBCol>
+            <MDBCol md='9' className='pe-5'>
+              <MDBInput size='lg' name='point' type='number' value={questionItem.point}
+                onChange={(e) => {
+                    setQuestionItem({ ...questionItem, point: e.target.value });
+                    setpointErr('');
+                }} />
+            </MDBCol>
+          </MDBRow>
+          {showPoint && (
+            <MDBRow className='align-items-center pt-4 pb-3'>
+              <MDBCol md='3' className='ps-5'>
+                <h1 className="mb-0" style={{ color: 'red' }}>   </h1>
+              </MDBCol>
+              <MDBCol md='9' className='pe-5'>
+                <p style={{ color: 'red' }}>{pointErr}</p>
+              </MDBCol>
+            </MDBRow>)}
+
      <MDBRow className='align-items-center pt-4 pb-3'>
             <MDBCol md='3' className='ps-5 '>
-              <h11 className="mb-0">Ennonce</h11>
+              <h11 className="mb-0">Image</h11>
             </MDBCol>
             <MDBCol md='9' className='pe-5'>
               <MDBInput size='lg' className="img-fluid" name="image" type='file' src={image}  accept="image/*"
@@ -216,12 +280,13 @@ function QuestionAdd(props) {
         
          
           <Button
-        variant="contained"
-        onClick={handleAddResponse}
-        style={{ marginBottom: '10px' }}
-      >
-        Add Response
-      </Button>
+  variant="contained"
+  onClick={handleAddResponse}
+  style={{ marginBottom: '10px' }}
+  startIcon={<AddCircleOutlineIcon />}
+>
+  Add Response
+</Button>
       {questionItem.responsesData.map((response, index) => (
         <div key={index}>
             <MDBRow className='align-items-center pt-4 pb-3'>
@@ -229,11 +294,19 @@ function QuestionAdd(props) {
               <h11 className="mb-0">Response</h11>
             </MDBCol>
             <MDBCol md='9' className='pe-5'>
+            <div className='d-flex align-items-center'>
               <MDBInput size='lg' name="content" type='text' value={response.content}
                  onChange={(e) => { 
                   onValueChange(e, index); 
-                  setrespErr(''); 
+                 setrespErr(' ');
                 }} />
+                <FaMinusCircle
+        onClick={() => removeResponse(index)}
+        style={{ marginLeft: '10px', cursor: 'pointer' }}
+        color="red"
+      />
+    </div>
+           
             </MDBCol>
           </MDBRow>
           {showResp && (
@@ -245,6 +318,7 @@ function QuestionAdd(props) {
                 <p style={{ color: 'red' }}>{respErr}</p>
               </MDBCol>
             </MDBRow>)}
+          
           <select
     className="form-select form-select-lg"
     style={{ padding: '0.5rem', borderRadius: '0.3rem', border: '1px solid #ced4da' }}
@@ -258,7 +332,7 @@ function QuestionAdd(props) {
         </div>
       ))} 
           <div style={styles.footer}>
-  <button onClick={AddQuestion} className="button-popup">Save</button>
+  <button  onClick={AddQuestion}  style={{ width: '100px', marginLeft: '450px' }} className="button-popup">Save</button>
 </div>
         </MDBContainer>
       </div>

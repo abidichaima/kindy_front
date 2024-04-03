@@ -27,3 +27,5 @@ export const deleteQuestion = async (id) => {
  export const editQuestion = async (id, question) => {
 return await axios.put(`${url}/update/${id}`, question);
     };
+
+  
