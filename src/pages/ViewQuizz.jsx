@@ -4,36 +4,64 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import PageTitle from '../components/pagetitle/PageTitle';
 import { Link, useParams } from 'react-router-dom';
 import { createPortal } from 'react-dom';
-import img from '../assets/images/BATTERIE.jpg';
-import 'sweetalert2/dist/sweetalert2.min.css';
-
+import img from '../assets/images/BATTERIE.jpg'
+//import img from '../assets/images/externe piano.jpg'
+//import { useNavigate } from "react-router-dom";
+//import avt from '../assets/images/logo1.png'
 import Swal from 'sweetalert2';
+
+
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import {Dialog, DialogContent,DialogTitle} from '@mui/material';
 import Modal from 'react-bootstrap/Modal';
 import Dashboard from './Dashboard';
 import { deleteQuestion, getAllquestions } from '../services/question';
 import CardModal from '../components/layouts/CardModal';
-import QuestionAdd from './QuestionAdd';
-import QuestionUpdate from './QuestionUpdate';
+import { addQuizz ,getAllquizzs,deleteQuizz} from '../services/quizz';
+import QuizzAdd from './QuizzAdd';
+import QuizzUpdate from './QuizzUpdate';
 
 
-function ViewQuestion(props) {
+function ViewQuizz(props) {
+
+  const DeleteConfirmation = async (id) => {
+    try {
+      const result = await Swal.fire({
+        title: 'Are you sure?',
+        text: 'You will not be able to recover this item!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Yes, delete it!',
+        onHide: () => setUpdateShow(false)
+    });
+  
+      if (result.isConfirmed) {
+        
+        await deleteQuizz(id);
+        Swal.fire(
+          'Deleted!',
+          'Your quizz has been deleted.',
+          'success'
+      );
+      const quizzResult= await getAllquizzs();
+      setquizzList(quizzResult.data);
+    }
+
+    } catch (error) {
+      console.error('Error deleting item:', error);
+      Swal.fire(
+        'Error',
+        'Failed to delete the quizz.',
+        'error'
+      );
+    }
+    
+  };
+
 const [addShow, setAddShow] = useState(false);
 const [updateShow, setUpdateShow] = useState(false);
-const dialogContentStyle = {
-
-  padding: '20px',
-  borderRadius: '10px',
-  border: '1px solid #ccc',
-  // background: `url('https://thumbs.dreamstime.com/z/notes-de-musique-7544001.jpg?w=576 576w')` , // Adjust the path to your image
-  backgroundSize: 'cover',
-  backdropFilter: 'blur(5px)', // Adjust the blur amount as needed
-  transition: 'box-shadow 0.3s',
-};
-
-const [isUpdateFormOpen, setUpdateFormOpen] = useState(false);
-
 
 const handleOpenPopupUp = (item) => {
   setSelectedItem(item);
@@ -41,40 +69,6 @@ const handleOpenPopupUp = (item) => {
   console.log(updateShow);
 
 };
-
-const DeleteConfirmation = async (id) => {
-  try {
-      const result = await Swal.fire({
-          title: 'Are you sure?',
-          text: 'You will not be able to recover this item!',
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#dc3545',
-          cancelButtonColor: '#6c757d',
-          confirmButtonText: 'Yes, delete it!'
-      });
-
-      if (result.isConfirmed) {
-          await deleteQuestion(id);
-          Swal.fire(
-              'Deleted!',
-              'Your question has been deleted.',
-              'success'
-          );
-          const questionResult= await getAllquestions();
-setquestionList(questionResult.data);
-      }
-  } catch (error) {
-      console.error('Error deleting item:', error);
-      Swal.fire(
-          'Error',
-          'Failed to delete the question.',
-          'error'
-      );
-  }
-};
-
-
 const btnAdd = {
     marginLeft: "800px",
     backgroundColor: "#076fb9",
@@ -90,7 +84,7 @@ const btnupdate = {
     borderRadius: "25px",
     border: "none",
     cursor: "pointer",
-    padding: "5px", // Ajustez le padding pour réduire l'espace autour de l'icône
+    padding: "5px", 
     outline: "none",
     transition: "background-color 0.3s",
     marginRight: "5px",
@@ -150,15 +144,15 @@ const btnStyles = {
  
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5); 
-  const [questionList,setquestionList] = useState([]);
+  const [quizzList,setquizzList] = useState([]);
 
 useEffect(() =>{
-const fetchQuestions = async() =>{
-const questionResult= await getAllquestions();
+const fetchQuizzs = async() =>{
+const quizzResult= await getAllquizzs();
 
-setquestionList(questionResult.data);
+setquizzList(quizzResult.data);
 }
-fetchQuestions();
+fetchQuizzs();
 },[]);
 
   const handleChangeItemsPerPage = (e) => {
@@ -171,31 +165,41 @@ fetchQuestions();
   };
   
   const handleNextPage = () => {
-    setCurrentPage((prevPage) => Math.min(prevPage + 1, Math.ceil(questionList.length / itemsPerPage)));
+    setCurrentPage((prevPage) => Math.min(prevPage + 1, Math.ceil(quizzList.length / itemsPerPage)));
   };
   
-  const pageCount = Math.ceil(questionList.length / itemsPerPage);
+  const pageCount = Math.ceil(quizzList.length / itemsPerPage);
   
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = Math.min(startIndex + itemsPerPage, questionList.length);
+  const endIndex = Math.min(startIndex + itemsPerPage, quizzList.length);
  
   const handleHide = async () => {
     setAddShow(false);
-    setUpdateShow(false);
-      const questionResult = await getAllquestions();
-      setquestionList(questionResult.data); 
+    try {
+      const quizzResult= await getAllquizzs();
+      setquizzList(quizzResult.data);
+    } catch (error) {
+      console.error('Error fetching questions:', error);
+    }
   };
- 
-return (   
-    <div>
-<QuestionAdd
- show={addShow}
- onHide={handleHide}
+return (
 
-        style={{ backgroundColor: 'white' }}
+   
+    <div>
+<QuizzAdd
+show={addShow}
+onHide={handleHide}
+style={{ backgroundColor: 'white' }}
    
       />
-  
+      {updateShow && (
+      <QuizzUpdate
+       show={updateShow}
+      initialValues={selectedItem}
+        onHide={() => setUpdateShow(false)}
+          />
+                                )}
+     
         <section class="tf-page-title ">    
             <div class="tf-container">
                 <div class="row">
@@ -258,33 +262,42 @@ Add</button>
 
   <div className="table-ranking top">
     <div className="title-ranking">
-      <div className="col-rankingg"><Link to="#">Ennonce</Link></div>
-      <div className="col-rankingg"><Link to="#">Point</Link></div>
+      <div className="col-rankingg"><Link to="#">Title</Link></div>
+      <div className="col-rankingg"><Link to="#">Description</Link></div>
+      <div className="col-rankingg"><Link to="#">Duration</Link></div>
+      <div className="col-rankingg"><Link to="#">Attempts</Link></div>
 
-      <div className="col-rankingg"><Link to="#">Image</Link></div>
-      <div className="col-rankingg"><Link to="#">Action</Link></div>
+      <div className="col-rankingg"><Link to="#">Level</Link></div>
+
+      <div className="col-rankingg"><Link to="#">Start Date </Link></div>
+      <div className="col-rankingg"><Link to="#">End Date </Link></div>
+      <div className="col-rankingg"><Link to="#">Actions</Link></div>
+
+
     </div>
   </div>
  
   <div className="table-ranking">
     {/* Affichage des éléments de la page actuelle */}
-    {console.log(questionList)}
-    {questionList.slice(startIndex, endIndex).map((item, index) => (
+    {console.log(quizzList)}
+    {quizzList.slice(startIndex, endIndex).map((item, index) => (
       <div className="content-ranking" key={index}> 
-        <div className="col-rankingg">{item.ennonce}</div>
-        <div className="col-rankingg">{item.point}</div>
+        <div className="col-rankingg">{item.titre}</div>
+        <div className="col-rankingg">{item.description}</div>
+        <div className="col-rankingg">{item.duree} minutes</div>
+        <div className="col-rankingg">{item.tentative} </div>
 
-        <div className="col-rankingg">  {item.image && item.image.url &&
-    <img src={item.image.url} alt="Cloudinary Image"  height={150} width={150}/>
-  }</div>
-      {/* Afficher toutes les réponses pour cette question */}
-      {item.responses.map((response, responseIndex) => (
-        <div key={responseIndex}></div>
-      ))}
+        <div className="col-rankingg">{item.level}</div>
+
+        <div className="col-rankingg">{new Date(item.dateDebut).toLocaleDateString()} {new Date(item.dateDebut).toLocaleTimeString()}</div>
+        <div className="col-rankingg">{new Date(item.dateFin).toLocaleDateString()} {new Date(item.dateFin).toLocaleTimeString()}</div>
+
+
         <button type='submit'  style={btnupdate} onClick={() => {
                       handleOpenPopupUp(item);
                                     setUpdateShow(true);
                                   }
+                                  
                                   }>
         <svg fill="none" viewBox="0 0 15 15" height="20px" width="20px" {...props}>
   <path
@@ -295,15 +308,9 @@ Add</button>
   />
 </svg>
 </button>
-{updateShow && (
-                                  <QuestionUpdate
-                                    show={updateShow}
-                                    initialValues={selectedItem}
-                                    onHide={handleHide}
-                                    />
-                                )}
 
-<Link to={`/questionDetail/${item._id}`}>
+
+<Link to={`/quizzDetail/${item._id}`}>
 <button type='submit'   style={btnshow}>
 <svg
   viewBox="0 0 24 24"
@@ -315,9 +322,8 @@ Add</button>
   <path d="M12 9a3.02 3.02 0 00-3 3c0 1.642 1.358 3 3 3 1.641 0 3-1.358 3-3 0-1.641-1.359-3-3-3z" />
   <path d="M12 5c-7.633 0-9.927 6.617-9.948 6.684L1.946 12l.105.316C2.073 12.383 4.367 19 12 19s9.927-6.617 9.948-6.684l.106-.316-.105-.316C21.927 11.617 19.633 5 12 5zm0 12c-5.351 0-7.424-3.846-7.926-5C4.578 10.842 6.652 7 12 7c5.351 0 7.424 3.846 7.926 5-.504 1.158-2.578 5-7.926 5z" />
 </svg>
-</button>
-</Link>
-<button   style={btndelete} onClick={() => DeleteConfirmation(item._id)} >
+</button></Link>
+<button   style={btndelete}  onClick={() => DeleteConfirmation(item._id)}>
 <svg
   viewBox="0 0 1024 1024"
   fill="currentColor"
@@ -355,7 +361,7 @@ Add</button>
     <FiChevronRight style={iconStyles} />
   </button>
 
-  <span style={{ marginLeft:'10px'}}>{questionList.length}</span>
+  <span style={{ marginLeft:'10px'}}>{quizzList.length}</span>
 </div>
 </div>
 </TabPanel>
@@ -378,4 +384,4 @@ Add</button>
 );
 }
 
-export default ViewQuestion;
+export default ViewQuizz;

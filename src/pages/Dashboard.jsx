@@ -3,6 +3,21 @@ import { Tab, TabList,  } from 'react-tabs';
 import { Link } from 'react-router-dom';
 import img1 from '../assets/images/logo.png'
 
+import ViewUser from './viewUser';
+import Swal from 'sweetalert2';
+
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import {
+ 
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    
+  } from '@mui/material';
+
+
+
+
 function Dashboard(props) {
 
     return (
@@ -51,7 +66,16 @@ width="20"
 <path d="M12.5 3a.5.5 0 010 1h-5a.5.5 0 010-1h5zm0 3a.5.5 0 010 1h-5a.5.5 0 010-1h5zm.5 3.5a.5.5 0 00-.5-.5h-5a.5.5 0 000 1h5a.5.5 0 00.5-.5zm-.5 2.5a.5.5 0 010 1h-5a.5.5 0 010-1h5z" />
 <path d="M16 2a2 2 0 00-2-2H2a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V2zM4 1v14H2a1 1 0 01-1-1V2a1 1 0 011-1h2zm1 0h9a1 1 0 011 1v12a1 1 0 01-1 1H5V1z" />
 </svg><Link to="/question">Questions</Link> </a></Tab>
-
+<Tab><a > <svg
+fill="currentColor"
+viewBox="0 0 16 16"
+height="20"
+width="20"
+{...props}
+>
+<path d="M12.5 3a.5.5 0 010 1h-5a.5.5 0 010-1h5zm0 3a.5.5 0 010 1h-5a.5.5 0 010-1h5zm.5 3.5a.5.5 0 00-.5-.5h-5a.5.5 0 000 1h5a.5.5 0 00.5-.5zm-.5 2.5a.5.5 0 010 1h-5a.5.5 0 010-1h5z" />
+<path d="M16 2a2 2 0 00-2-2H2a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V2zM4 1v14H2a1 1 0 01-1-1V2a1 1 0 011-1h2zm1 0h9a1 1 0 011 1v12a1 1 0 01-1 1H5V1z" />
+</svg><Link to="/quizz">Quizz</Link> </a></Tab>
 <Tab><a > <svg
 fill="currentColor"
 viewBox="0 0 16 16"
@@ -60,7 +84,7 @@ width="1em"
 {...props}
 >
 <path d="M7 2.5a.5.5 0 01.5-.5h7a.5.5 0 01.5.5v1a.5.5 0 01-.5.5h-7a.5.5 0 01-.5-.5v-1zM2 1a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V3a2 2 0 00-2-2H2zm0 8a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H2zm.854-3.646a.5.5 0 01-.708 0l-1-1a.5.5 0 11.708-.708l.646.647 1.646-1.647a.5.5 0 11.708.708l-2 2zm0 8a.5.5 0 01-.708 0l-1-1a.5.5 0 01.708-.708l.646.647 1.646-1.647a.5.5 0 01.708.708l-2 2zM7 10.5a.5.5 0 01.5-.5h7a.5.5 0 01.5.5v1a.5.5 0 01-.5.5h-7a.5.5 0 01-.5-.5v-1zm0-5a.5.5 0 01.5-.5h5a.5.5 0 010 1h-5a.5.5 0 01-.5-.5zm0 8a.5.5 0 01.5-.5h5a.5.5 0 010 1h-5a.5.5 0 01-.5-.5z" />
-</svg> Results </a></Tab>
+</svg><Link to="/results"> Results </Link></a></Tab>
 <Tab><a >  <svg
 fill="currentColor"
 viewBox="0 0 16 16"

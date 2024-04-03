@@ -23,9 +23,9 @@ import Ranking from "./Ranking";
 import Register from "../components/Register/Register"
 import Wallet from "./Wallet";
 import ViewUser from "./viewUser";
-import ViewQuestion from "./viewQuestion";
+//import ViewQuestion from "./viewQuestion";
 import Dash from "./Dash";  
-import Profile from "./Profile";
+//import Profile from "./Profile";
 import { useCookies } from "react-cookie";
 import { Link, useNavigate } from "react-router-dom";
 import React, { useEffect } from 'react';
@@ -76,16 +76,20 @@ if (currentUser) {
 
 const DashWrapper = () => {
   const navigate = useNavigate();
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
-    if (currentUser.role === 'student' || currentUser.role === 'teacher') {
-      navigate('/404');
+    const user = getUserInfoFromCookie();
+    if (user) {
+      setCurrentUser(user);
+    } else {
+      // Redirect to 404 page if user data is not found in cookies
+      navigate('/404', { replace: true });
     }
-  }, [currentUser.role, navigate]);
+  }, [navigate]);
 
-  return <Dash />;
+  return currentUser ? <Dash /> : null;
 };
-
 const routes = [
   { path: '/', component: <Home01 />},
 
@@ -110,6 +114,7 @@ const routes = [
   { path: '/blog-details-v1', component: <BlogDetails01 />},
   { path: '/blog-details-v2', component: <BlogDetails02 />},
   { path: '/contact', component: <Contact />},
+
   { path: '/users', component: <ViewUser />},
   { path: '/question', component: <ViewQuestion />},
 
@@ -125,7 +130,14 @@ const routes = [
   { path: '/freetime', component: <ViewFreeTime />},
   { path: '/holidays', component: <Holidays />},
   { path: '/mycalendar', component: <ViewCalendarTeacher />},
-
+ { path: '/quizz', component: <ViewQuizz/>},
+  { path: '/test', component: <QuizzComp/>},
+  { path: '/questionDetail/:id', component: <QuestionDetail />},
+  { path: '/quizzDetail/:id', component: <QuizzDetail />},
+  { path: '/results', component: <ViewResult />},
+  { path: '/resultDetail/:id', component: <ResultDetail />},
+  { path: '/quizz/:id', component: <Quiz />},
+  { path: '/quizz/validation/:id', component: <QuizzValide />},
 ]
 
 export default routes;
