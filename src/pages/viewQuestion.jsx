@@ -181,6 +181,7 @@ fetchQuestions();
  
   const handleHide = async () => {
     setAddShow(false);
+    setUpdateShow(false);
     try {
       const questionResult = await getAllquestions();
       setquestionList(questionResult.data);
@@ -188,9 +189,7 @@ fetchQuestions();
       console.error('Error fetching questions:', error);
     }
   };
-return (
-
-   
+return (   
     <div>
 <QuestionAdd
  show={addShow}
