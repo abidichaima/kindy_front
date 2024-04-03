@@ -5,6 +5,8 @@ import { useCookies } from "react-cookie";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./styles.module.css";
 import Swal from 'sweetalert2';
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons"; // Importez les icônes de l'œil
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"; // Importez FontAwesome pour utiliser les icônes
 import {
   MDBBtn,
   MDBContainer,
@@ -23,7 +25,15 @@ function Register() {
   const [cookies] = useCookies(["cookie-name"]);
   const navigate = useNavigate();
 
+  const [values, setValues] = useState({ email: '', password: '' });
+  const [error, setError] = useState('');
 
+  useEffect(() => {
+    // Si l'utilisateur est déjà connecté, le rediriger vers la page 404
+    if (cookies.user) {
+      navigate('/404');
+    }
+  }, [cookies.user, navigate]);
 
  
   const [email, setEmail] = useState('');
@@ -60,7 +70,19 @@ function Register() {
   const [showErrConfirmPassword, setShowErrConfirmPassword] = useState(false);
 
 
+  const [passwordVisible, setPasswordVisible] = useState(false); // État pour suivre la visibilité du mot de passe
 
+  // Fonction pour basculer la visibilité du mot de passe
+  const togglePasswordVisibility = () => {
+    setPasswordVisible((prevVisible) => !prevVisible);
+  };
+
+  const [ConfirmPasswordVisible, setConfirmPasswordVisible] = useState(false); // État pour suivre la visibilité du mot de passe
+
+  // Fonction pour basculer la visibilité du mot de passe
+  const toggleConfirmPasswordVisibility = () => {
+    setConfirmPasswordVisible((prevVisible) => !prevVisible);
+  };
 
 
 
@@ -75,7 +97,12 @@ function Register() {
   };
 
 
- 
+  const googleAuth = () => {
+		window.open(
+			`http://localhost:4000/user/auth/google/callback`,
+			"_self"
+		);
+	};
 
   const handleSubmit = async (event) => {
 
@@ -161,10 +188,10 @@ function Register() {
     } catch (error) {
       console.error('There was a problem with the fetch operation:', error);
       Swal.fire({
-        title: 'Error saving User !',
+        title: 'password should contain upper ,lower case , number  and special letter  !',
         icon: 'warning',
         showConfirmButton: false,
-        timer: 1500, // Close after 1.5 seconds
+        timer: 1500, 
       });
     }
   }    
@@ -290,40 +317,45 @@ value={firstName}
 
                 </fieldset>
                 <fieldset>
-                  <input
-                    id="showpassword"
-                    name="password"
-                    tabIndex="2"
-                    aria-required="true"
-                    value={password}
+  <input
+    id="password"
+    name="password"
+    tabIndex="2"
+    aria-required="true"
+    value={password}
+    type={passwordVisible ? "text" : "password"} // Utilisez le type dynamique en fonction de la visibilité du mot de passe
+    placeholder="Password"
+    onChange={(e) => { setPassword(e.target.value); setErrPassword(''); }}
+  />
+  {/* Icône pour basculer la visibilité du mot de passe */}
+  <span className="btn-show-pass" onClick={togglePasswordVisibility}>
+    <FontAwesomeIcon icon={passwordVisible ? faEyeSlash : faEye} />
+  </span>
+  {showerrPassword && (
+    <div className='error-message'>
+      <p style={{ color: 'red' }}>{errPassword}</p>
+    </div>
+  )}
+</fieldset>
 
-                    type="password"
-                    placeholder="Password"
-                    onChange={(e) => {setPassword(e.target.value); setErrPassword ('')}}
-                  />
-                  {showerrPassword && (
-                    <div className='error-message'>
-                      <p style={{ color: 'red' }}>{errPassword}</p>
-                    </div>)}
-                  <span className="btn-show-pass"></span>
-                </fieldset>
 
                 
 <fieldset>
   <input
-    id="confirmpassword" // Step 2
-    name="confirmpassword" // Step 2
+    id="confirmpassword"
+    name="confirmpassword"
     tabIndex="3"
     value={confirmPassword}
-
+    type={ConfirmPasswordVisible ? "text" : "password"} // Utilisez le type dynamique en fonction de la visibilité du mot de passe
     aria-required="true"
-    type="password"
     placeholder="Confirm Password"
-    onChange={(e) =>{ setconfirmPassword(e.target.value) ; setErrConfirmPassword ('')}}
-
-  
+    onChange={(e) => { setconfirmPassword(e.target.value); setErrConfirmPassword(''); }}
   />
-  {showErrConfirmPassword && ( // Step 3
+  {/* Icône pour basculer la visibilité du mot de passe */}
+  <span className="btn-show-pass" onClick={toggleConfirmPasswordVisibility}>
+    <FontAwesomeIcon icon={ConfirmPasswordVisible ? faEyeSlash : faEye} />
+  </span>
+  {showErrConfirmPassword && (
     <div className='error-message'>
       <p style={{ color: 'red' }}>{errConfirmPassword}</p>
     </div>
@@ -341,7 +373,7 @@ value={firstName}
                 <div className="button-gg">
                   <Link to="#"><i className="fab fa-facebook"></i>Facebook</Link>
                 </div>
-                <div className="button-gg mb33">
+                <div className="button-gg mb33" onClick={googleAuth}>
                   <Link to="#"><i className="fab fa-google"></i>Google</Link>
                 </div>
 

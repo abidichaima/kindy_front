@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { ToastContainer, toast } from "react-toastify";
@@ -6,7 +6,8 @@ import axios from "axios";
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
 import { jwtDecode } from "jwt-decode";
-
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons"; // Importez les icônes de l'œil
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"; 
 const Login = () => {
 
 
@@ -19,17 +20,34 @@ const Login = () => {
 
       header :{
         marginTop : '100px'
-      }
-  }
+      },
+      inputgrouptextbtnshowpass: {
+        cursor: 'pointer',
+        position: 'absolute',
+        right: '10px',
+        top: '50%',
+        transform: 'translateY(-50%)',
+      },}
+  const navigate = useNavigate();
+  const [cookies] = useCookies(['user']);
   const [values, setValues] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
+
+  const togglePasswordVisibility = () => {
+    setPasswordVisible((prevVisible) => !prevVisible);
+  };
 
   const handleChange = ({ currentTarget: input }) => {
     setValues({ ...values, [input.name]: input.value });
   };
+  const [passwordVisible, setPasswordVisible] = useState(false); // État pour suivre la visibilité du mot de passe
 
-
-	const navigate = useNavigate()
+  const googleAuth = () => {
+		window.open(
+			`http://localhost:4000/user/auth/google/callback`,
+			"_self"
+		);
+	};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,7 +55,7 @@ const Login = () => {
     
    
     try {
-      const url = 'http://localhost:4000/user/auth';
+      const url = 'http://localhost:4000/user';
       const response = await axios.post(url, values, {
         headers: {
           'Content-Type': 'application/json',
@@ -77,7 +95,12 @@ const Login = () => {
     }
   };
    
-
+  useEffect(() => {
+    // Si l'utilisateur est déjà connecté, le rediriger vers la page 404
+    if (cookies.user) {
+      navigate('/');
+    }
+  }, [cookies.user, navigate]);
 
 
 
@@ -111,19 +134,29 @@ const Login = () => {
                   }
                 />
               </div>
-              <div className="form-group">
-                <label></label>
-                <input
-                  type="password"
-                  name="password"
-                  placeholder="password"
-                  className="form-control"
-                  value={values.password}
-                  onChange={(e) =>
-                    setValues({ ...values, [e.target.name]: e.target.value })
-                  }
-                />
-              </div>
+              
+              <div>
+      <div className="form-group">
+        <label></label>
+        <div className="input-group">
+          <input
+            type={passwordVisible ? "text" : "password"}
+            name="password"
+            placeholder="Password"
+            className="form-control"
+            value={values.password}
+            onChange={(e) =>
+              setValues({ ...values, [e.target.name]: e.target.value })
+            }
+            
+          />
+          <div className="inputgrouptextbtnshowpass" onClick={() => setPasswordVisible(!passwordVisible)}>
+            <FontAwesomeIcon icon={passwordVisible ? faEyeSlash : faEye} />
+            </div>
+
+        </div>
+      </div>
+    </div>
               <div className="row justify-content-center">
               <button type="submit" className="button-gg mb33">
                 Submit
@@ -134,6 +167,7 @@ const Login = () => {
             <span>
               <br></br>
             </span>
+            
             <div className="row justify-content-center">
   <div className="text-center">
     <span>

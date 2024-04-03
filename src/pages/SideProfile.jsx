@@ -45,7 +45,8 @@ import {
     );
   }
 function SideProfile(props) {
-   
+  const hasImage = currentUser && currentUser.image && currentUser.image.url;
+
   function getUserInfoFromCookie() {
     // Obtenez la valeur du cookie actuel (vous pouvez remplacer document.cookie par la méthode que vous utilisez pour récupérer les cookies)
     var cookieValue = document.cookie.match(/(?:^|;) ?user=([^;]*)(?:;|$)/);
@@ -91,15 +92,17 @@ function SideProfile(props) {
 <div className="dashboard-user">
                                     <div className="dashboard-infor">
                                     <div className="image">
-                                                        {currentUser.image && currentUser.image.url && (
-  <div>
-    <img src={currentUser.image.url} alt="" style={{ width: '500px', height: '400px' }} />
-  </div>
-)}
+                        {hasImage ? (
+                            <div>
+                                                          <p>no image</p>
 
-{!currentUser.image && (
-  <p>no image</p>
-)} </div>
+                            </div>
+                        ) : (
+                          <img src={currentUser.image.url} alt="User" style={{ width: '500px', height: '400px' }} />
+
+                        )}
+                    </div>
+
                                         <div className="name"></div>
                                         <div className="name"  >    {currentUser.firstName} </div> 
  
