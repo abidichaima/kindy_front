@@ -173,7 +173,7 @@ function Register() {
       const payload = { email, password, firstName, lastName, phoneNumber, level, confirmPassword };
       console.log(payload);
     
-      await axios.post("http://localhost:4000/user/users", JSON.stringify(payload), {
+      await axios.post("http://localhost:4000/user/users", payload, {
         headers: {
           'Content-Type': 'application/json',
         },

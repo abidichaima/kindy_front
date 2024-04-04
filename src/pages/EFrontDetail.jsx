@@ -90,9 +90,9 @@ function EFrontDetail(props) {
                     <div className="row">
                         <div className="col-md-12">
                             <div className="tf-item-detail-inner">
-                                <div className="image">
-                                    <img src={data.event.image.url} alt="Binasea" style={{ width: '800px', height: '700px' }} />                                                        </div>
-                                <div className="content">
+                                <div >
+                                    <img src={data.event.image.url} alt="Binasea" style={{ marginLeft:'100px', width: '500px', height: '600px' }} />                                                        </div>
+                                <div className="content"style={{marginLeft:'100px'}} >
 
                                     <h2 className="title-detail">Event {data.event.title}  </h2>
                                     <p className="except">Organized BY {data.event.organizer} .</p>
@@ -153,6 +153,10 @@ function EFrontDetail(props) {
                 </div>
             </section>
 
+            <br></br>
+<br></br>
+<br></br>
+
             <section className='tf-explore-more'>
                 <div className="tf-container">
                     <div className="row">
@@ -204,6 +208,11 @@ function EFrontDetail(props) {
                 )}
 
             </section>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
 
         </div>
     );

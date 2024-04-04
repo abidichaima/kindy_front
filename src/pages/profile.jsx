@@ -108,6 +108,7 @@ return (
                     <div class="thumb-pagetitle"  style={{ width: '100%' }}>
                     <img src={img} alt="images"   style={{ width: '100%' }}/>
                     </div>
+                  
                 </div>
             </div>                     
         </section>

@@ -26,19 +26,19 @@ function Home01(props) {
                 <Banner01 data={dataBanner} />
 
                 <Category data={dataCategory} />
-        
+                <h1>Events </h1>
                         <EventFront />
                 
 
 
-                {/* */} <LiveAutions data={dataLiveaution} />
+                {/* <LiveAutions data={dataLiveaution} />*/} 
 
-                <Create data={dataCreate} />
-
-
+                {/* <Create data={dataCreate} />*/}
 
 
-                <Explore data={dataExplore} />
+
+
+               {/*  <Explore data={dataExplore} />*/} 
             </div>
         </div>
 

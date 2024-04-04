@@ -21,14 +21,6 @@ const menus = [
     links: '/',
   },
   {
-    id: 2,
-    name: 'Explore',
-    links: '#',
-    namesub: [
-      // ... (your existing Explore submenu items)
-    ],
-  },
-  {
     id: 5,
     name: 'About Us',
     links: '/create',
