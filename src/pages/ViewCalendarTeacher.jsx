@@ -20,13 +20,30 @@ function ViewCalendarTeacher(props) {
   const [selectedEvent, setSelectedEvent] = useState(null);
 
   useEffect(() => {
+    function getUserInfoFromCookie() {
+      var cookieValue = document.cookie.match(/(?:^|;) ?user=([^;]*)(?:;|$)/);
+  
+      if (cookieValue) {
+        var decodedValue = decodeURIComponent(cookieValue[1].replace(/\+/g, ' '));
+  
+        var userObject = JSON.parse(decodedValue);
+  
+        return userObject;
+      } else {
+        return null;
+      }
+    }
+  
+     var currentUser = getUserInfoFromCookie();
+
+console.log("user id",currentUser._id);
     const teacherId = '65e6a522574ca30f0be2455a'; // Static teacher ID
 
     // Fetch lessons for the teacher
     fetch('http://localhost:4000/api/lesson/getByTeacher', {
-      method: 'GET',
+      method: 'GET',  
       headers: {
-        'teacher': teacherId
+        'teacher': currentUser._id
       },
     })
       .then((response) => response.json())
@@ -94,6 +111,8 @@ function ViewCalendarTeacher(props) {
     setSelectedEvent(null);
   }
   
+
+
 
 return (
 

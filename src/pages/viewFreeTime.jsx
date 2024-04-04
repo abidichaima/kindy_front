@@ -21,7 +21,24 @@ function ViewFreeTime(props) {
   const [selectedEvent, setSelectedEvent] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:4000/api/freetime/65e6a522574ca30f0be2455a')
+    function getUserInfoFromCookie() {
+      var cookieValue = document.cookie.match(/(?:^|;) ?user=([^;]*)(?:;|$)/);
+  
+      if (cookieValue) {
+        var decodedValue = decodeURIComponent(cookieValue[1].replace(/\+/g, ' '));
+  
+        var userObject = JSON.parse(decodedValue);
+  
+        return userObject;
+      } else {
+        return null;
+      }
+    }
+     var currentUser = getUserInfoFromCookie();
+console.log("user id",currentUser._id);
+const teacherId = currentUser._id; // Static teacher ID
+
+fetch(`http://localhost:4000/api/freetime/${teacherId}`)
       .then((response) => response.json())
       .then((data) => {
         const events = [];
@@ -29,7 +46,7 @@ function ViewFreeTime(props) {
         const endDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 6, 0); // Generate events for the next 6 months
 
         data.forEach((free) => {
-          const dayIndex = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].indexOf(free.day);
+          const dayIndex = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 6].indexOf(free.day);
           let date = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + (dayIndex + 1 - currentDate.getDay()) % 7);
 
           while (date <= endDate) {
