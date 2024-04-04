@@ -191,32 +191,43 @@ if (!quizData) {
                                                           </div>
                                                           </div>
                                                           
-                                                         {showResults && (
-                                                          <div className="tf-item-detail-inner">
-      <div className="content text-center col-md-12">
-        <div style={quizzItemStyle}>
+                                                          {showResults && (
+  <div className="tf-item-detail-inner">
+    <div className="content text-center col-md-12">
+      <div style={quizzItemStyle}>
         <Typography variant="h4" component="h1" gutterBottom style={{ fontWeight: 'bold', color: '#4155c2', fontSize: '24px', marginBottom: '20px' }}>
-Result          </Typography>
-          <Typography variant="body1" gutterBottom style={{ marginBottom: '1rem', fontSize: '18px', fontWeight: 'bold' }}>
-            Title of quizz: {quizData && quizData.titre}
-          </Typography>
-          {resultResponse && resultResponse.map((response, index) => (
-            <Card key={index} style={{ marginBottom: '2rem', textAlign: 'left' }}>
-              <CardContent>
-                <Typography variant="h6" gutterBottom style={{ fontWeight: 'bold', marginBottom: '0.5rem', fontSize: '20px' }}>
-                  Attempt : {index + 1}
-                </Typography>
-                <Typography variant="body1" gutterBottom style={{ fontWeight: 'bold', marginBottom: '0.5rem', fontSize: '18px' }}>
-                  Score : {response.score}
-                </Typography>
-                {response.responses.map((questionResponse, i) => (
+          Result
+        </Typography>
+        <Typography variant="body1" gutterBottom style={{ marginBottom: '1rem', fontSize: '18px', fontWeight: 'bold' }}>
+          Title of quizz: {quizData && quizData.titre}
+        </Typography>
+        {resultResponse && resultResponse.map((response, index) => (
+          <Card key={index} style={{ marginBottom: '2rem', textAlign: 'left' }}>
+            <CardContent>
+              <Typography variant="h6" gutterBottom style={{ fontWeight: 'bold', marginBottom: '0.5rem', fontSize: '20px' }}>
+                Attempt : {index + 1}
+              </Typography>
+              <Typography variant="body1" gutterBottom style={{ fontWeight: 'bold', marginBottom: '0.5rem', fontSize: '18px' }}>
+                Score : {response.score}
+              </Typography>
+              {response.responses.map((questionResponse, i) => {
+                const question = questionResponse.questionId;
+                const selectedOptions = questionResponse.selectedOptions || [];
+                const correctResponses = question.responses || [];
+
+                // Vérifier si la question est correcte ou incorrecte
+                const isQuestionCorrect = correctResponses.every(response => {
+                  return selectedOptions.includes(response.content) === response.isCorrect;
+                });
+
+                return (
                   <div key={i} style={{ marginBottom: '1rem' }}>
                     <Typography variant="body1" gutterBottom style={{ fontWeight: 'bold', fontSize: '16px' }}>
-                      Question {i+1}:  {questionResponse.questionId.ennonce} 
+                      Question {i + 1}:  {question ? question.ennonce : ''}
                     </Typography>
                     <ul style={{ listStyleType: 'none', paddingLeft: '0', marginBottom: '0.5rem' }}>
                       <li style={{ fontWeight: 'bold' }}>
-                        Reponses 
+                        Responses :
                         {questionResponse.questionId.responses.map((response, index) => (
                           <span key={index} style={{ marginRight: '1rem' }}>
                             {response.content} : {response.isCorrect ? 'Correcte' : 'Incorrecte'}
@@ -225,26 +236,32 @@ Result          </Typography>
                       </li>
                       <li style={{ fontWeight: 'bold' }}>
                         Options selected :
-                        {questionResponse.selectedOptions.map((option, j) => (
-                          <span key={j} style={{ marginRight: '1rem' }}>{option} , </span>
-                        ))}
+                        {selectedOptions.length > 0 ? (
+                          <div>
+                            {selectedOptions.map((option, j) => (
+                              <div key={j}>
+                                <span style={{ marginRight: '1rem' }}>{option},</span>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <span>none selected</span>
+                        )}
+                        <p style={{ fontWeight: 'bold', color: isQuestionCorrect ? 'green' : 'red' }}>
+                          Your response is {isQuestionCorrect ? 'correct' : 'incorrect'}
+                        </p>
                       </li>
                     </ul>
                   </div>
-                ))}
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                );
+              })}
+            </CardContent>
+          </Card>
+        ))}
       </div>
     </div>
-
-
-                
-   
-               
+  </div>
 )}
-
 
 
                      

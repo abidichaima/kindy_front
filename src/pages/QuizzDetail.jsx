@@ -93,6 +93,8 @@ function QuizzDetail(props) {
       {question.image.url && ( // Vérifiez si question.image existe
         <img src={question.image.url} height="200px" width="200px"  />
       )}
+            <p><strong>Points : </strong>{question.point}</p>
+
       <p><strong>Réponses: </strong></p>
       <ul>
         {question.responses.map((response, index) => (

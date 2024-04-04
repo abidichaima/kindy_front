@@ -3,6 +3,7 @@ import { Button, Card, CardContent, Container, Grid, Typography } from "@materia
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Link, useHistory } from 'react-router-dom';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import { getuser } from '../services/question';
 import Swal from 'sweetalert2';
@@ -25,7 +26,7 @@ const Quiz = () => {
   const [showResults, setShowResults] = useState(false);
   const [showQuizz, setshowQuizz] = useState(true);
   const [resultResponse, setResultResponse] = useState(null);
-  
+
   const useStyles = makeStyles((theme) => ({
     button: {
       backgroundColor: '#FFC0CB', // Couleur rose
@@ -38,7 +39,7 @@ const Quiz = () => {
       height: '40px', // Hauteur du bouton
     },
     card: {
-    
+
       boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', // Add shadow effect
     },
   }));
@@ -57,13 +58,13 @@ const Quiz = () => {
     }
   }
 
-   var currentUser = getUserInfoFromCookie();
+  var currentUser = getUserInfoFromCookie();
 
   useEffect(() => {
     const fetchQuizData = async () => {
       try {
         const response = await axios.get(`http://localhost:4000/quizz/show/${id}`);
-        setQuizData(response.data.quizz); 
+        setQuizData(response.data.quizz);
         startTimer();
       } catch (error) {
         console.error('Error fetching quiz data:', error);
@@ -78,7 +79,7 @@ const Quiz = () => {
 
   useEffect(() => {
     if (quizData && quizData.duree) {
-      const durationInSeconds = quizData.duree * 60; 
+      const durationInSeconds = quizData.duree * 60;
       setQuizDurationInSeconds(durationInSeconds);
       setTimeRemaining(durationInSeconds);
     }
@@ -101,10 +102,10 @@ const Quiz = () => {
         }
         return prevTime - 1;
       });
-      
+
     }, 1000);
   };
-  
+
   const handleOptionSelect = (option, index) => {
     const newSelectedOptions = [...selectedOptions];
     if (newSelectedOptions[currentQuestionIndex]?.includes(option)) {
@@ -130,29 +131,37 @@ const Quiz = () => {
     return <div>Loading...</div>;
   }
 
-  
+
   const sendQuizResult = async () => {
     let updatedScore = 0;
-  
+
     const responses = quizData.questions.map((question, index) => {
       const selectedOptionsForQuestion = selectedOptions[index] || [];
-  
-      const isQuestionCorrect = selectedOptionsForQuestion.every(selectedOption => {
-        return question.responses.some(response => {
-          return selectedOption === response.content && response.isCorrect;
-        });
+      let isQuestionCorrect = true;
+
+      // Vérifiez chaque réponse de la question
+      question.responses.forEach(response => {
+        // Vérifiez si une réponse incorrecte est sélectionnée
+        if (!response.isCorrect && selectedOptionsForQuestion.includes(response.content)) {
+          isQuestionCorrect = false;
+        }
+        // Vérifiez si une réponse correcte n'est pas sélectionnée
+        if (response.isCorrect && !selectedOptionsForQuestion.includes(response.content)) {
+          isQuestionCorrect = false;
+        }
       });
-  
+
       if (isQuestionCorrect) {
         updatedScore += question.point;
+
       }
-  
+
       return {
         question: question,
         selectedOptions: selectedOptionsForQuestion,
       };
     });
-  
+
     if (responses.some(response => response.selectedOptions.length === 0)) {
       Swal.fire({
         icon: "error",
@@ -162,47 +171,47 @@ const Quiz = () => {
       });
       return;
     }
-  
+
     setScore(updatedScore);
-  
+
     const quizResult = {
       userId: currentUser._id,
       quizId: id,
       score: updatedScore,
       responses: JSON.stringify(responses),
     };
-  
+
     console.log("Réponses sélectionnées :", quizResult);
-  
+
     try {
       const response = await axios.post('http://localhost:4000/result/add', quizResult, {
         headers: {
           'Content-Type': 'application/json'
         }
       });
-      
+
       const resultId = response.data._id;
       console.log('ID du résultat créé :', resultId);
-    
+
       setShowResults(true);
       setshowQuizz(false);
-    
+
       const Response = await axios.get(`http://localhost:4000/result/show/${resultId}`);
-      console.log("tyu",Response.data);
-     setResultResponse(Response.data) ;
+      console.log("tyu", Response.data);
+      setResultResponse(Response.data);
     } catch (error) {
       console.error('Erreur lors de l\'envoi du résultat du quiz ou de la récupération du résultat:', error);
     }
   };
   const quizzItemStyle = {
-    color:'black',
-      marginBottom: '20px',
-      border: '1px solid #ccc',
-      borderRadius: '10px',
-      padding: '15px',
-      alignItems: 'center',
-    };
-  
+    color: 'black',
+    marginBottom: '20px',
+    border: '1px solid #ccc',
+    borderRadius: '10px',
+    padding: '15px',
+    alignItems: 'center',
+  };
+
   const question = quizData.questions[currentQuestionIndex];
 
   return (
@@ -215,13 +224,13 @@ const Quiz = () => {
               Question {currentQuestionIndex + 1}/{quizData.questions.length}
             </Typography>
             <Typography variant="h4" component="h1" gutterBottom className="question" style={{ textAlign: 'center' }}>
-  {question.ennonce}
-</Typography>
-{question.image.url && (
-    <div style={{ textAlign: 'center' }}>
-        <img src={question.image.url} className="image" />
-    </div>
-)}       <Grid container spacing={2} justifyContent="center">
+              {question.ennonce}
+            </Typography>
+            {question.image.url && (
+              <div style={{ textAlign: 'center' }}>
+                <img src={question.image.url} className="image" />
+              </div>
+            )}       <Grid container spacing={2} justifyContent="center">
               {question.responses.map((response, index) => (
                 <Grid item xs={6} key={index}>
                   <Button
@@ -231,11 +240,10 @@ const Quiz = () => {
                       fontSize: '1.4rem', // Taille de la police
                       fontWeight: 'bold', // Poids de la police
                     }}
-                    className={`optionButton ${
-                      (selectedOptions[currentQuestionIndex] || []).includes(response.content) ? 'selectedOptionButton' : ''
-                    }`}
+                    className={`optionButton ${(selectedOptions[currentQuestionIndex] || []).includes(response.content) ? 'selectedOptionButton' : ''
+                      }`}
                     variant={(selectedOptions[currentQuestionIndex] || []).includes(response.content) ? "contained" : "outlined"}
-  
+
                     onClick={() => handleOptionSelect(response.content, index)}
                   >
                     {(selectedOptions[currentQuestionIndex] || []).includes(response.content) ? response.content : response.content}
@@ -244,7 +252,7 @@ const Quiz = () => {
               ))}
             </Grid>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem' }}>
-              <Typography variant="body1" style={{ fontSize:'15px',color:'black' }}>
+              <Typography variant="body1" style={{ fontSize: '15px', color: 'black' }}>
                 Time Remaining: {Math.floor(timeRemaining / 60)}:{(timeRemaining % 60).toString().padStart(2, '0')}
               </Typography>
               <div>
@@ -279,77 +287,100 @@ const Quiz = () => {
           </CardContent>
         </Card>
       )}
-  
-  {showResults && (
-                                                          <div className="tf-item-detail-inner">
-      <div className="content text-center col-md-12">
-        <div style={quizzItemStyle}>
-        <Typography variant="h4" component="h1" gutterBottom style={{ fontWeight: 'bold', color: '#4155c2', fontSize: '24px', marginBottom: '20px' }}>
-            Results
-          </Typography>
-          <Typography variant="body1" gutterBottom style={{ marginBottom: '1rem', fontSize: '18px', fontWeight: 'bold' }}>
-            Title of quizz : {quizData && quizData.titre}
-          </Typography>
-          {resultResponse && resultResponse.responses && resultResponse.responses.length > 0 && (
-  <Card style={{ marginBottom: '2rem', textAlign: 'left' }}>
-    <CardContent>
-     
-      <Typography variant="body1" gutterBottom style={{ fontWeight: 'bold', marginBottom: '0.5rem', fontSize: '18px' }}>
-        Score : {resultResponse.score}
+
+      {showResults && (
+        <div className="tf-item-detail-inner">
+          <div className="content text-center col-md-12">
+            <div style={quizzItemStyle}>
+              <Typography variant="h4" component="h1" gutterBottom style={{ fontWeight: 'bold', color: '#4155c2', fontSize: '24px', marginBottom: '20px' }}>
+                Results
+              </Typography>
+              <Typography variant="body1" gutterBottom style={{ marginBottom: '1rem', fontSize: '18px', fontWeight: 'bold' }}>
+                Title of quizz : {quizData && quizData.titre}
+              </Typography>
+              {resultResponse && resultResponse.responses && resultResponse.responses.length > 0 && (
+                <Card style={{ marginBottom: '2rem', textAlign: 'left' }}>
+                  <CardContent>
+
+                  <Typography variant="body1" gutterBottom style={{ fontWeight: 'bold', marginBottom: '0.5rem', fontSize: '18px' }}>
+  Score : {resultResponse.score}
+</Typography>
+{resultResponse.responses.map((questionResponse, i) => {
+  const question = questionResponse.questionId;
+  const selectedOptions = questionResponse.selectedOptions || [];
+  const correctResponses = question.responses || [];
+
+  // Vérifier si la question est correcte ou incorrecte
+  const isQuestionCorrect = correctResponses.every(response => {
+    return selectedOptions.includes(response.content) === response.isCorrect;
+  });
+
+  return (
+    <div key={i} style={{ marginBottom: '1rem' }}>
+      <Typography variant="body1" gutterBottom style={{ fontWeight: 'bold', fontSize: '16px' }}>
+        Question {i + 1}: {question ? question.ennonce : ''}
       </Typography>
-      {resultResponse.responses.map((questionResponse, i) => {
-        const question = questionResponse.questionId;
-        const selectedOptions = questionResponse.selectedOptions || [];
-        const correctResponses = question.responses || [];
-
-        return (
-          <div key={i} style={{ marginBottom: '1rem' }}>
-            <Typography variant="body1" gutterBottom style={{ fontWeight: 'bold', fontSize: '16px' }}>
-              Question {i + 1}: {question ? question.ennonce : ''}
-            </Typography>
-            <ul style={{ listStyleType: 'none', paddingLeft: '0', marginBottom: '0.5rem' }}>
-            <li style={{ fontWeight: 'bold' }}>
-  Responses  :
-  {questionResponse.questionId.responses && questionResponse.questionId.responses.map((response, index) => (
-    <span key={index} style={{ marginRight: '1rem' }}>
-    {response.content} :  {response.isCorrect ? 'Correcte' : 'Incorrecte'}
-  </span>
-  ))}
-</li>
-              <li style={{ fontWeight: 'bold' }}>
-                Options selected :
-                {selectedOptions.length > 0 ? (
-                  selectedOptions.map((option, j) => (
-                    <span key={j} style={{ marginRight: '1rem' }}>{option}  , </span>
-                  ))
-                ) : (
-                  <span>none selected</span>
-                )}
-              </li>
-            </ul>
-          </div>
-        );
-      })}
-      
-    </CardContent>
- 
-  </Card>
-)}
-
-
-        </div>
-      </div>
+      <ul style={{ listStyleType: 'none', paddingLeft: '0', marginBottom: '0.5rem' }}>
+        <li style={{ fontWeight: 'bold' }}>
+          Responses  :
+          {questionResponse.questionId.responses && questionResponse.questionId.responses.map((response, index) => (
+            <span key={index} style={{ marginRight: '1rem' }}>
+              {response.content} :  {response.isCorrect ? 'Correcte' : 'Incorrecte'}
+            </span>
+          ))}
+        </li>
+        <li style={{ fontWeight: 'bold' }}>
+          Options selected :
+          {selectedOptions.length > 0 ? (
+            <div>
+              {selectedOptions.map((option, j) => (
+                <div key={j}>
+                  <span style={{ marginRight: '1rem' }}>{option},</span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <span>none selected</span>
+          )}
+          <p style={{ fontWeight: 'bold', color: isQuestionCorrect ? 'green' : 'red' }}>
+            Your response is {isQuestionCorrect ? 'correct' : 'incorrect'}
+          </p>
+        </li>
+      </ul>
     </div>
+  );
+})}
+                    <Link to={`/test`}>
+                      <Button
+                        style={{
+                          backgroundColor: '#bdbda1',
+                          color: 'white',
+                          display: 'flex',
+                          alignItems: 'center',
+                        }}
+                        startIcon={<ArrowBackIcon />}  
+                      >
+                        Backward
+                      </Button>
+                    </Link>                  </CardContent>
+
+                </Card>
+              )}
 
 
-                
-   
-               
-)}
+            </div>
+          </div>
+        </div>
+
+
+
+
+
+      )}
 
     </Container>
   );
-  
+
 };
 
 export default Quiz;

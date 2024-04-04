@@ -83,20 +83,17 @@ function QuestionAdd(props) {
    const navigate = useNavigate();
  
    const previewFiles = (file) => {
-     const reader = new FileReader();
-     reader.readAsDataURL(file);
-     reader.onloadend = () => {
-       setImage(reader.result);
-     }
-   }
- 
-   const handleChangeFile = (e) => {
-     const image = e.target.files[0];
-     setImage(image);
-     previewFiles(image);
-   };
-   
-  
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setImage(reader.result);
+    }
+  }
+
+  const handleChangeFile = (e) => {
+    const imageFile = e.target.files[0];
+    previewFiles(imageFile);
+  };
    const removeResponse = (indexToRemove) => {
     setQuestionItem(prevQuestionItem => ({
         ...prevQuestionItem,
@@ -277,8 +274,9 @@ formData.append("responsesData", JSON.stringify(questionItem.responsesData));
                        />
             </MDBCol>
           </MDBRow>
-        
          
+          <img src={image}  className="img-fluid" />
+      
           <Button
   variant="contained"
   onClick={handleAddResponse}

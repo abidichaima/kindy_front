@@ -157,33 +157,36 @@ const DeleteConfirmation = (userId) => {
   };
 
   const btnStyles = {
-    backgroundColor: "transparent",
-    border: "none",
-    cursor: "pointer",
-    padding: "5px",
-    outline: "none",
-    transition: "background-color 0.3s",
+    padding: '6px 8px',
+    fontSize: '12px',
+    border: '1px black',
+    borderRadius: '15px',
+    cursor: 'pointer',
+    background: '#e5e2e2',
+    color: 'black',
+    marginRight: '10px',
   };
+  
+  const selectStyle = {
+    padding: '8px',
+    fontSize: '14px',
+    borderRadius: '5px',
+    border: '1px solid #ddd',
+    background: '#e5e2e2',
+    cursor: 'pointer',
 
+  };
   const iconStyles = {
     fontSize: "1.5rem",
     color: "#333",
   };
 
   const btnHoverStyles = {
-    boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.3)",
-    backgroundColor: "grey",
+    boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.3)", 
+   // backgroundColor: "#0971da",
   };
 
-  const selectStyle = {
-    padding: '5px',
-    borderRadius: '5px',
-    border: '1px solid #ccc',
-    backgroundColor: '#fff',
-    transition: 'box-shadow 0.3s',
-    marginLeft: "15px",
-    marginBottom: "5px",
-  };
+  
 
   const [prevHover, setPrevHover] = useState(false);
   const [nextHover, setNextHover] = useState(false);
@@ -283,21 +286,7 @@ Add</button>
 <div>
 <div className="inner-content inventory">
   <h4 className="title-dashboard">Users</h4>
-  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-    <div style={{ flex: 1 }}>
-      <div className="pagination-controls" style={{ marginBottom: '20px' }}>
-        <select id="itemsPerPage" value={itemsPerPage} onChange={handleChangeItemsPerPage} style={selectStyle}>
-          <option value="5">5</option>
-          <option value="10">10</option>
-          <option value="15">15</option>
-          <option value="50">50</option>
-          <option value="100">100</option>
-        </select>
-      </div>
-    </div>
  
-  
-  </div>
 
 
 <div style={{ marginTop: '100px' }}>
@@ -395,27 +384,45 @@ onClick={() => {
 
 {/* Contrôles de pagination en bas du tableau */}
 <div className="pagination-controls" style={{ marginTop: '20px', textAlign: 'center' }}>
-  <button
-    onClick={handlePrevPage}
-    style={{ ...btnStyles, ...(currentPage === 1 ? { pointerEvents: "none" } : {}), ...(prevHover ? btnHoverStyles : {}) }}
-    onMouseEnter={() => setPrevHover(true)}
-    onMouseLeave={() => setPrevHover(false)}
-    disabled={currentPage === 1}
-  >
-    <FiChevronLeft style={iconStyles} />
-  </button>
-  
-  <button
-    onClick={handleNextPage}
-    style={{ ...btnStyles, ...(currentPage === pageCount ? { pointerEvents: "none" } : {}), ...(nextHover ? btnHoverStyles : {}) }}
-    onMouseEnter={() => setNextHover(true)}
-    onMouseLeave={() => setNextHover(false)}
-    disabled={currentPage === pageCount}
-  >
-    <FiChevronRight style={iconStyles} />
-  </button>
+<div style={{ display: 'flex', alignItems: 'center' }}>
+  <div className="pagination-controls" style={{ marginLeft: '20px' }}>
+    <select id="itemsPerPage" value={itemsPerPage} onChange={handleChangeItemsPerPage} style={selectStyle}>
+      <option value="5">5</option>
+      <option value="10">10</option>
+      <option value="15">15</option>
+      <option value="15">50</option>
+      <option value="15">100</option>
 
-  <span style={{ marginLeft:'10px'}}>{userList.length}</span>
+    </select>
+  </div>
+
+  {/* Contrôles de pagination en bas du tableau */}
+  <div className="pagination-controls" style={{ marginLeft: 'auto', marginRight: '20px', textAlign: 'center' }}>
+    <button
+      onClick={handlePrevPage}
+      style={{ ...btnStyles, ...(currentPage === 1 ? { pointerEvents: "none" } : {}), ...(prevHover ? btnHoverStyles : {}) }}
+      onMouseEnter={() => setPrevHover(true)}
+      onMouseLeave={() => setPrevHover(false)}
+      disabled={currentPage === 1}
+    >
+      <FiChevronLeft style={{ fontSize: '20px' }} />
+    </button>
+    <span style={{marginRight:'6px', fontSize: '16px', fontWeight: 'bold' }}>{userList.length}</span>
+
+    <button
+      onClick={handleNextPage}
+      style={{ ...btnStyles, ...(currentPage === pageCount ? { pointerEvents: "none" } : {}), ...(nextHover ? btnHoverStyles : {}) }}
+      onMouseEnter={() => setNextHover(true)}
+      onMouseLeave={() => setNextHover(false)}
+      disabled={currentPage === pageCount}
+    >
+      <FiChevronRight style={{ fontSize: '20px' }} />
+    </button>
+
+  </div>
+</div>
+
+
 </div>
 
 </div>

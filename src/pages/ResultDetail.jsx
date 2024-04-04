@@ -108,18 +108,47 @@ function ResultDetail() {
                                                                     )}
                                                                 </TabPanel>
                                                                 <TabPanel>
-                                                                {data && data.responses && (
+  {data && data.responses && (
     <div className="tab-details">
-        {data.responses.map((response, index) => (
-            <div key={index}>
-                <p><strong>Question:</strong> {response.questionId && response.questionId.ennonce}</p>
-                <p><strong>User Answer:</strong> {response.selectedOptions.join(', ')}</p>
-                <p><strong>Is Correct:</strong> {response.questionId && response.questionId.responses && response.questionId.responses[0].isCorrect ? 'Correct' : 'Incorrect'}</p>
-                <hr />
-            </div>
-        ))}
+      {data.responses.map((response, index) => {
+        const question = response.questionId;
+        const selectedOptions = response.selectedOptions || [];
+        const correctResponses = question.responses || [];
+
+        // Vérifier si la question est correcte ou incorrecte
+        const isQuestionCorrect = correctResponses.every(response => {
+          return selectedOptions.includes(response.content) === response.isCorrect;
+        });
+
+        return (
+          <div key={index}>
+            <p><strong>Question:</strong> {question && question.ennonce}</p>
+            <p><strong>User Answers:</strong> {selectedOptions.join(', ')}</p>
+            <ul style={{ listStyleType: 'none', paddingLeft: '0', marginBottom: '0.5rem' }}>
+              <li style={{ fontWeight: 'bold' }}>
+                {selectedOptions.length > 0 ? (
+                  <div>
+                    {selectedOptions.map((option, j) => (
+                      <div key={j}>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <span>none selected</span>
+                )}
+                <p style={{ fontWeight: 'bold', color: isQuestionCorrect ? 'green' : 'red' }}>
+                  The response is {isQuestionCorrect ? 'correct' : 'incorrect'}
+                </p>
+              </li>
+            </ul>
+            <hr />
+          </div>
+        );
+      })}
     </div>
-)}                           </TabPanel>
+  )}
+</TabPanel>
+
                                                             </Tabs>
                                                         </div>
                                                     </div>

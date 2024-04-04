@@ -24,12 +24,10 @@ import {
 }
   from 'mdb-react-ui-kit';
 const styles = {
-    popup: {
-        
+    popup: {        
         backgroundColor: 'trasparent',
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-        borderRadius: '8px',
-        
+        borderRadius: '8px',        
       },
   buttonS: {
     margin: '10px',
@@ -121,7 +119,8 @@ function QuizzAdd(props) {
       ...quizzItem,
       questions: data
     }));
-    setquestionsE('');
+
+   setquestionsE(' ');
   }
    const navigate = useNavigate();
 
@@ -146,8 +145,8 @@ function QuizzAdd(props) {
     setdureeErr('');
     setdebut('');
     setfin('');
-    setquestionsE('');
-    setTentative('');
+setquestionsE('')   ;
+ setTentative('');
 
     if (props.onHide) {
       props.onHide();
@@ -426,6 +425,7 @@ console.log("dddd",quizzItem);
           placeholder="Select questions"
           value={selectedOptions}
           onChange={handleSelect}
+        
           isSearchable={true}
           isMulti
         />
