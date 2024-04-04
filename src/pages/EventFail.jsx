@@ -12,24 +12,32 @@ EventFail.propTypes = {
 function EventFail(props) {
 
     const dispatch = useDispatch();
-
-    const selectedTicket = useSelector((state) => state.tickets.selectedTicket);
-    console.log('Selected Ticket:', JSON.stringify(selectedTicket, null, 2));
-
-    const save = () => {
-
-        alert('Tickets unsaved!');
-        dispatch(unselectTicket());
-        console.log("after unsaved : ", selectedTicket)
-
-    };
     useEffect(() => {
-        if (selectedTicket) {
-            save();
-        }
-    }, [selectedTicket]);
-
-
+        const Endpoint = "http://localhost:4000/tickets/delete";
+        fetch(Endpoint, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    alert('Tickets unsaved!');
+                    dispatch(unselectTicket());
+                }
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+                alert('Error saving tickets. Please try again.');
+            });
+    
+    }, []);
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '80vh' }}>

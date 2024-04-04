@@ -161,7 +161,6 @@ function EventsDashComments(props) {
                                                         <div className="col-rankingg"><Link to="#">Event Title</Link></div>
                                                         <div className="col-rankingg"><Link to="#">User Name</Link></div>
                                                         <div className="col-rankingg"><Link to="#">Comment</Link></div>
-                                                        <div className="col-rankingg"><Link to="#">Date</Link></div>
 
                                                         <div className="col-rankingg"><Link to="#">Replies</Link></div>
                                                     </div>
@@ -174,7 +173,6 @@ function EventsDashComments(props) {
                                                                 <div className="col-rankingg">{events[index]?.title}</div>
                                                                 <div className="col-rankingg">{item.username}</div>
                                                                 <div className="col-rankingg">{item.comment}</div>
-                                                                <div className="col-rankingg">{item.CreatedAt}</div>
 
                                                                 <Link to={`/replies/${item._id}`}>
                                                                     <button type="button" style={btnshow}>

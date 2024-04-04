@@ -24,6 +24,22 @@ const Comment = ({ comment }) => {
     const [addReply, { isLoading, isSuccess }] = useAddReplyMutation() || {};
 
 
+    function getUserInfoFromCookie() {
+        var cookieValue = document.cookie.match(/(?:^|;) ?user=([^;]*)(?:;|$)/);
+
+        if (cookieValue) {
+            var decodedValue = decodeURIComponent(cookieValue[1].replace(/\+/g, ' '));
+
+            var userObject = JSON.parse(decodedValue);
+
+            return userObject;
+        } else {
+            return null;
+        }
+    }
+
+    var currentUser = getUserInfoFromCookie();
+
     const submitHandler = (e) => {
         e.preventDefault();
 
@@ -31,8 +47,8 @@ const Comment = ({ comment }) => {
             commentId: comment?._id,
             data: {
                 commentId: comment?._id,
-                username: 'admin',
-                userid: '660168d295aa9aa915fad3ce',
+                username: currentUser.firstName,
+                userid: currentUser._id,
                 reply: reply
             }
 
@@ -61,7 +77,6 @@ const Comment = ({ comment }) => {
         setIsPopupOpen(true);
     };
 
-    const [currentUser, setCurrentUser] = useState('660168d295aa9aa915fad3ce');
 
     return (
         <div>
@@ -85,13 +100,14 @@ const Comment = ({ comment }) => {
                             <time pubdate dateTime="2022-02-08" title="February 8th, 2022">{comment?.createdAt}</time>
                         </p>
                     </div>
-                    {currentUser && currentUser === comment?.userid && (
+                    {currentUser && currentUser._id === comment?.userid && (
                         <div style={{ position: 'relative', display: 'inline-flex' }}>
 
                             <div style={{ position: 'absolute', top: '100%', right: '0', zIndex: '10', backgroundColor: 'white', borderRadius: '5px', boxShadow: '0 1px 2px rgba(0,0,0,0.1)', display: 'flex', flexDirection: 'column' }}>
                                 <button style={{ padding: '8px 16px', cursor: 'pointer', backgroundColor: '#f9f9f9', color: '#333', textDecoration: 'none' }}
                                     onClick={deleteCommenthandler}>  <BsTrash style={{ fontSize: '1.5rem' }} /></button>
-                                <button style={{ padding: '8px 16px', cursor: 'pointer', backgroundColor: '#f9f9f9', color: '#333', textDecoration: 'none', marginTop: '10px' }} onClick={() => handleOpenPopup(comment)}>
+                                <button style={{ padding: '8px 16px', cursor: 'pointer', backgroundColor: '#f9f9f9', color: '#333', textDecoration: 'none', marginTop: '10px' }} 
+                                onClick={() => handleOpenPopup(comment)}>
                                     <AiOutlineEdit style={{ fontSize: '2rem' }} /></button>
 
                             </div>
@@ -99,7 +115,9 @@ const Comment = ({ comment }) => {
                     )}
 
                 </footer>
+
                 <p style={{ color: '#666', marginBottom: '20px' }}>{comment?.comment}</p>
+                {currentUser !== null && (
                 <div style={{ display: 'flex', alignItems: 'center', marginTop: '20px' }}>
                     <button onClick={replyButtonClicked} style={{ display: 'flex', alignItems: 'center', fontSize: '14px', color: '#666', textDecoration: 'underline', cursor: 'pointer', backgroundColor: 'transparent', border: 'none', padding: '5px' }}>
                         <svg aria-hidden="true" style={{ width: '20px', height: '20px', marginRight: '8px', verticalAlign: 'middle' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
@@ -118,6 +136,7 @@ const Comment = ({ comment }) => {
                         </form>
                     )}
                 </div>
+                )}
                 {comment?.replies?.length >= 0 && comment?.replies?.map((reply, i) => {
                     return <Reply key={reply?._id} reply={reply} />
                 })}

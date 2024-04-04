@@ -13,6 +13,7 @@ const isAuthenticated = () => {
 };
 
 
+
 const menus = [
   {
     id: 1,
@@ -37,11 +38,7 @@ const menus = [
     name: 'Contact',
     links: '/contact',
   },
-  {
-    id: 7,
-    name: 'Tickets',
-    links: '/testEvent',
-},
+
 ];
 
 
@@ -52,27 +49,29 @@ if (isAuthenticated()) {
 
     },
     {
-        
+
     },
     {
 
     },
     {
-        
+
     },
     {
 
     },
     {
-        
+      id: 7,
+      name: 'Tickets',
+      links: '/testEvent',
     },
     {
       id: 9,
       name: 'Profile',
       links: '/profile',
     },
-   
-  
+
+
   );
 } else {
   menus.push(
@@ -80,13 +79,13 @@ if (isAuthenticated()) {
 
     },
     {
-        
+
     },
     {
-        
+
     },
     {
-        
+
     },
     {
       id: 7,

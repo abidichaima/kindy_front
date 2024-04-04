@@ -1,23 +1,38 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { QRCodeCanvas } from 'qrcode.react';
-import {  AiOutlineDownload } from "react-icons/ai";
+import { AiOutlineDownload } from "react-icons/ai";
 import { jsPDF } from 'jspdf'
 EventTest.propTypes = {
 
 };
 
 function EventTest(props) {
-  
-  const [id, setid] = useState(1);
+
   const [dataT, setDataT] = useState([]);
   const [events, setEvents] = useState([]);
+  function getUserInfoFromCookie() {
+    var cookieValue = document.cookie.match(/(?:^|;) ?user=([^;]*)(?:;|$)/);
+
+    if (cookieValue) {
+      var decodedValue = decodeURIComponent(cookieValue[1].replace(/\+/g, ' '));
+
+      var userObject = JSON.parse(decodedValue);
+
+      return userObject;
+    } else {
+      return null;
+    }
+  }
+
+  var currentUser = getUserInfoFromCookie();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         // Fetch ticket data
-        const ticketResponse = await axios.get(`http://localhost:4000/tickets/user/${id}`);
+        console.log("currenttt ", currentUser._id);
+        const ticketResponse = await axios.get(`http://localhost:4000/tickets/user/${currentUser._id}`);
         setDataT(ticketResponse.data.tickets || []);
 
         // Fetch event data
@@ -38,10 +53,10 @@ function EventTest(props) {
       }
     };
 
-    if (id) {
+    if (currentUser._id) {
       fetchData();
     }
-  }, [id]);
+  }, [currentUser._id]);
 
 
   const [loading, setLoading] = useState(false);
@@ -51,27 +66,27 @@ function EventTest(props) {
     return `This ticket is for user ${item.user_id} for the event: ${eventTitle}, number of tickets: ${item.number}, total paid: ${item.amount}`;
   };
 
- 
 
- const QrCodeDownload = () => {
 
-        // Defines the pdf
-        let pdf = new jsPDF({
-            orientation: 'landscape',
-            unit: 'mm',
-            format: [40, 40]
-        })
+  const QrCodeDownload = () => {
 
-        // Transforms the canvas into a base64 image
-        let base64Image = document.getElementById('qrcode').toDataURL()
+    // Defines the pdf
+    let pdf = new jsPDF({
+      orientation: 'landscape',
+      unit: 'mm',
+      format: [40, 40]
+    })
 
-        // Adds the image to the pdf
-        pdf.addImage(base64Image, 'png', 0, 0, 40, 40)
+    // Transforms the canvas into a base64 image
+    let base64Image = document.getElementById('qrcode').toDataURL()
 
-        // Downloads the pdf
-        pdf.save('QR.pdf')
-    
-    }
+    // Adds the image to the pdf
+    pdf.addImage(base64Image, 'png', 0, 0, 40, 40)
+
+    // Downloads the pdf
+    pdf.save('QR.pdf')
+
+  }
 
   return (
     <div>
@@ -123,7 +138,7 @@ function EventTest(props) {
                       fgColor="#000000"
                       level="H"
                       includeMargin={false}
-                      id = 'qrcode'/>
+                      id='qrcode' />
 
                   </div>
                   <div className="col-rankingg">

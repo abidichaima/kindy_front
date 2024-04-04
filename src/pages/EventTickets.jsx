@@ -58,7 +58,7 @@ function EventTickets(props) {
     const [nextHover, setNextHover] = useState(false);
    
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(5); // Modifié pour démarrer à 5 par défaut
+    const [itemsPerPage, setItemsPerPage] = useState(5); 
     const [data, setData] = useState([]);
 
     const [events, setEvents] = useState([]);
@@ -117,13 +117,7 @@ function EventTickets(props) {
 
     return (
 
-
         <div>
-
-
-
-
-
             <section class="tf-page-title ">
                 <div class="tf-container">
                     <div class="row">

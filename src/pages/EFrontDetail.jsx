@@ -18,28 +18,27 @@ function EFrontDetail(props) {
 
     const { id } = useParams();
 
-    const [user, setUser] = useState(1);
+
     const [modalShow, setModalShow] = useState(false);
 
     let { data: data } = useGetEventIdQuery(id) || {};
-    
+
     function getUserInfoFromCookie() {
         var cookieValue = document.cookie.match(/(?:^|;) ?user=([^;]*)(?:;|$)/);
-    
+
         if (cookieValue) {
-          var decodedValue = decodeURIComponent(cookieValue[1].replace(/\+/g, ' '));
-    
-          var userObject = JSON.parse(decodedValue);
-    
-          return userObject;
+            var decodedValue = decodeURIComponent(cookieValue[1].replace(/\+/g, ' '));
+
+            var userObject = JSON.parse(decodedValue);
+
+            return userObject;
         } else {
-          return null;
+            return null;
         }
-      }
-    
-       var currentUser = getUserInfoFromCookie();
-    
-    
+    }
+
+    var currentUser = getUserInfoFromCookie();
+
     //COMMENT SECTION 
     const [comment, setComment] = useState('');
     let { data: comments } = useFetchCommentsQuery(id) || {};
@@ -64,8 +63,8 @@ function EFrontDetail(props) {
                 eventId: id,
                 data: {
                     eventId: id,
-                    username: 'admin',
-                    userid:'332068d295aa9aa915fad3ce',
+                    username: currentUser.firstName,
+                    userid: currentUser._id,
                     comment: comment
                 }
             });
@@ -132,11 +131,20 @@ function EFrontDetail(props) {
                                             <h6>Get your ticket NOW</h6>
                                             <div className="price"><div className="icon"> <EventIcon fontSize="large" /></div></div>
                                         </div>
-                                        <div className="button">
-                                            <Link to="#" onClick={() => setModalShow(true)} className="tf-button" data-toggle="modal" data-target="#popup_bid" style={{ width: '100%', padding: '15px', fontSize: '18px' }}>
-                                                BOOK A TICKET
-                                            </Link>
-                                        </div>
+                                        {currentUser !== null && (
+                                            <div className="button">
+                                                <Link to="#" onClick={() => setModalShow(true)} className="tf-button" data-toggle="modal" data-target="#popup_bid" style={{ width: '100%', padding: '15px', fontSize: '18px' }}>
+                                                    BOOK A TICKET
+                                                </Link>
+                                            </div>
+                                        )}
+                                        {currentUser == null && (
+                                         <div className="button">
+                                         <Link to="/login" onClick={() => setModalShow(true)} className="tf-button" data-toggle="modal" data-target="#popup_bid" style={{ width: '100%', padding: '15px', fontSize: '18px' }}>
+                                            Login 
+                                         </Link>
+                                     </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -159,20 +167,21 @@ function EFrontDetail(props) {
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }} class="flex justify-between items-center mb-6">
                                     <h2 style={{ fontSize: '1rem', lineHeight: '1.5rem', fontWeight: 'bold', color: '#333' }} class="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">Discussion ({Number(ultimateTotal)})</h2>
                                 </div>
-                                <form onSubmit={submitHandler} style={{ marginBottom: '6px' }} class="mb-6">
-                                    <div style={{ paddingTop: '8px', paddingRight: '16px', paddingBottom: '4px', paddingLeft: '16px', marginBottom: '4px', backgroundColor: 'white', borderTopLeftRadius: '8px', borderTopRightRadius: '8px', borderBottomRightRadius: '4px', borderBottomLeftRadius: '4px', border: '1px solid #ccc', color: '#333', fontFamily: 'Arial, sans-serif' }} class="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
-                                        <label for="comment" style={{ display: 'none' }} class="sr-only">Your comment</label>
-                                        <textarea id="comment" rows="6" onChange={(e) => setComment(e.target.value)}
-                                            style={{ width: '100%', padding: '0px', fontSize: '20px', color: '#333', border: '0', outline: 'none', backgroundColor: 'white' }}
-                                            class="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none dark:text-white dark:placeholder-gray-400 dark:bg-gray-800"
-                                            placeholder="Write a comment..." required value={comment}/>
-                                    </div>
-                                    <button type="submit"
-                                        style={{ display: 'inline-flex', justifyContent: 'center', alignItems: 'center', paddingTop: '0.625rem', paddingBottom: '0.625rem', paddingLeft: '1rem', paddingRight: '1rem', fontSize: '15px', fontWeight: 'bold', textAlign: 'center', color: '#fff', backgroundColor: '#1e3a8a', borderRadius: '0.375rem', outline: 'none', cursor: 'pointer', transition: 'background-color 0.2s, border-color 0.2s, color 0.2s', border: '1px solid transparent', whiteSpace: 'nowrap', textDecoration: 'none', userSelect: 'none' }}
-                                        class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-primary-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800">
-                                        Post comment
-                                    </button>
-                                </form>
+                                {currentUser !== null && (
+                                    <form onSubmit={submitHandler} style={{ marginBottom: '6px' }} class="mb-6">
+                                        <div style={{ paddingTop: '8px', paddingRight: '16px', paddingBottom: '4px', paddingLeft: '16px', marginBottom: '4px', backgroundColor: 'white', borderTopLeftRadius: '8px', borderTopRightRadius: '8px', borderBottomRightRadius: '4px', borderBottomLeftRadius: '4px', border: '1px solid #ccc', color: '#333', fontFamily: 'Arial, sans-serif' }} class="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+                                            <label for="comment" style={{ display: 'none' }} class="sr-only">Your comment</label>
+                                            <textarea id="comment" rows="6" onChange={(e) => setComment(e.target.value)}
+                                                style={{ width: '100%', padding: '0px', fontSize: '20px', color: '#333', border: '0', outline: 'none', backgroundColor: 'white' }}
+                                                class="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none dark:text-white dark:placeholder-gray-400 dark:bg-gray-800"
+                                                placeholder="Write a comment..." required value={comment} />
+                                        </div>
+                                        <button type="submit"
+                                            style={{ display: 'inline-flex', justifyContent: 'center', alignItems: 'center', paddingTop: '0.625rem', paddingBottom: '0.625rem', paddingLeft: '1rem', paddingRight: '1rem', fontSize: '15px', fontWeight: 'bold', textAlign: 'center', color: '#fff', backgroundColor: '#1e3a8a', borderRadius: '0.375rem', outline: 'none', cursor: 'pointer', transition: 'background-color 0.2s, border-color 0.2s, color 0.2s', border: '1px solid transparent', whiteSpace: 'nowrap', textDecoration: 'none', userSelect: 'none' }}
+                                            class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-primary-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800">
+                                            Post comment
+                                        </button>
+                                    </form>)}
 
                                 {
                                     comments?.map((comment) => {
@@ -185,14 +194,14 @@ function EFrontDetail(props) {
 
                     </div>
                 </div>
-
-                <CardModal
-                    show={modalShow}
-                    onHide={() => setModalShow(false)}
-                    event={data.event}
-                    user={currentUser}
-                />
-
+                {currentUser !== null && (
+                    <CardModal
+                        show={modalShow}
+                        onHide={() => setModalShow(false)}
+                        event={data.event}
+                        user={currentUser._id}
+                    />
+                )}
 
             </section>
 

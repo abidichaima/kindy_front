@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom'
 import { Modal } from "react-bootstrap";
 import axios from 'axios';
-import { addTicketReducer,selectTicket } from './redux/slices/ticketsSlice'; 
+import { addTicketReducer, selectTicket } from './redux/slices/ticketsSlice';
 import { useSelector, useDispatch } from "react-redux";
 
 
@@ -20,7 +20,7 @@ const CardModal = (props) => {
     const [showerr, setShow] = useState(false);
     const [number, setNumber] = useState(0);
     const dispatch = useDispatch();
- 
+
     const handleAmount = (e) => {
         const value = e.target.value;
         setNumber(value);
@@ -28,7 +28,7 @@ const CardModal = (props) => {
         setAmount(prix)
         console.log(amount)
         setShow(false)
-        if (value > (maxPeople-reserved)) {
+        if (value > (maxPeople - reserved)) {
             setShow(true)
         }
     }
@@ -38,14 +38,14 @@ const CardModal = (props) => {
         number,
         amount
     };
-
+    
     const onsubmit = (e) => {
         e.preventDefault();
 
         axios.post('http://localhost:4000/api/payment', payload)
             .then((res) => {
                 const { result } = res.data;
-
+               
                 dispatch(selectTicket(payload));
                 dispatch(addTicketReducer(payload));
                 console.log('Ticket after dispatch:', payload);
@@ -53,6 +53,11 @@ const CardModal = (props) => {
             })
             .catch((err) => console.error(err));
 
+            axios.post('http://localhost:4000/tickets/addUpdate', payload)
+            .then((res) => {
+                console.log('Ticket after dispatch:', payload);  
+            })
+            .catch((err) => console.error(err));
 
     }
 
@@ -69,7 +74,7 @@ const CardModal = (props) => {
             <div className="modal-body space-y-20 pd-40">
                 <h3>BOOK NOW</h3>
                 <p className="text-center sub-heading">How many tickets you want ?</p>
-                <p className="label-1">Enter quantity. <span className="color-popup">{(maxPeople-reserved)} available</span></p>
+                <p className="label-1">Enter quantity. <span className="color-popup">{(maxPeople - reserved)} available</span></p>
 
                 <input type="number" className="form-control" onChange={handleAmount}
                 />

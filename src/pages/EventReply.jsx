@@ -20,7 +20,21 @@ const Reply = ({ reply }) => {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const handleClosePopup = () => setIsPopupOpen(false);
 
-    const [currentUser, setCurrentUser] = useState('660168d295aa9aa915fad3ce');
+    function getUserInfoFromCookie() {
+        var cookieValue = document.cookie.match(/(?:^|;) ?user=([^;]*)(?:;|$)/);
+
+        if (cookieValue) {
+            var decodedValue = decodeURIComponent(cookieValue[1].replace(/\+/g, ' '));
+
+            var userObject = JSON.parse(decodedValue);
+
+            return userObject;
+        } else {
+            return null;
+        }
+    }
+
+    var currentUser = getUserInfoFromCookie();
 
 
 
@@ -41,7 +55,7 @@ const Reply = ({ reply }) => {
                     <p style={{ fontSize: '0.875rem', color: '#6B7280' }}>
                         <time pubdate datetime="2022-02-08" title="February 8th, 2022">{reply?.reply}</time>
                     </p>
-                    {currentUser && currentUser === reply?.userid && (
+                    {currentUser && currentUser._id === reply?.userid && (
                         <div>
                             <button
                                 style={{
