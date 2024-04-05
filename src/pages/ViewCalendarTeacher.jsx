@@ -37,7 +37,6 @@ function ViewCalendarTeacher(props) {
      var currentUser = getUserInfoFromCookie();
 
 console.log("user id",currentUser._id);
-    const teacherId = '65e6a522574ca30f0be2455a'; // Static teacher ID
 
     // Fetch lessons for the teacher
     fetch('http://localhost:4000/api/lesson/getByTeacher', {
