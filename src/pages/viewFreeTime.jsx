@@ -123,17 +123,8 @@ return (
         <Dashboard />
       </div>
       <div className="col-xl-10 col-lg-8 col-md-12">
-        <div className="row">          {showModal && (
-            <div className="col-xl-3 col-lg-12 col-md-12">
-              <LessonsForm
-                show={showModal}
-                selectedRange={selectedRange}
-                selectedEvent={selectedEvent}
-                onClose={handleCloseModal}
-              />
-            </div>
-          )}
-        <div className={`col-xl-${showModal ? '9' : '12'} col-lg-12 col-md-12 overflow-table`}>
+        <div className="row">       
+        <div className={`col-xl-12} col-lg-12 col-md-12 overflow-table`}>
             <div className="dashboard-content inventory content-tab">
               <div className="demo-app-main">
               <FullCalendar
