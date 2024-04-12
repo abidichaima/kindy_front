@@ -4,15 +4,16 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Link, useHistory } from 'react-router-dom';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-
+import IconButton from '@material-ui/core/IconButton';
+import MicIcon from '@material-ui/icons/Mic';
 import { getuser } from '../services/question';
 import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
-import './quiz.css'; // Importer le fichier CSS pour les styles personnalisés
+import './quiz.css'; 
 import { makeStyles } from "@material-ui/core/styles";
-import { IconButton } from '@material-ui/core';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import Speech from '../Speech';
 const Quiz = () => {
   const { id } = useParams();
   const [quizData, setQuizData] = useState();
@@ -26,6 +27,7 @@ const Quiz = () => {
   const [showResults, setShowResults] = useState(false);
   const [showQuizz, setshowQuizz] = useState(true);
   const [resultResponse, setResultResponse] = useState(null);
+  const [isSpeechRecognitionActive, setIsSpeechRecognitionActive] = useState(false);
 
   const useStyles = makeStyles((theme) => ({
     button: {
@@ -213,7 +215,36 @@ const Quiz = () => {
   };
 
   const question = quizData.questions[currentQuestionIndex];
-
+  const handleSpeechResult = (index, transcript) => {
+    // Traitez ici les résultats de la reconnaissance vocale pour la question actuelle
+    console.log(`Résultat de la reconnaissance vocale pour la question ${index + 1}:`, transcript);
+  };
+  
+  // Fonction pour démarrer ou arrêter la reconnaissance vocale
+  const handleMicButtonClick = () => {
+    // Vérifiez si la reconnaissance vocale est déjà en cours
+    if (isSpeechRecognitionActive) {
+      // Arrêtez la reconnaissance vocale
+      stopSpeechRecognition();
+    } else {
+      // Démarrez la reconnaissance vocale
+      startSpeechRecognition();
+    }
+  };
+  
+  // Fonction pour démarrer la reconnaissance vocale
+  const startSpeechRecognition = () => {
+    // Implémentez ici le démarrage de la reconnaissance vocale
+    console.log('Début de la reconnaissance vocale...');
+    setIsSpeechRecognitionActive(true); // Mettez à jour l'état pour indiquer que la reconnaissance vocale est active
+  };
+  
+  // Fonction pour arrêter la reconnaissance vocale
+  const stopSpeechRecognition = () => {
+    // Implémentez ici l'arrêt de la reconnaissance vocale
+    console.log('Arrêt de la reconnaissance vocale...');
+    setIsSpeechRecognitionActive(false); // Mettez à jour l'état pour indiquer que la reconnaissance vocale est inactive
+  };
   return (
     <Container maxWidth="md" className="quiz-container">
       {showQuizz && (
@@ -221,10 +252,15 @@ const Quiz = () => {
           <CardContent>
             {/* Afficher le numéro de la question */}
             <Typography variant="h6" component="h2" style={{ marginBottom: '1rem' }}>
-              Question {currentQuestionIndex + 1}/{quizData.questions.length}
+              Question {currentQuestionIndex + 1}/{quizData.questions.length} 
+              <Speech onResult={(transcript) => handleSpeechResult(currentQuestionIndex, transcript)} />
             </Typography>
             <Typography variant="h4" component="h1" gutterBottom className="question" style={{ textAlign: 'center' }}>
               {question.ennonce}
+              <IconButton onClick={handleMicButtonClick} aria-label="Start Voice Recognition">
+  <MicIcon />
+</IconButton>
+    
             </Typography>
             {question.image.url && (
               <div style={{ textAlign: 'center' }}>

@@ -14,6 +14,7 @@ function ResultDetail() {
         const fetchData = async () => {
             try {
                 const response = await axios.get(`http://localhost:4000/result/show/${id}`);
+                console.log(response.data);
                 setData(response.data);
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -94,7 +95,7 @@ function ResultDetail() {
                                                                                 <p><strong>Start Date:</strong> {data.quizId && data.quizId.dateDebut}</p>
                                                                                 <p><strong>End Date:</strong> {data.quizId && data.quizId.dateFin}</p>
                                                                                 <p><strong>Level:</strong> {data.quizId && data.quizId.level}</p>
-                                                                                <p><strong>Score:</strong> {data.quizId && data.quizId.score}</p>
+                                                                                <p><strong>Score:</strong> {data.score && data.score}</p>
                                                                                 <p><strong>Questions:</strong></p>
                                                                                 <ul>
                                                                                     {data.quizId && data.quizId.questions.map((quest, index) => (
@@ -108,47 +109,19 @@ function ResultDetail() {
                                                                     )}
                                                                 </TabPanel>
                                                                 <TabPanel>
-  {data && data.responses && (
+                                                                {data && data.responses && (
     <div className="tab-details">
-      {data.responses.map((response, index) => {
-        const question = response.questionId;
-        const selectedOptions = response.selectedOptions || [];
-        const correctResponses = question.responses || [];
-
-        // Vérifier si la question est correcte ou incorrecte
-        const isQuestionCorrect = correctResponses.every(response => {
-          return selectedOptions.includes(response.content) === response.isCorrect;
-        });
-
-        return (
-          <div key={index}>
-            <p><strong>Question:</strong> {question && question.ennonce}</p>
-            <p><strong>User Answers:</strong> {selectedOptions.join(', ')}</p>
-            <ul style={{ listStyleType: 'none', paddingLeft: '0', marginBottom: '0.5rem' }}>
-              <li style={{ fontWeight: 'bold' }}>
-                {selectedOptions.length > 0 ? (
-                  <div>
-                    {selectedOptions.map((option, j) => (
-                      <div key={j}>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <span>none selected</span>
-                )}
-                <p style={{ fontWeight: 'bold', color: isQuestionCorrect ? 'green' : 'red' }}>
-                  The response is {isQuestionCorrect ? 'correct' : 'incorrect'}
-                </p>
-              </li>
-            </ul>
-            <hr />
-          </div>
-        );
-      })}
+        {data.responses.map((response, index) => (
+            <div key={index}>
+                <p><strong>Question:</strong> {response.questionId && response.questionId.ennonce}</p>
+                <p><strong>User Answer:</strong> {response.selectedOptions.join(', ')}</p>
+                <p><strong>Is Correct:</strong> {response.questionId.responses && response.questionId.responses[0].isCorrect ? 'Correct' : 'Incorrect'}</p>
+                <hr />
+            </div>
+        ))}
     </div>
-  )}
-</TabPanel>
-
+)}
+                                                                </TabPanel>
                                                             </Tabs>
                                                         </div>
                                                     </div>
