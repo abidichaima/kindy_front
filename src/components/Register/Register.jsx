@@ -7,6 +7,9 @@ import styles from "./styles.module.css";
 import Swal from 'sweetalert2';
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons"; // Importez les icônes de l'œil
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"; // Importez FontAwesome pour utiliser les icônes
+import { GoogleAuthProvider, signInWithPopup, getAuth } from 'firebase/auth';
+import { app } from '../../firebaseConfig';
+
 import {
   MDBBtn,
   MDBContainer,
@@ -97,12 +100,79 @@ function Register() {
   };
 
 
-  const googleAuth = () => {
-		window.open(
-			`http://localhost:4000/user/auth/google/callback`,
-			"_self"
-		);
-	};
+  const handleGoogleClick = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      const auth = getAuth(app);
+
+      const result = await signInWithPopup(auth, provider);
+      console.log(result);
+  
+      const popup = window.open('about:blank', '_blank', 'width=600,height=600');
+  
+      if (!popup || popup.closed || typeof popup.closed === 'undefined') {
+        alert('Please allow popups for this site');
+        return;
+      }
+  
+      window.addEventListener('message', (event) => {
+        if (event.origin === 'http://localhost:4000') {
+          console.log('Received data from popup:', event.data);
+          
+          // Close the popup
+          popup.close();
+        }
+      });
+  
+      popup.postMessage({
+        name: result.user.displayName,
+        email: result.user.email,
+        photo: result.user.photoURL,
+      }, 'http://localhost:4000');
+  
+      const res = await fetch('http://localhost:4000/user/users/google', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: result.user.displayName,
+          email: result.user.email,
+          photo: result.user.photoURL,
+        }),
+        credentials: 'include',
+      });
+      if (res.status === 400) {
+        // Email already exists
+        Swal.fire({
+          icon: 'error',
+          title: 'Registration Failed!',
+          text: 'Email already in use',
+        });
+        return;
+
+      }
+      Swal.fire({
+        icon: 'success',
+        title: 'Registration Successful!',
+        text: 'Please enter your credentials.',
+      }
+
+    );
+    
+
+      const data = await res.json();
+      console.log(data);
+    
+
+
+    } catch (error) {
+      console.error('Could not login with Google:', error.message);
+      console.log("Firebase app:", app);
+    }
+
+
+  };
 
   const handleSubmit = async (event) => {
 
@@ -373,7 +443,7 @@ value={firstName}
                 <div className="button-gg">
                   <Link to="#"><i className="fab fa-facebook"></i>Facebook</Link>
                 </div>
-                <div className="button-gg mb33" onClick={googleAuth}>
+                <div className="button-gg mb33" onClick={handleGoogleClick}>
                   <Link to="#"><i className="fab fa-google"></i>Google</Link>
                 </div>
 

@@ -4,13 +4,13 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Link, useHistory } from 'react-router-dom';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-
+import IconButton from '@material-ui/core/IconButton';
+import MicIcon from '@material-ui/icons/Mic'; 
 import { getuser } from '../services/question';
 import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
-import './quiz.css'; // Importer le fichier CSS pour les styles personnalisés
+import './quiz.css'; 
 import { makeStyles } from "@material-ui/core/styles";
-import { IconButton } from '@material-ui/core';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 const Quiz = () => {
@@ -26,6 +26,7 @@ const Quiz = () => {
   const [showResults, setShowResults] = useState(false);
   const [showQuizz, setshowQuizz] = useState(true);
   const [resultResponse, setResultResponse] = useState(null);
+
 
   const useStyles = makeStyles((theme) => ({
     button: {
@@ -213,7 +214,21 @@ const Quiz = () => {
   };
 
   const question = quizData.questions[currentQuestionIndex];
-
+  const handleReadQuestion = async () => {
+    // Vérifiez si la synthèse vocale est prise en charge par le navigateur
+    if ('speechSynthesis' in window) {
+      const currentQuestion = quizData.questions[currentQuestionIndex];
+      const text = currentQuestion.ennonce;
+      
+      // Créez un objet SpeechSynthesisUtterance avec le texte à lire
+      const utterance = new SpeechSynthesisUtterance(text);
+      
+      // Utilisez la synthèse vocale par défaut du navigateur pour lire le texte
+      window.speechSynthesis.speak(utterance);
+    } else {
+      console.error('Speech synthesis is not supported by this browser');
+    }
+  };
   return (
     <Container maxWidth="md" className="quiz-container">
       {showQuizz && (
@@ -221,10 +236,15 @@ const Quiz = () => {
           <CardContent>
             {/* Afficher le numéro de la question */}
             <Typography variant="h6" component="h2" style={{ marginBottom: '1rem' }}>
-              Question {currentQuestionIndex + 1}/{quizData.questions.length}
+              Question {currentQuestionIndex + 1}/{quizData.questions.length} 
+              <IconButton onClick={handleReadQuestion}> {/* Ajoutez l'icône et liez-la à la fonction de lecture */}
+              <MicIcon />
+            </IconButton>
             </Typography>
             <Typography variant="h4" component="h1" gutterBottom className="question" style={{ textAlign: 'center' }}>
               {question.ennonce}
+             
+    
             </Typography>
             {question.image.url && (
               <div style={{ textAlign: 'center' }}>

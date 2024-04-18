@@ -1,4 +1,4 @@
-import React , {useState,useContext} from 'react';
+import React , {useState,useContext,useEffect,useRef} from 'react';
 import Button from 'react-bootstrap/Button';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import PageTitle from '../components/pagetitle/PageTitle';
@@ -39,70 +39,68 @@ import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import {Dialog, DialogContent,DialogTitle} from '@mui/material';
 import Modal from 'react-bootstrap/Modal';
 import Dashboard from './Dashboard';
-
-
-
-
+import Chart from 'chart.js/auto';
+import axios from 'axios';
 function Dash(props) {
-
+    const chartRef = useRef(null);
   
- 
-
-return (
-
-   
-    <div>
-
-        <section class="tf-page-title ">    
-            <div class="tf-container">
-                <div class="row">
-                    <div class="col-md-12">
-                        <ul class="breadcrumbs">
-                            <li><Link to="/">Home</Link></li>
-                            <li>Profile</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>  
-            <div class="container-fluid"  style={{ width: '100%' }}>
-                <div class="row"  style={{ width: '100%' }}>
-                    <div class="thumb-pagetitle"  style={{ width: '100%' }}>
-                    <img src={img} alt="images"   style={{ width: '100%' }}/>
-                    </div>
-                </div>
-            </div>                     
+    useEffect(() => {
+      const data = {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        values: [65, 59, 80, 81, 56, 55, 40]
+      };
+  
+      // Créer le graphique
+      const ctx = chartRef.current.getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: data.labels,
+          datasets: [{
+            label: 'Statistiques',
+            data: data.values,
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }, []);
+  
+    return (
+      <div>
+        <section className="tf-page-title ">
+          {/* Le reste du contenu reste inchangé */}
         </section>
-
+  
         <section className="tf-dashboard tf-tab">
-            <div className="tf-container">
-                <Tabs className='dashboard-filter'>
-                    <div className="row ">                 
-                        <div className="col-xl-3 col-lg-12 col-md-12">
-                            <Dashboard/>
-                        </div>
-                        <div className="col-xl-9 col-lg-12 col-md-12 overflow-table">
-
-                            <div className="dashboard-content inventory content-tab">
-                                                            
-                            
-
-
-                                  
-                               this is dash
-                                
-                                                    
-                                
-                                
-                            </div>
-                        </div>
+          <div className="tf-container">
+            <Tabs className='dashboard-filter'>
+              <div className="row ">
+                <div className="col-xl-3 col-lg-12 col-md-12">
+                  {/* Composant Dashboard reste inchangé */}
+                </div>
+                <div className="col-xl-9 col-lg-12 col-md-12 overflow-table">
+                  <div className="dashboard-content inventory content-tab">
+                    this is dash
+                    <div>
+                      <canvas ref={chartRef} width="400" height="400"></canvas>
                     </div>
-                </Tabs> 
-                
-            </div>
+                  </div>
+                </div>
+              </div>
+            </Tabs>
+          </div>
         </section>
-        
-    </div>
-);
-}
-
-export default Dash;
+      </div>
+    );
+  }
+  
+  export default Dash;

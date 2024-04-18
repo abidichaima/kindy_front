@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { Modal } from "react-bootstrap";
+
 import 'sweetalert2/dist/sweetalert2.min.css';
 import Swal from 'sweetalert2';
 import {  getAllquestions } from '../services/question';
@@ -275,7 +276,7 @@ formData.append("responsesData", JSON.stringify(questionItem.responsesData));
             </MDBCol>
           </MDBRow>
          
-          <img src={image}  className="img-fluid" />
+          
       
           <Button
   variant="contained"
