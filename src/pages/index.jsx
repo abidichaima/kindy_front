@@ -138,7 +138,7 @@ const routes = [
   { path: '/users', component: <ViewUser />},
   { path: '/question', component: <ViewQuestion />},
 
-  { path: '/dash', component: <DashWrapper /> },
+  { path: '/dash', component: <Dash /> },
   { path: '/dashboard', component: <Dashboard />},
 
   { path: '/profile', component: <Profile />},

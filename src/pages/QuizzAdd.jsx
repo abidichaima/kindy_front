@@ -90,6 +90,7 @@ function QuizzAdd(props) {
      level: "non precise level",
      tentative:"",
      questions:"",
+     total:0,
    });
   
    const [questionList, setQuestionList] = useState([]);
@@ -209,6 +210,7 @@ setquestionsE('')   ;
        formData.append("dateFin", quizzItem.dateFin);
        formData.append("level", quizzItem.level);
        formData.append("tentative", quizzItem.tentative);
+       formData.append("total", quizzItem.total);
 
        formData.append("questions", JSON.stringify(quizzItem.questions));
       // console.log(formData.);
