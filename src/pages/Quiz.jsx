@@ -66,6 +66,7 @@ const Quiz = () => {
       try {
         const response = await axios.get(`http://localhost:4000/quizz/show/${id}`);
         setQuizData(response.data.quizz);
+        console.log("eeee",response.data.quizz);
         startTimer();
       } catch (error) {
         console.error('Error fetching quiz data:', error);
@@ -174,13 +175,12 @@ const Quiz = () => {
     }
 
     setScore(updatedScore);
-
     const quizResult = {
       userId: currentUser._id,
       quizId: id,
-      score: updatedScore,
-      responses: JSON.stringify(responses),
-    };
+      score: updatedScore ,
+      responses: JSON.stringify(responses)
+    }
 
     console.log("Réponses sélectionnées :", quizResult);
 
@@ -237,13 +237,13 @@ const Quiz = () => {
             {/* Afficher le numéro de la question */}
             <Typography variant="h6" component="h2" style={{ marginBottom: '1rem' }}>
               Question {currentQuestionIndex + 1}/{quizData.questions.length} 
-              <IconButton onClick={handleReadQuestion}> {/* Ajoutez l'icône et liez-la à la fonction de lecture */}
-              <MicIcon />
-            </IconButton>
+            
             </Typography>
             <Typography variant="h4" component="h1" gutterBottom className="question" style={{ textAlign: 'center' }}>
               {question.ennonce}
-             
+              <IconButton onClick={handleReadQuestion}> {/* Ajoutez l'icône et liez-la à la fonction de lecture */}
+              <MicIcon />
+            </IconButton>
     
             </Typography>
             {question.image.url && (

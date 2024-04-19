@@ -1,106 +1,202 @@
-import React , {useState,useContext,useEffect,useRef} from 'react';
-import Button from 'react-bootstrap/Button';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import PageTitle from '../components/pagetitle/PageTitle';
-import { Link } from 'react-router-dom';
-import { createPortal } from 'react-dom';
-//import avt from '../assets/images/logo1.png'
-import img from '../assets/images/BATTERIE.jpg'
-
-import img1 from '../assets/images/product/product4.jpg'
-import img2 from '../assets/images/product/product5.jpg'
-import img3 from '../assets/images/product/product6.jpg'
-import img4 from '../assets/images/product/product7.jpg'
-import img5 from '../assets/images/product/product8.jpg'
-import img6 from '../assets/images/product/product9.jpg'
-import icon1 from '../assets/images/svg/icon-wallet-1.svg'
-import icon2 from '../assets/images/svg/icon-wallet-2.svg'
-import icon3 from '../assets/images/svg/icon-wallet-3.svg'
-import icon4 from '../assets/images/svg/icon-wallet-4.svg'
-import icon5 from '../assets/images/svg/icon-wallet-5.svg'
-import icon6 from '../assets/images/svg/icon-wallet-6.svg'
-import icon7 from '../assets/images/svg/icon-wallet-7.svg'
-import icon8 from '../assets/images/svg/icon-wallet-8.svg'
-import avt1 from '../assets/images/author/history-at1.jpg'
-import avt2 from '../assets/images/author/history-at2.jpg'
-import avt3 from '../assets/images/author/history-at3.jpg'
-import avt4 from '../assets/images/author/history-at4.jpg'
-import avt5 from '../assets/images/author/history-at5.jpg'
-import avt6 from '../assets/images/author/history-at6.jpg'
-import avtf1 from '../assets/images/author/author-follow1.jpg'
-import avtf2 from '../assets/images/author/author-follow2.jpg'
-import avtf3 from '../assets/images/author/author-follow3.jpg'
-import avtf4 from '../assets/images/author/author-follow4.jpg'
-import avtf5 from '../assets/images/author/author-follow3.jpg'
-import avtf6 from '../assets/images/author/author-follow4.jpg'
-
-import Swal from 'sweetalert2';
-import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
-import {Dialog, DialogContent,DialogTitle} from '@mui/material';
-import Modal from 'react-bootstrap/Modal';
+import React, { useState, useEffect, useRef } from 'react';
+import { Tab, Tabs } from 'react-tabs';
 import Dashboard from './Dashboard';
 import Chart from 'chart.js/auto';
-import axios from 'axios';
+import { useParams } from 'react-router-dom';
+import img from '../assets/images/BATTERIE.jpg';
+
 function Dash(props) {
-    const chartRef = useRef(null);
-  
-    useEffect(() => {
-      const data = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        values: [65, 59, 80, 81, 56, 55, 40]
-      };
-  
-      // Créer le graphique
-      const ctx = chartRef.current.getContext('2d');
-      new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: data.labels,
-          datasets: [{
-            label: 'Statistiques',
-            data: data.values,
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            borderColor: 'rgba(75, 192, 192, 1)',
-            borderWidth: 1
-          }]
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true
+  const chartRef = useRef(null);
+  const quizChartRef = useRef(null);
+
+  const [chartInstance, setChartInstance] = useState(null);
+  const [quizChartInstance, setQuizChartInstance] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`http://localhost:4000/result/showall`);
+        const data = await response.json();
+
+        // Compter le nombre de quiz par grade
+        const gradeCounts = {};
+        data.forEach(quizResult => {
+          const gradeLevel = quizResult.userId.level;
+          if (gradeCounts[gradeLevel]) {
+            gradeCounts[gradeLevel]++;
+          } else {
+            gradeCounts[gradeLevel] = 1;
+          }
+        });
+
+        // Créer des labels et des valeurs pour le graphique
+        const labels = Object.keys(gradeCounts);
+        const values = labels.map(gradeLevel => gradeCounts[gradeLevel]);
+
+        // Créer le nouveau graphique
+        const ctx = chartRef.current.getContext('2d');
+        const newChartInstance = new Chart(ctx, {
+          type: 'pie',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Quiz par grade',
+              data: values,
+              backgroundColor: [
+                'rgba(255, 99, 132, 0.5)',
+                'rgba(54, 162, 235, 0.5)',
+                'rgba(255, 206, 86, 0.5)',
+                'rgba(75, 192, 192, 0.5)',
+                'rgba(153, 102, 255, 0.5)',
+                'rgba(255, 159, 64, 0.5)',
+                'rgba(255, 99, 132, 0.5)'
+              ],
+              borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)',
+                'rgba(255, 99, 132, 1)'
+              ],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
             }
           }
-        }
-      });
-    }, []);
+        });
+
+        // Mettre à jour l'état avec l'instance du nouveau graphique
+        setChartInstance(newChartInstance);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []); // Exécuté une seule fois au montage
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`http://localhost:4000/result/showall`);
+        const data = await response.json();
   
-    return (
-      <div>
-        <section className="tf-page-title ">
-          {/* Le reste du contenu reste inchangé */}
-        </section>
+        const quizResponses = {};
+        data.forEach(result => {
+          const quizTitle = result.quizId.titre;
+          const correctResponses = result.responses.filter(response => response.isCorrect).length;
+          const incorrectResponses = result.responses.length - correctResponses;
   
-        <section className="tf-dashboard tf-tab">
-          <div className="tf-container">
-            <Tabs className='dashboard-filter'>
-              <div className="row ">
-                <div className="col-xl-3 col-lg-12 col-md-12">
-                  {/* Composant Dashboard reste inchangé */}
-                </div>
-                <div className="col-xl-9 col-lg-12 col-md-12 overflow-table">
-                  <div className="dashboard-content inventory content-tab">
-                    this is dash
-                    <div>
-                      <canvas ref={chartRef} width="400" height="400"></canvas>
-                    </div>
-                  </div>
+          if (!quizResponses[quizTitle]) {
+            quizResponses[quizTitle] = {
+              correct: correctResponses,
+              incorrect: incorrectResponses
+            };
+          }
+        });
+  
+        const labels = Object.keys(quizResponses);
+        const correctValues = labels.map(quizTitle => quizResponses[quizTitle].correct);
+        const incorrectValues = labels.map(quizTitle => quizResponses[quizTitle].incorrect);
+  
+        // Créer le nouveau graphique pour les réponses de quiz
+        const ctxQuiz = quizChartRef.current.getContext('2d');
+        const newQuizChartInstance = new Chart(ctxQuiz, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: 'Réponses correctes',
+                data: correctValues,
+                backgroundColor: 'rgba(0, 255, 0, 0.5)', // Vert pour les réponses correctes
+                borderColor: 'rgba(0, 255, 0, 1)', // Vert pour les réponses correctes
+                borderWidth: 1
+              },
+              {
+                label: 'Réponses incorrectes',
+                data: incorrectValues,
+                backgroundColor: 'rgba(255, 0, 0, 0.5)', // Rouge pour les réponses incorrectes
+                borderColor: 'rgba(255, 0, 0, 1)', // Rouge pour les réponses incorrectes
+                borderWidth: 1
+              }
+            ]
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+  
+        setQuizChartInstance(newQuizChartInstance);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+  
+    fetchData();
+  }, []);
+  
+  
+
+  return (
+    <div>
+      <section className="tf-page-title ">
+        <div className="tf-container">
+          <div className="row">
+            <div className="col-md-12">
+              <ul className="breadcrumbs">
+                <li>Home</li>
+                <li>Profile</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div className="container-fluid" style={{ width: '100%' }}>
+          <div className="row" style={{ width: '100%' }}>
+            <div className="thumb-pagetitle" style={{ width: '100%' }}>
+              <img src={img} alt="images" style={{ width: '100%' }} />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="tf-dashboard tf-tab">
+        <div className="tf-container">
+          <Tabs className='dashboard-filter'>
+            <div className="row">
+              <div className="col-xl-3 col-lg-12 col-md-12">
+                <Dashboard />
+              </div>
+              
+              <div className="col-xl-4 col-lg-4 col-md-4 overflow-table">
+                <div className="dashboard-content inventory content-tab">
+                  <canvas ref={quizChartRef} id="quizChart" width="200" height="200"></canvas>
                 </div>
               </div>
-            </Tabs>
-          </div>
-        </section>
-      </div>
-    );
-  }
-  
-  export default Dash;
+              <div className="col-xl-1 col-lg-1 col-md-1 overflow-table">
+</div>
+              <div className="col-xl-4 col-lg-4 col-md-4 overflow-table">
+                <div className="dashboard-content inventory content-tab">
+                  <canvas ref={chartRef} width="200" height="200"></canvas>
+                </div>
+              </div>
+            </div>
+          </Tabs>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+export default Dash;
