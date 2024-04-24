@@ -273,9 +273,9 @@ return (
             <div className="col-xl-2 col-lg-4 col-md-12">
               <Dashboard />
             </div>
-            <PDFViewer style={{ width: '100%', height: '100vh' }}>
+     {/*      <PDFViewer style={{ width: '100%', height: '100vh' }}>
         {renderPdf()}
-      </PDFViewer>
+</PDFViewer> */} 
             <div className="col-xl-10 col-lg-8 col-md-12">
               <div className="row">
                 {showModal && (
