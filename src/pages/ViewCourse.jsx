@@ -7,12 +7,12 @@ import Swal from 'sweetalert2';
 
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import Dashboard from './Dashboard';
-import { getAllclassrooms,deleteClassroom} from '../services/classroom';
-import ClassroomAdd from './ClassroomAdd';
-//import ClassroomUpdate from './ClassroomUpdate';
+import { getAllcourses,deleteCourse} from '../services/course';
+import CourseAdd from './CourseAdd';
+//import CourseUpdate from './CourseUpdate';
 
 
-function ViewClassroom(props) {
+function ViewCourse(props) {
 
   const DeleteConfirmation = async (id) => {
     try {
@@ -29,21 +29,21 @@ function ViewClassroom(props) {
   
       if (result.isConfirmed) {
         
-        await deleteClassroom(id);
+        await deleteCourse(id);
         Swal.fire(
           'Deleted!',
-          'Your classroom has been deleted.',
+          'Your course has been deleted.',
           'success'
       );
-      const classroomResult= await getAllclassrooms();
-      setclassroomList(classroomResult.data);
+      const courseResult= await getAllcourses();
+      setcourseList(courseResult.data);
     }
 
     } catch (error) {
       console.error('Error deleting item:', error);
       Swal.fire(
         'Error',
-        'Failed to delete the classroom.',
+        'Failed to delete the course.',
         'error'
       );
     }
@@ -120,14 +120,14 @@ const btndelete = {
   const [nextHover, setNextHover] = useState(false); 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5); 
-  const [classroomList,setclassroomList] = useState([]);
+  const [courseList,setcourseList] = useState([]);
 useEffect(() =>{
-const fetchClassrooms = async() =>{
-const classroomResult= await getAllclassrooms();
+const fetchCourses = async() =>{
+const courseResult= await getAllcourses();
 
-setclassroomList(classroomResult.data);
+setcourseList(courseResult.data);
 }
-fetchClassrooms();
+fetchCourses();
 },[]);
 
   const handleChangeItemsPerPage = (e) => {
@@ -140,33 +140,33 @@ fetchClassrooms();
   };
   
   const handleNextPage = () => {
-    setCurrentPage((prevPage) => Math.min(prevPage + 1, Math.ceil(classroomList.length / itemsPerPage)));
+    setCurrentPage((prevPage) => Math.min(prevPage + 1, Math.ceil(courseList.length / itemsPerPage)));
   };
   
-  const pageCount = Math.ceil(classroomList.length / itemsPerPage);
+  const pageCount = Math.ceil(courseList.length / itemsPerPage);
   
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = Math.min(startIndex + itemsPerPage, classroomList.length);
+  const endIndex = Math.min(startIndex + itemsPerPage, courseList.length);
  
   const handleHide = async () => {
     setAddShow(false);
     setUpdateShow(false);
-      const classroomResult= await getAllclassrooms();
-      setclassroomList(classroomResult.data);
+      const courseResult= await getAllcourses();
+      setcourseList(courseResult.data);
     
   };
   
 
 return (
   <div>
-    <ClassroomAdd
+    <CourseAdd
       show={addShow}
       onHide={handleHide}
       style={{ backgroundColor: 'white' }}
     />  
 
     {/* {updateShow && (
-      <ClassroomUpdate
+      <CourseUpdate
        show={updateShow}
       initialValues={selectedItem}
       onHide={handleHide}
@@ -218,24 +218,28 @@ return (
                   <div>
                     <div className="inner-content inventory">
                       <div className="title-dashboard">
-                        <h4>Classrooms</h4>
+                        <h4>Courses</h4>
                       </div>
 
                       <div className="table-ranking top">
                         <div className="title-ranking">
-                          <div className="col-rankingg"><Link to="#">Name</Link></div>
+                          <div className="col-rankingg"><Link to="#">Matière</Link></div>   
+                          <div className="col-rankingg"><Link to="#">Type</Link></div>
                           <div className="col-rankingg"><Link to="#">Capacity</Link></div>
+                          <div className="col-rankingg"><Link to="#">Level</Link></div>
                           <div className="col-rankingg"><Link to="#">Actions</Link></div>
                         </div>
                       </div>
 
                       <div className="table-ranking">
                         {/* Affichage des éléments de la page actuelle */}
-                        {console.log(classroomList)}
-                        {classroomList.slice(startIndex, endIndex).map((item, index) => (
+                        {console.log(courseList)}
+                        {courseList.slice(startIndex, endIndex).map((item, index) => (
                           <div className="content-ranking" key={index}> 
                             <div className="col-rankingg">{item.name}</div>
+                            <div className="col-rankingg">{item.type}</div>
                             <div className="col-rankingg">{item.capacity}</div>
+                            <div className="col-rankingg">{item.niveau}</div>
 
                             <button type='submit' style={btnupdate} onClick={() => {
                               handleOpenPopupUp(item);
@@ -278,7 +282,7 @@ return (
                           >
                             <FiChevronLeft style={{ fontSize: '20px' }} />
                           </button>
-                          <span style={{marginRight:'6px', fontSize: '16px', fontWeight: 'bold' }}>{classroomList.length}</span>
+                          <span style={{marginRight:'6px', fontSize: '16px', fontWeight: 'bold' }}>{courseList.length}</span>
                           <button
                             onClick={handleNextPage}
                             style={{ ...btnStyles, ...(currentPage === pageCount ? { pointerEvents: "none" } : {}), ...(nextHover ? btnHoverStyles : {}) }}
@@ -304,4 +308,4 @@ return (
 
 }
 
-export default ViewClassroom;
+export default ViewCourse;

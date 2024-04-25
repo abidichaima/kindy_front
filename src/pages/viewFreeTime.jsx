@@ -153,7 +153,20 @@ function ViewFreeTime(props) {
   
   const createFreeTimeInDatabase = async (freeTime) => {
     try {
-      const response = await fetch(`http://localhost:4000/api/freeTime/660fae724e90412c4971b127`, {
+      function getUserInfoFromCookie() {
+        var cookieValue = document.cookie.match(/(?:^|;) ?user=([^;]*)(?:;|$)/);
+        if (cookieValue) {
+          var decodedValue = decodeURIComponent(cookieValue[1].replace(/\+/g, ' '));
+          var userObject = JSON.parse(decodedValue);
+          return userObject;
+        } else {
+          return null;  
+        }
+      }
+       var currentUser = getUserInfoFromCookie();
+        console.log("user id",currentUser._id);
+        const teacherId = currentUser._id; // Static teacher ID
+      const response = await fetch(`http://localhost:4000/api/freeTime/${teacherId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
