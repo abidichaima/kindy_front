@@ -5,6 +5,7 @@ function LessonsForm({ show, selectedRange, selectedEvent, onClose, onSubmit }) 
   const [selectedTeacher, setSelectedTeacher] = useState(null);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [selectedStudents, setSelectedStudents] = useState(null);
+  const [selectedClassroom, setSelectedClassroom] = useState(null);
 
   const [startLessonDate, setStartLessonDate] = useState('');
   const [endLessonDate, setEndLessonDate] = useState('');
@@ -13,15 +14,18 @@ function LessonsForm({ show, selectedRange, selectedEvent, onClose, onSubmit }) 
   const [allStudents, setAllStudents] = useState([]);
   const [allTeachers, setAllTeachers] = useState([]);
   const [allCourses, setAllCourses] = useState([]);
+  const [allClassrooms, setAllClassrooms] = useState([]);
 
   useEffect(() => {
     console.log("ana jit")
     const fetchData = async () => {
       try {
-        const [studentsResponse, teachersResponse, coursesResponse] = await Promise.all([
+        const [studentsResponse, teachersResponse, coursesResponse,classroomsResponse] = await Promise.all([
           fetch('http://localhost:4000/user/users/role/student'),
           fetch('http://localhost:4000/user/users/role/teacher'),
           fetch('http://localhost:4000/api/course/get'),
+          fetch('http://localhost:4000/api/classroom/get'),
+
         ]);
 
         const studentsData = await studentsResponse.json();
