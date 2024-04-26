@@ -1,7 +1,6 @@
-import React , {useState,useEffect} from 'react';
+import React , {useState,useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import img from '../assets/images/BATTERIE.jpg'
-
 import Dashboard from './Dashboard';
 import { formatDate } from '@fullcalendar/core';
 import FullCalendar from '@fullcalendar/react';
@@ -10,8 +9,6 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import LessonsForm from '../components/LessonForm'; 
 
-
-
 function ViewCalendar(props) {
   const [weekendsVisible, setWeekendsVisible] = useState(true);
   const [currentEvents, setCurrentEvents] = useState([]);
@@ -19,7 +16,9 @@ function ViewCalendar(props) {
   const [showModal, setShowModal] = useState(true);
   const [selectedRange, setSelectedRange] = useState(null);
   const [selectedEvent, setSelectedEvent] = useState(null);
-  
+  const [searchTerm, setSearchTerm] = useState(''); // State to hold the search term
+  const calendarRef = useRef(null);
+
   useEffect(() => {
     fetch('http://localhost:4000/api/lesson/get')
       .then((response) => response.json())
@@ -39,11 +38,42 @@ function ViewCalendar(props) {
           
         }));
         setInitialEvents(events);
+        setCurrentEvents(events); // Set current events initially
+
       })
       .catch((error) => {
         console.error('Error fetching events:', error);
       });
   }, []);
+
+  // Filter events by search term when searchTerm state changes
+  useEffect(() => {
+    if (searchTerm.trim() === '') {
+      setCurrentEvents(initialEvents); // Reset to all events if search term is empty
+    } else {
+      const filteredEvents = initialEvents.filter((event) =>
+        event.classroom.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setCurrentEvents(filteredEvents);
+    }
+  }, [searchTerm, initialEvents]);
+
+
+  useEffect(() => {
+    if (calendarRef.current) {
+      const calendarApi = calendarRef.current.getApi();
+      calendarApi.refetchEvents();
+    }
+  }, [searchTerm]);
+
+  function handleSearchInputChange(event) {
+    setSearchTerm(event.target.value);
+  }
+  function filterEvents(event) {
+    const eventClassroom = event.classroom.toLowerCase();
+    const search = searchTerm.toLowerCase();
+    return eventClassroom.includes(search);
+  }
 
   function handleWeekendsToggle() {
     setWeekendsVisible(!weekendsVisible);
@@ -98,6 +128,13 @@ return (
         <Dashboard />
       </div>
       <div className="col-xl-10 col-lg-8 col-md-12">
+        {/* Input field for search */}
+      <input
+        type="text"
+        placeholder="Search by classroom name"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
         <div className="row">          {showModal && (
             <div className="col-xl-3 col-lg-12 col-md-12">
               <LessonsForm
@@ -124,7 +161,7 @@ return (
                   selectMirror={true}
                   dayMaxEvents={true}
                   weekends={weekendsVisible}
-                  events={initialEvents}
+                  events={initialEvents.filter(filterEvents)}
                   select={(selectInfo) => {
                     setShowModal(true);
                     setSelectedRange(selectInfo);

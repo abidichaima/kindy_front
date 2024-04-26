@@ -10,6 +10,8 @@ import interactionPlugin from '@fullcalendar/interaction';
 function ViewFreeTime(props) {
   const [weekendsVisible] = useState(true);
   const [initialEvents, setInitialEvents] = useState([]);
+  console.log("initialEvents:", initialEvents);
+
   const [formData, setFormData] = useState({
     day: '',
     start: '',
@@ -50,7 +52,7 @@ function ViewFreeTime(props) {
   const generateEvents = (data) => {
     const events = [];
     const currentDate = new Date();
-    const endDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 6, 0); // Generate events for the next 6 months
+    const endDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 3, 0); // Generate events for the next 6 months
 
     data.forEach((free) => {
       const dayIndex = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 6].indexOf(free.day);

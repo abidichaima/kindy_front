@@ -84,6 +84,7 @@ function ViewCalendarTeacher(props) {
       .catch((error) => {
         console.error('Error fetching holidays:', error);
       });
+      
   }, []);
   
   useEffect(() => {
