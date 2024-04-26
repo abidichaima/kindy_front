@@ -6,10 +6,13 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
+import SideProfile from './SideProfile';
 
 function ViewFreeTime(props) {
   const [weekendsVisible] = useState(true);
   const [initialEvents, setInitialEvents] = useState([]);
+  console.log("initialEvents:", initialEvents);
+
   const [formData, setFormData] = useState({
     day: '',
     start: '',
@@ -50,7 +53,7 @@ function ViewFreeTime(props) {
   const generateEvents = (data) => {
     const events = [];
     const currentDate = new Date();
-    const endDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 6, 0); // Generate events for the next 6 months
+    const endDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 3, 0); // Generate events for the next 6 months
 
     data.forEach((free) => {
       const dayIndex = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 6].indexOf(free.day);
@@ -160,7 +163,7 @@ function ViewFreeTime(props) {
           var userObject = JSON.parse(decodedValue);
           return userObject;
         } else {
-          return null;  
+          return null;
         }
       }
        var currentUser = getUserInfoFromCookie();
@@ -211,7 +214,7 @@ function ViewFreeTime(props) {
         <div className="container-fluid">
           <div className="row">
             <div className="col-xl-2 col-lg-4 col-md-12">
-              <Dashboard />
+              <SideProfile />
             </div>
             <div className="col-xl-10 col-lg-8 col-md-12">
               <div className="row">       

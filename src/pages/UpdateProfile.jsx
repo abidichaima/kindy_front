@@ -238,21 +238,17 @@ function UpdateProfile(props ) {
             image: image,
           };
        
-          const decodedToken = jwtDecode(response.data.data);
 
           // Store user information in cookies
    // Accessing user information
   
    // Store user information in cookies
-   Cookies.set('user', JSON.stringify(decodedToken ), { expires: 7 }); 
-          console.log('Updated user in cookies:', updatedUser);
           Swal.fire({
           title: 'Success',
           text: 'login again to see modifications',
           icon: 'success',
           confirmButtonText: 'OK'
         });
-        Cookies.set('user', JSON.stringify(updatedUser));
 
       }})
       .catch(error => {

@@ -5,32 +5,35 @@ function LessonsForm({ show, selectedRange, selectedEvent, onClose, onSubmit }) 
   const [selectedTeacher, setSelectedTeacher] = useState(null);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [selectedStudents, setSelectedStudents] = useState(null);
+  const [selectedClassroom, setSelectedClassroom] = useState(null); // State for selected classroom
 
   const [startLessonDate, setStartLessonDate] = useState('');
   const [endLessonDate, setEndLessonDate] = useState('');
   const [typeLesson, setTypeLesson] = useState('');
-  const [classRoom, setClassRoom] = useState('');
   const [allStudents, setAllStudents] = useState([]);
   const [allTeachers, setAllTeachers] = useState([]);
   const [allCourses, setAllCourses] = useState([]);
+  const [allClassrooms, setAllClassrooms] = useState([]); // State for all classrooms
 
   useEffect(() => {
-    console.log("ana jit")
     const fetchData = async () => {
       try {
-        const [studentsResponse, teachersResponse, coursesResponse] = await Promise.all([
+        const [studentsResponse, teachersResponse, coursesResponse, classroomsResponse] = await Promise.all([
           fetch('http://localhost:4000/user/users/role/student'),
           fetch('http://localhost:4000/user/users/role/teacher'),
           fetch('http://localhost:4000/api/course/get'),
+          fetch('http://localhost:4000/api/classroom/get'),
         ]);
 
         const studentsData = await studentsResponse.json();
         const teachersData = await teachersResponse.json();
         const coursesData = await coursesResponse.json();
+        const classroomsData = await classroomsResponse.json(); // Fetch classrooms data
 
-        setAllStudents(studentsData.map(teacher => ({ value: teacher._id, label: `${teacher.firstName} ${teacher.lastName}` })));
+        setAllStudents(studentsData.map(student => ({ value: student._id, label: `${student.firstName} ${student.lastName}` })));
         setAllTeachers(teachersData.map(teacher => ({ value: teacher._id, label: `${teacher.firstName} ${teacher.lastName}` })));
         setAllCourses(coursesData.map(course => ({ value: course._id, label: course.name })));
+        setAllClassrooms(classroomsData.map(classroom => ({ value: classroom._id, label: classroom.name }))); // Set classrooms state
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -57,19 +60,20 @@ function LessonsForm({ show, selectedRange, selectedEvent, onClose, onSubmit }) 
     if (selectedEvent) {
       setSelectedTeacher({ value: selectedEvent.extendedProps.teacher._id, label: `${selectedEvent.extendedProps.teacher.firstName} ${selectedEvent.extendedProps.teacher.lastName}` });
       setSelectedCourse({ value: selectedEvent.extendedProps.course._id, label: selectedEvent.extendedProps.course.name });
-      setSelectedStudents(selectedEvent.extendedProps.students.map(student => ({ value: student._id, label: `${student.firstName} ${student.lastName}` })));
+      setSelectedClassroom({ value: selectedEvent.extendedProps.classroom._id, label: selectedEvent.extendedProps.classroom.name });
+
       setStartLessonDate(formatDate(selectedEvent.start));
       setEndLessonDate(formatDate(selectedEvent.end));
       setTypeLesson(selectedEvent.title.split(' - ')[0]);
-      setClassRoom(selectedEvent.extendedProps.classroom);
     } else {
       setSelectedTeacher(null);
       setSelectedCourse(null);
-      setSelectedStudents([]);
+      setSelectedClassroom(null);
+
+      setSelectedStudents([null]);
       setStartLessonDate('');
       setEndLessonDate('');
       setTypeLesson('');
-      setClassRoom('');
     }
   }, [selectedEvent]);
 
@@ -83,7 +87,7 @@ function LessonsForm({ show, selectedRange, selectedEvent, onClose, onSubmit }) 
       endLessonDate: endLessonDate ? new Date(endLessonDate) : null,
       course: selectedCourse.value,
       typeLesson,
-      classRoom,
+      classroom: selectedClassroom.value, // Include selected classroom in lesson data
     };
 
     try {
@@ -99,13 +103,14 @@ function LessonsForm({ show, selectedRange, selectedEvent, onClose, onSubmit }) 
 
         if (response.ok) {
           console.log('Lesson updated successfully');
-          selectedEvent.setProp('title', `${typeLesson} - ${selectedCourse.label}`);
+          selectedEvent.setProp('title', `${selectedCourse.label} - ${selectedClassroom.label}`);
           selectedEvent.setStart(new Date(startLessonDate));
           selectedEvent.setEnd(new Date(endLessonDate));
           selectedEvent.setExtendedProp('teacher', selectedTeacher);
           selectedEvent.setExtendedProp('students', selectedStudents);
-          selectedEvent.setExtendedProp('classroom', classRoom);
           selectedEvent.setExtendedProp('course', selectedCourse);
+          selectedEvent.setExtendedProp('classroom', selectedClassroom); // Update classroom in selected event
+          window.location.reload();
         } else {
           console.error('Failed to update lesson');
         }
@@ -220,11 +225,12 @@ function LessonsForm({ show, selectedRange, selectedEvent, onClose, onSubmit }) 
           </label>
           <br />
           <label>
-            Classroom:
-            <input
-              type="text"
-              value={classRoom}
-              onChange={(e) => setClassRoom(e.target.value)}
+            Classroom: {/* Select input for choosing classroom */}
+            <Select
+              value={selectedClassroom}
+              onChange={setSelectedClassroom}
+              options={allClassrooms}
+              required
             />
           </label>
           <br />

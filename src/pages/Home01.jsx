@@ -26,7 +26,15 @@ function Home01(props) {
                 <Banner01 data={dataBanner} />
 
                 <Category data={dataCategory} />
-                <h1>Events </h1>
+                <div className="tf-container">
+
+                <div className="row">
+                        <div className="col-md-12">
+                            <div className="tf-heading mb40 wow fadeInUp">
+                                <h4 className="heading">Events</h4>
+                            </div>
+                            </div>     </div>
+                </div>
                         <EventFront />
                 
 
