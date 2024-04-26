@@ -67,7 +67,7 @@ function EventTest(props) {
   const canvasRef = useRef(null);
 
   const generateQRCodeData = (item, eventTitle) => {
-    return `This ticket is for user ${item.user_id} for the event: ${eventTitle}, number of tickets: ${item.number}, total paid: ${item.amount}`;
+    return `This ticket is for user ${currentUser.firstName} ${currentUser.lastName} for the event: ${eventTitle}, number of tickets: ${item.number}, total paid: ${item.amount}`;
   };
 
 

@@ -129,13 +129,15 @@ User Management
 <Dropdown.Menu>
   <Dropdown.Item>
 
-    <Link to="/event">Event</Link>
+    <Link to="/event">Events</Link>
   </Dropdown.Item>
   <Dropdown.Item>
-    <Link to="/ticket">Event Tickets</Link>
+    <Link to="/ticket">Events Tickets</Link>
   </Dropdown.Item>
   <Dropdown.Item>
-    <Link to="/comments">Event Comments</Link>
+  {/* <Link to="/comments">Event Comments</Link>*/} 
+    <Link to="/satisfaction">Events Satisfaction</Link>
+
   </Dropdown.Item>
 </Dropdown.Menu>
 </Dropdown>

@@ -35,32 +35,32 @@ function EventTickets(props) {
         background: '#e5e2e2',
         color: 'black',
         marginRight: '10px',
-      };
-      
-      const selectStyle = {
+    };
+
+    const selectStyle = {
         padding: '8px',
         fontSize: '14px',
         borderRadius: '5px',
         border: '1px solid #ddd',
         background: '#e5e2e2',
         cursor: 'pointer',
-    
-      };
+
+    };
 
     const iconStyles = {
         fontSize: "1.5rem",
         color: "#333",
     };
     const btnHoverStyles = {
-        boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.3)", 
+        boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.3)",
         backgroundColor: "grey",
-      };
-    
+    };
+
     const [prevHover, setPrevHover] = useState(false);
     const [nextHover, setNextHover] = useState(false);
-   
+
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(5); 
+    const [itemsPerPage, setItemsPerPage] = useState(5);
     const [data, setData] = useState([]);
 
     const [events, setEvents] = useState([]);
@@ -117,6 +117,27 @@ function EventTickets(props) {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = Math.min(startIndex + itemsPerPage, data.length);
 
+    const [users, setUsers] = useState([]);
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const response = await axios.get('http://localhost:4000/user/users//getAllUsers');
+                setUsers(response.data);
+            } catch (error) {
+                console.error('Error fetching users:', error);
+            }
+        };
+
+        fetchUsers();
+    }, []);
+
+    const getUserNameById = (userId) => {
+        console.log(userId); // Ensure userId is correct
+        const user = users.find(user => user._id === userId);
+        return user ? `${user.firstName} ${user.lastName}` : 'Unknown'; // Use template literal to concatenate first name and last name
+    };
+
+
     return (
 
         <div>
@@ -156,7 +177,7 @@ function EventTickets(props) {
                                             <div className="inner-content inventory">
                                                 <h4 className="title-dashboard">Tickets</h4>
 
-                                              
+
 
                                                 <div className="table-ranking top">
                                                     <div className="title-ranking">
@@ -176,7 +197,7 @@ function EventTickets(props) {
                                                                 {new Date(item.createdAt).toLocaleDateString('en-GB')}
                                                             </div>
                                                             <div className="col-rankingg">{events[index]?.title}</div>
-                                                            <div className="col-rankingg">{item.user_id}</div>
+                                                            <div className="col-rankingg">{getUserNameById(item.user_id)}</div>
                                                             <div className="col-rankingg">{item.number}</div>
                                                             <div className="col-rankingg">{item.amount}</div>
                                                         </div>
@@ -186,42 +207,42 @@ function EventTickets(props) {
 
                                             {/* Contrôles de pagination en bas du tableau */}
                                             <div className="pagination-controls" style={{ marginTop: '20px', textAlign: 'center' }}>
-                                            <div style={{ display: 'flex', alignItems: 'center' }}>
-  <div className="pagination-controls" style={{ marginLeft: '20px' }}>
-    <select id="itemsPerPage" value={itemsPerPage} onChange={handleChangeItemsPerPage} style={selectStyle}>
-      <option value="5">5</option>
-      <option value="10">10</option>
-      <option value="15">15</option>
-    </select>
-  </div>
+                                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                    <div className="pagination-controls" style={{ marginLeft: '20px' }}>
+                                                        <select id="itemsPerPage" value={itemsPerPage} onChange={handleChangeItemsPerPage} style={selectStyle}>
+                                                            <option value="5">5</option>
+                                                            <option value="10">10</option>
+                                                            <option value="15">15</option>
+                                                        </select>
+                                                    </div>
 
-  {/* Contrôles de pagination en bas du tableau */}
-  <div className="pagination-controls" style={{ marginLeft: 'auto', marginRight: '20px', textAlign: 'center' }}>
-    <button
-      onClick={handlePrevPage}
-      style={{ ...btnStyles, ...(currentPage === 1 ? { pointerEvents: "none" } : {}), ...(prevHover ? btnHoverStyles : {}) }}
-      onMouseEnter={() => setPrevHover(true)}
-      onMouseLeave={() => setPrevHover(false)}
-      disabled={currentPage === 1}
-    >
-      <FiChevronLeft style={{ fontSize: '20px' }} />
-    </button>
-    <span style={{marginRight:'6px', fontSize: '16px', fontWeight: 'bold' }}>{data.length}</span>
+                                                    {/* Contrôles de pagination en bas du tableau */}
+                                                    <div className="pagination-controls" style={{ marginLeft: 'auto', marginRight: '20px', textAlign: 'center' }}>
+                                                        <button
+                                                            onClick={handlePrevPage}
+                                                            style={{ ...btnStyles, ...(currentPage === 1 ? { pointerEvents: "none" } : {}), ...(prevHover ? btnHoverStyles : {}) }}
+                                                            onMouseEnter={() => setPrevHover(true)}
+                                                            onMouseLeave={() => setPrevHover(false)}
+                                                            disabled={currentPage === 1}
+                                                        >
+                                                            <FiChevronLeft style={{ fontSize: '20px' }} />
+                                                        </button>
+                                                        <span style={{ marginRight: '6px', fontSize: '16px', fontWeight: 'bold' }}>{data.length}</span>
 
-    <button
-      onClick={handleNextPage}
-      style={{ ...btnStyles, ...(currentPage === pageCount ? { pointerEvents: "none" } : {}), ...(nextHover ? btnHoverStyles : {}) }}
-      onMouseEnter={() => setNextHover(true)}
-      onMouseLeave={() => setNextHover(false)}
-      disabled={currentPage === pageCount}
-    >
-      <FiChevronRight style={{ fontSize: '20px' }} />
-    </button>
+                                                        <button
+                                                            onClick={handleNextPage}
+                                                            style={{ ...btnStyles, ...(currentPage === pageCount ? { pointerEvents: "none" } : {}), ...(nextHover ? btnHoverStyles : {}) }}
+                                                            onMouseEnter={() => setNextHover(true)}
+                                                            onMouseLeave={() => setNextHover(false)}
+                                                            disabled={currentPage === pageCount}
+                                                        >
+                                                            <FiChevronRight style={{ fontSize: '20px' }} />
+                                                        </button>
 
-  </div>
-</div>
+                                                    </div>
+                                                </div>
 
-                                              
+
 
                                             </div>
                                         </div>
