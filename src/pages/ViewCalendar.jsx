@@ -26,7 +26,7 @@ function ViewCalendar(props) {
       .then((data) => {
         const events = data.map((lesson) => ({
           id: lesson._id,
-          title: `${lesson.typeLesson} - ${lesson.course?.name || 'No Course'}`,
+          title: `${lesson.course?.name || 'No Course'}`,
           start: new Date(lesson.startLessonDate),
           end: new Date(lesson.endLessonDate),
           teacher: lesson.teacher,
@@ -51,14 +51,11 @@ function ViewCalendar(props) {
 
   function handleEventClick(clickInfo) {
               // eslint-disable-next-line no-restricted-globals
-
       console.log("modal true")
       console.log(clickInfo.event)
-
       setShowModal(true);
       setSelectedRange({ start: clickInfo.event.start, end: clickInfo.event.end });
       setSelectedEvent(clickInfo.event);
-    
   }
 
   function handleEvents(events) {
@@ -73,8 +70,6 @@ function ViewCalendar(props) {
 
 
 return (
-
-   
   <div>
   <section class="tf-page-title">    
       <div class="tf-container">
@@ -142,17 +137,13 @@ return (
                   slotMinTime="08:00:00"
                   slotMaxTime="20:00:00"
                 />
-              </div>
-              
+              </div> 
             </div>
-            
-
-          </div><div className="col-xl-12 col-lg-12 col-md-12"><Sidebar
+            </div><div className="col-xl-12 col-lg-12 col-md-12"><Sidebar
                 weekendsVisible={weekendsVisible}
                 handleWeekendsToggle={handleWeekendsToggle}
                 currentEvents={currentEvents}
               /></div>
-
         </div>
       </div>
     </div>
@@ -176,7 +167,7 @@ function renderEventContent(eventInfo) {
   );
 }
 
-function Sidebar({ weekendsVisible, handleWeekendsToggle, currentEvents }) {
+function Sidebar({ currentEvents }) {
   return (
     <div className='demo-app-sidebar'>
       <div className='demo-app-sidebar-section'>
@@ -191,7 +182,6 @@ function Sidebar({ weekendsVisible, handleWeekendsToggle, currentEvents }) {
         <h2>Instructions</h2>
         <ul>
           <li>Select dates and you will be prompted to create a new event</li>
-          <li>Drag, drop, and resize events</li>
           <li>Click an event to edit or delete it</li>
         </ul>
       </div>

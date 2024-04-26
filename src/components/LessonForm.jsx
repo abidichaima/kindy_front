@@ -110,7 +110,7 @@ function LessonsForm({ show, selectedRange, selectedEvent, onClose, onSubmit }) 
           selectedEvent.setExtendedProp('students', selectedStudents);
           selectedEvent.setExtendedProp('course', selectedCourse);
           selectedEvent.setExtendedProp('classroom', selectedClassroom); // Update classroom in selected event
-
+          window.location.reload();
         } else {
           console.error('Failed to update lesson');
         }
