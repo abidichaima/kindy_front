@@ -1,5 +1,4 @@
 import React , {useState,useEffect, useRef } from 'react';
-import React , {useState,useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import img from '../assets/images/BATTERIE.jpg'
 import Dashboard from './Dashboard';
@@ -40,41 +39,11 @@ function ViewCalendar(props) {
         setInitialEvents(events);
         setCurrentEvents(events); // Set current events initially
 
-        setCurrentEvents(events); // Set current events initially
       })
       .catch((error) => {
         console.error('Error fetching events:', error);
       });
   }, []);
-
-  // Filter events by search term when searchTerm state changes
-  useEffect(() => {
-    if (searchTerm.trim() === '') {
-      setCurrentEvents(initialEvents); // Reset to all events if search term is empty
-    } else {
-      const filteredEvents = initialEvents.filter((event) =>
-        event.classroom.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      setCurrentEvents(filteredEvents);
-    }
-  }, [searchTerm, initialEvents]);
-
-
-  useEffect(() => {
-    if (calendarRef.current) {
-      const calendarApi = calendarRef.current.getApi();
-      calendarApi.refetchEvents();
-    }
-  }, [searchTerm]);
-
-  function handleSearchInputChange(event) {
-    setSearchTerm(event.target.value);
-  }
-  function filterEvents(event) {
-    const eventClassroom = event.classroom.toLowerCase();
-    const search = searchTerm.toLowerCase();
-    return eventClassroom.includes(search);
-  }
 
   // Filter events by search term when searchTerm state changes
   useEffect(() => {
@@ -192,7 +161,6 @@ return (
                   dayMaxEvents={true}
                   weekends={weekendsVisible}
                   events={initialEvents.filter(filterEvents)}
-                  events={initialEvents.filter(filterEvents)}
                   select={(selectInfo) => {
                     setShowModal(true);
                     setSelectedRange(selectInfo);
@@ -206,9 +174,7 @@ return (
                   slotMaxTime="20:00:00"
                 />
               </div> 
-              </div> 
             </div>
-            </div><div className="col-xl-12 col-lg-12 col-md-12"><Sidebar
             </div><div className="col-xl-12 col-lg-12 col-md-12"><Sidebar
                 weekendsVisible={weekendsVisible}
                 handleWeekendsToggle={handleWeekendsToggle}
@@ -237,7 +203,6 @@ function renderEventContent(eventInfo) {
   );
 }
 
-function Sidebar({ currentEvents }) {
 function Sidebar({ currentEvents }) {
   return (
     <div className='demo-app-sidebar'>
