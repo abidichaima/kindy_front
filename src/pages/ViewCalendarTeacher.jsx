@@ -9,6 +9,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import LessonsForm from '../components/LessonForm';
 import {  isSameDay } from 'date-fns';
+import SideProfile from './SideProfile';
 
 function ViewCalendarTeacher(props) {
   const [weekendsVisible, setWeekendsVisible] = useState(true);
@@ -50,14 +51,18 @@ function ViewCalendarTeacher(props) {
         const events = data.map((lesson) => ({
           id: lesson._id,
           title: `${lesson.course?.name || 'No Course'}`,
+          title: `${lesson.course?.name || 'No Course'}`,
           start: new Date(lesson.startLessonDate),
           end: new Date(lesson.endLessonDate),
           teacher: lesson.teacher,
           students: lesson.students,
           classroomm: lesson.classroom._id,
           classroom: lesson.classroom.name,
+          classroomm: lesson.classroom._id,
+          classroom: lesson.classroom.name,
           course: lesson.course,
           teacherfistname: lesson.teacher.firstName,
+          teacherlastname: lesson.teacher.lastName ,
           teacherlastname: lesson.teacher.lastName ,
         }));
         setInitialEvents(events);
@@ -84,6 +89,7 @@ function ViewCalendarTeacher(props) {
       .catch((error) => {
         console.error('Error fetching holidays:', error);
       });
+      
       
   }, []);
   
@@ -124,6 +130,11 @@ function ViewCalendarTeacher(props) {
 
       
    
+ 
+
+
+      
+   
 return (
 
    
@@ -152,7 +163,7 @@ return (
         <div className="container-fluid">
           <div className="row">
             <div className="col-xl-2 col-lg-4 col-md-12">
-              <Dashboard />
+              <SideProfile />
             </div>
      {/*      <PDFViewer style={{ width: '100%', height: '100vh' }}>
         {renderPdf()}
@@ -295,5 +306,3 @@ function SidebarEvent({ event }) {
 }
 
 export default ViewCalendarTeacher; 
-
-

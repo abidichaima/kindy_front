@@ -3,6 +3,10 @@ import axios from 'axios';
 import { QRCodeCanvas } from 'qrcode.react';
 import { AiOutlineDownload } from "react-icons/ai";
 import { jsPDF } from 'jspdf'
+import SideProfile from './SideProfile';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import { Link, Navigate } from 'react-router-dom'; // Import Navigate from react-router-dom
+import img from '../assets/images/BATTERIE.jpg'
 EventTest.propTypes = {
 
 };
@@ -63,7 +67,7 @@ function EventTest(props) {
   const canvasRef = useRef(null);
 
   const generateQRCodeData = (item, eventTitle) => {
-    return `This ticket is for user ${item.user_id} for the event: ${eventTitle}, number of tickets: ${item.number}, total paid: ${item.amount}`;
+    return `This ticket is for user ${currentUser.firstName} ${currentUser.lastName} for the event: ${eventTitle}, number of tickets: ${item.number}, total paid: ${item.amount}`;
   };
 
 
@@ -87,26 +91,54 @@ function EventTest(props) {
     pdf.save('QR.pdf')
 
   }
-
   return (
     <div>
 
-      <section className="tf-page-title ">
-        <div className="tf-container">
-          <div className="row">
-            <div className="col-md-12">
 
 
-              <h4 className="page-title-heading">Your Tickets</h4>
+      <section class="tf-page-title ">
+        <div class="tf-container">
+          <div class="row">
+            <div class="col-md-12">
+              <ul class="breadcrumbs">
+                <li><Link to="/">Home</Link></li>
+                <li>Profile</li>
+              </ul>
             </div>
+          </div>
+        </div>
+        <div class="container-fluid" style={{ width: '100%' }}>
+          <div class="row" style={{ width: '100%' }}>
+            <div class="thumb-pagetitle" style={{ width: '100%' }}>
+              <img src={img} alt="images" style={{ width: '100%' }} />
+            </div>
+
           </div>
         </div>
       </section>
 
-      <section className="tf-ranking tf-filter overflow-d">
-        <div className="tf-container">
+      <section className="tf-dashboard tf-tab">
+            <div className="tf-container">
+              <Tabs className='dashboard-filter'>
+      <div className="row">
+        <div className="col-xl-3 col-lg-12 col-md-12">
+          <SideProfile />
+        </div>
 
-          <div className="table-ranking">
+        <div className="col-xl-9 col-lg-12 col-md-12 overflow-table">
+          <section className="tf-page-title ">
+            <div className="tf-container">
+              <div className="row">
+                <div className="col-md-12">
+
+
+                  <h4 className="page-title-heading"></h4>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <div className="table-ranking" style={{marginTop:'50px'}}>
             <div className="title-ranking">
               <div className="col-ranking">#</div>
               <div className="col-ranking">Date of Booking</div>
@@ -122,14 +154,14 @@ function EventTest(props) {
               dataT.map((item, index) => (
 
                 <div className="content-ranking tf-loadmore 3d anime music" key={index} style={{ marginBottom: '10px' }} >
-                  <div className="col-rankingg" style={{ marginRight: '130px' }}>{index}</div>
-                  <div className="col-rankingg" style={{ marginRight: '150px' }}>
+                  <div className="col-rankingg" style={{ marginRight: '100px' }}>{index}</div>
+                  <div className="col-rankingg" style={{ marginRight: '100px' }}>
                     {new Date(item.createdAt).toLocaleDateString('en-GB')}
                   </div>
-                  <div className="col-rankingg" style={{ marginRight: '150px' }}>{events[index]?.title}</div>
-                  <div className="col-rankingg" style={{ marginRight: '150px' }}>{item.number}</div>
-                  <div className="col-rankingg" style={{ marginRight: '150px' }}>{item.amount}</div>
-                  <div className="col-rankingg" style={{ marginRight: '100px' }}>
+                  <div className="col-rankingg" style={{ marginRight: '100px' }}>{events[index]?.title}</div>
+                  <div className="col-rankingg" style={{ marginRight: '100px' }}>{item.number}</div>
+                  <div className="col-rankingg" style={{ marginRight: '100px' }}>{item.amount}</div>
+                  <div className="col-rankingg" style={{ marginRight: '50px' }}>
                     <QRCodeCanvas
                       ref={canvasRef}
                       value={generateQRCodeData(item, events[index]?.title)}
@@ -154,13 +186,16 @@ function EventTest(props) {
               ))
 
             }
+</div>
 
-          </div>
-
-        </div>
+</div>
+      </div>
+      </Tabs>
+      </div>
       </section>
 
     </div>
+
   );
 }
 

@@ -20,6 +20,7 @@ import CardModal from '../components/layouts/CardModal';
 import { addQuizz ,getAllquizzs,deleteQuizz} from '../services/quizz';
 import QuizzAdd from './QuizzAdd';
 import QuizzUpdate from './QuizzUpdate';
+import SideProfile from './SideProfile';
 
 
 function ViewQuizz(props) {
@@ -227,7 +228,7 @@ style={{ backgroundColor: 'white' }}
                 <Tabs className='dashboard-filter'>
                     <div className="row ">                 
                         <div className="col-xl-3 col-lg-12 col-md-12">
-                            <Dashboard/>
+                            <SideProfile/>
                         </div>
                         <div className="col-xl-9 col-lg-12 col-md-12 overflow-table">
 

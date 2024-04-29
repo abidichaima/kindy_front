@@ -9,6 +9,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import LessonsForm from '../components/LessonForm';
 import { isSameDay } from 'date-fns';
+import SideProfile from './SideProfile';
 
 function ViewCalendarStudent(props) {
   const [weekendsVisible, setWeekendsVisible] = useState(true);
@@ -137,7 +138,7 @@ return (
         <div className="container-fluid">
           <div className="row">
             <div className="col-xl-2 col-lg-4 col-md-12">
-              <Dashboard />
+              <SideProfile />
             </div>
             <div className="col-xl-10 col-lg-8 col-md-12">
               <div className="row">
@@ -278,5 +279,3 @@ function SidebarEvent({ event }) {
 }
 
 export default ViewCalendarStudent; 
-
-

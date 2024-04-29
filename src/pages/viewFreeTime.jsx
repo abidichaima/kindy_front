@@ -6,6 +6,7 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
+import SideProfile from './SideProfile';
 
 function ViewFreeTime(props) {
   const [weekendsVisible] = useState(true);
@@ -213,7 +214,7 @@ function ViewFreeTime(props) {
         <div className="container-fluid">
           <div className="row">
             <div className="col-xl-2 col-lg-4 col-md-12">
-              <Dashboard />
+              <SideProfile />
             </div>
             <div className="col-xl-10 col-lg-8 col-md-12">
               <div className="row">       
