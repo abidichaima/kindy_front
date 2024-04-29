@@ -18,28 +18,32 @@ function ViewCalendar(props) {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [searchTerm, setSearchTerm] = useState(''); // State to hold the search term
   const calendarRef = useRef(null);
-
   useEffect(() => {
     fetch('http://localhost:4000/api/lesson/get')
       .then((response) => response.json())
       .then((data) => {
-        const events = data.map((lesson) => ({
-          id: lesson._id,
-          title: `${lesson.course?.name || 'No Course'}`,
-          start: new Date(lesson.startLessonDate),
-          end: new Date(lesson.endLessonDate),
-          teacher: lesson.teacher,
-          students: lesson.students,
-          classroomm: lesson.classroom._id,
-          classroom: lesson.classroom.name,
-          course: lesson.course,
-          teacherfistname: lesson.teacher.firstName,
-          teacherlastname: lesson.teacher.lastName ,
-          
-        }));
+        const events = data.map((lesson) => {
+          const event = {
+            id: lesson._id,
+            title: `${lesson.course?.name || 'No Course'}`,
+            start: new Date(lesson.startLessonDate),
+            end: new Date(lesson.endLessonDate),
+            teacher: lesson.teacher,
+            students: lesson.students,
+            teacherfistname: lesson.teacher.firstName,
+            teacherlastname: lesson.teacher.lastName,
+          };
+          if (lesson.classroom) {
+            event.classroomm = lesson.classroom._id;
+            event.classroom = lesson.classroom.name;
+          } else {
+            event.classroomm = null;
+            event.classroom = 'No Classroom';
+          }
+          return event;
+        });
         setInitialEvents(events);
         setCurrentEvents(events); // Set current events initially
-
       })
       .catch((error) => {
         console.error('Error fetching events:', error);
