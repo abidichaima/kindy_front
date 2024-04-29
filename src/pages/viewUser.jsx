@@ -6,6 +6,7 @@ import { Dialog, DialogTitle, DialogContent } from '@material-ui/core';
 import { Tabs, TabPanel } from 'react-tabs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
 
 import UpdateUserForm from './updateUser';
 import AddUserForm from './addUser';
@@ -26,6 +27,7 @@ function ViewUser(props) {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [addShow, setAddShow] = useState(false);
   const [updateShow, setUpdateShow] = useState(false);
+  const [data, setData] = useState([]);
 
   const handleClosePopup = () => {
     setIsPopupOpen(false);
@@ -105,6 +107,11 @@ const DeleteConfirmation = (userId) => {
           console.error(data.errors);
           Swal.fire('Error', 'Failed to delete the item.', 'error');
         }
+
+        axios.get('http://localhost:4000/user/users/getAllUsers')
+        .then((response) => {
+          setData(response.data);
+        })
       } catch (error) {
         console.error('Error deleting user:', error);
         Swal.fire('Error', 'Failed to delete the item.', 'error');
@@ -227,9 +234,18 @@ const [searchResults, setSearchResults] = useState([]);
     }
   };
 
+  const close = () => {
+    setAddShow(false);
+    setUpdateShow(false)
+    axios.get('http://localhost:4000/user/users/getAllUsers')
+      .then((response) => {
+        setData(response.data);
+      })
+  }
+
   return (
     <div>
-    <AddUserForm show={addShow} onHide={() => setAddShow(false)} />
+    <AddUserForm show={addShow} onHide={close} />
 
 
 
@@ -348,7 +364,8 @@ onClick={() => {
                                   <UpdateUserForm
                                     show={updateShow}
                                     initialValues={selectedItem}
-                                    onHide={() => setUpdateShow(false)}
+                                    onHide={close}
+                                    
                                   />
                                 )}
                             

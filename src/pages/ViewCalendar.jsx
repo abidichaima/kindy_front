@@ -18,7 +18,6 @@ function ViewCalendar(props) {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [searchTerm, setSearchTerm] = useState(''); // State to hold the search term
   const calendarRef = useRef(null);
-
   useEffect(() => {
     fetch('http://localhost:4000/api/lesson/get')
       .then((response) => response.json())

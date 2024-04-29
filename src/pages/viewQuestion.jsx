@@ -16,6 +16,7 @@ import { deleteQuestion, getAllquestions } from '../services/question';
 import CardModal from '../components/layouts/CardModal';
 import QuestionAdd from './QuestionAdd';
 import QuestionUpdate from './QuestionUpdate';
+import SideProfile from './SideProfile';
 
 
 function ViewQuestion(props) {
@@ -225,7 +226,7 @@ return (
                 <Tabs className='dashboard-filter'>
                     <div className="row ">                 
                         <div className="col-xl-3 col-lg-12 col-md-12">
-                            <Dashboard/>
+                            <SideProfile/>
                         </div>
                         <div className="col-xl-9 col-lg-12 col-md-12 overflow-table">
 

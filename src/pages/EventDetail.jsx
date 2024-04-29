@@ -14,7 +14,7 @@ function EventDetail(props) {
     const { id } = useParams();
     const [data, setData] = useState(null);
     const [dataT, setDataT] = useState([]);
-   
+
     useEffect(() => {
         const fetchDataT = async () => {
             try {
@@ -30,7 +30,7 @@ function EventDetail(props) {
         }
 
     });
-    console.log("data of tickett ",dataT);
+    console.log("data of tickett ", dataT);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -102,7 +102,16 @@ function EventDetail(props) {
 
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = Math.min(startIndex + itemsPerPage, dataT.length);
+    const formatDate = (dateTimeString) => {
+        const date = new Date(dateTimeString);
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const year = date.getFullYear();
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
 
+        return `${day}/${month}/${year} , ${hours}:${minutes}`;
+    };
     if (!data) {
         return <p>Loading...</p>;
     }
@@ -173,7 +182,8 @@ function EventDetail(props) {
 
                                                                         <p >Location: {data.location}</p>
 
-                                                                        <p >Date & Time: {data.date}</p>
+                                                                        <p >Date & Time: {formatDate(data.date)} </p>
+
 
                                                                         <p> Number of reserved tickets : {data.tickets}</p>
 
@@ -203,7 +213,7 @@ function EventDetail(props) {
                     </Tabs>
                 </div>
             </section>
-            <section className="tf-dashboard tf-tab">
+            {/*  <section className="tf-dashboard tf-tab">
                 <div className="tf-container">
                     <Tabs className='dashboard-filter'>
                         <div className="row ">
@@ -249,7 +259,7 @@ function EventDetail(props) {
                                                 </div>
                                             </div>
 
-                                            {/* Contrôles de pagination en bas du tableau */}
+                                            
                                             <div className="pagination-controls" style={{ marginTop: '20px', textAlign: 'center' }}>
                                                 <button
                                                     onClick={handlePrevPage}
@@ -282,7 +292,7 @@ function EventDetail(props) {
                     </Tabs>
 
                 </div>
-            </section>
+                                                </section>*/}
         </div>
     );
 }

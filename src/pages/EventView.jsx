@@ -182,6 +182,16 @@ function ViewQuestion(props) {
         setData(response.data);
       })
   }
+  const formatDate = (dateTimeString) => {
+    const date = new Date(dateTimeString);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+
+    return `${day}/${month}/${year}, ${hours}:${minutes}`;
+};
   return (
 
 
@@ -253,11 +263,13 @@ function ViewQuestion(props) {
                           <div className="title-ranking">
                             <div className="col-rankingg"><Link to="#">Image</Link></div>
 
-                            <div className="col-rankingg"><Link to="#">title & organizer</Link></div>
-                            <div className="col-rankingg"><Link to="#">description</Link></div>
-                            <div className="col-rankingg"><Link to="#">price & max people</Link></div>
+                            <div className="col-rankingg"><Link to="#">Title </Link></div>
+                            <div className="col-rankingg"><Link to="#">Organizer</Link></div>
+
+                             {/*<div className="col-rankingg"><Link to="#">description</Link></div>*/}
+                            <div className="col-rankingg"><Link to="#">Price & Tickets</Link></div>
                             <div className="col-rankingg"><Link to="#">location</Link></div>
-                            <div className="col-rankingg"><Link to="#">date & time</Link></div>
+                            <div className="col-rankingg"><Link to="#">Date & Time</Link></div>
                             <div className="col-rankingg"><Link to="#">Action</Link></div>
                           </div>
                         </div>
@@ -267,11 +279,13 @@ function ViewQuestion(props) {
                           {data.slice(startIndex, endIndex).map((item, index) => (
                             <div className="content-ranking" key={index}>
                               <div className="col-rankingg"><img src={item.image.url} alt="Image Description"></img></div>
-                              <div className="col-rankingg">{item.title} | {item.organizer}</div>
-                              <div className="col-rankingg">{item.desc}</div>
+                              <div className="col-rankingg">{item.title} </div>
+                              <div className="col-rankingg"> {item.organizer}</div>
+
+                              {/* <div className="col-rankingg">{item.desc}</div>*/}
                               <div className="col-rankingg">{item.price} | {item.maxPeople}</div>
                               <div className="col-rankingg">{item.location}</div>
-                              <div className="col-rankingg">{item.date}</div>
+                              <div className="col-rankingg">{formatDate(item.date)}</div>
                               <div>
                                 <button type='submit' style={btnupdate}
 

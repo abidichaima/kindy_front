@@ -53,9 +53,10 @@ if (isAuthenticated()) {
 
     },
     {
-      id: 7,
-      name: 'Tickets',
-      links: '/testEvent',
+
+    },
+    {
+
     },
     {
       id: 9,

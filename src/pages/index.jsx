@@ -59,6 +59,7 @@ import ViewClassroom from './ViewClassroom';
 import ViewCalendarStudent from './ViewCalendarStudent';
 import ViewCourse from './ViewCourse';
 import View1 from './1';
+import EventSatisfaction from './EventSatisfaction';
 
    
 function getUserInfoFromCookie() {
@@ -177,6 +178,8 @@ const routes = [
   { path: '/testEvent', component: <EventTest />},
   { path: '/comments', component: <EventsDashComments />},
   { path: '/replies/:id', component: <EventsDashReplies />},
+  { path: '/satisfaction', component: <EventSatisfaction />},
+
 ]
 
 export default routes;

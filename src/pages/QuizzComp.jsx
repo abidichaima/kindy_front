@@ -120,7 +120,7 @@ function QuizzComp() {
                           <div className="tf-item-detail-inner">
                             <div className=" col-md-2" ></div>
                             <div className="content  col-md-6">
-                            <h2 style={title} className="title-detail">Liste des Quiz</h2>
+                            <h2 style={title} className="title-detail"></h2>
                               {quizzList && quizzList.map((item, index) => (                             
                                 <div key={index} style={quizzItemStyle}>
                                   <h3 style={quizzTitleStyle}>

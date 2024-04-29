@@ -19,6 +19,7 @@ import { getAllRes } from '../services/question';
 import CardModal from '../components/layouts/CardModal';
 import { addQuizz ,getAllquizzs,deleteRes} from '../services/quizz';
 import QuizzAdd from './QuizzAdd';
+import SideProfile from './SideProfile';
 
 function ViewResult(props) {
 
@@ -172,7 +173,7 @@ return (
                 <Tabs className='dashboard-filter'>
                     <div className="row ">                 
                         <div className="col-xl-3 col-lg-12 col-md-12">
-                            <Dashboard/>
+                            <SideProfile/>
                         </div>
                         <div className="col-xl-9 col-lg-12 col-md-12 overflow-table">
 

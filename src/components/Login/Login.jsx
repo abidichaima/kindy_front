@@ -5,6 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
+import img from '../../assets/images/conservatoire.jpg'
 import { jwtDecode } from "jwt-decode";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons"; // Importez les icônes de l'œil
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"; 
@@ -19,14 +20,17 @@ const Login = () => {
       },
 
       header :{
-        marginTop : '100px'
+        marginTop : '200px'
       },
-      inputgrouptextbtnshowpass: {
+      inputGroupTextBtnShowPass: {
         cursor: 'pointer',
         position: 'absolute',
         right: '10px',
         top: '50%',
         transform: 'translateY(-50%)',
+        zIndex: '10', // Make sure the icon stays above the input
+        background: 'transparent', // Make the background transparent
+        border: 'none', // Remove border
       },}
   const navigate = useNavigate();
   const [cookies] = useCookies(['user']);
@@ -106,18 +110,59 @@ const Login = () => {
 
   return (
 
-    <div style={styles.header}>
+    <div >
 
-
-    <div className="login-page">
+      <section className="tf-page-title style-2">
+        <div className="tf-container">
+          <div className="row">
+            <div className="col-md-12">
+              <ul className="breadcrumbs">
+                <li><Link to="/blog-v2">Home</Link></li>
+                <li>Login</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+   
+    <div className="login-page" style={{ marginTop: '100px' , alignItems: 'center' , marginLeft:'190px' }}>
       <div className="container">
+  
         <div className="row">
-          <div className="col-md-6 mx-auto">
-          <div className="row justify-content-center">
-          
-          <h6 className="heading" >Login</h6>
+
+
+
+        <div className="col-xl-3 col-lg-4 col-md-6">
+                            <h5 className="title-preview"></h5>
+                            <div className="sc-product style1">
+                                <div className="top">
+                                    <Link to="#" className="tag">EL KINDY CONSERVATORY </Link>
+                                        <Link to="#" className="heart-icon"></Link>
+                                   
+                                </div>
+                                <div className="features">
+                                    <div className="product-media">
+                                        <img src={img} alt="images" />
+                                    </div>
+                                 
+                             
+                                    
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+          <div className="col-md-6 ">
+          <div >
+          <div className="features">
+           
+          <h4 className="heading" style={{ marginTop: '100px', marginLeft:'100px' }}></h4>
 
           </div>
+
+          
 
             <form onSubmit={handleSubmit}>
               <div className="form-group">
@@ -142,7 +187,7 @@ const Login = () => {
           <input
             type={passwordVisible ? "text" : "password"}
             name="password"
-            placeholder="Password"
+            placeholder="password"
             className="form-control"
             value={values.password}
             onChange={(e) =>
@@ -155,7 +200,7 @@ const Login = () => {
       className="input-group-text password-toggle"
       onClick={() => setPasswordVisible(!passwordVisible)}
     >
-      <FontAwesomeIcon icon={passwordVisible ? faEyeSlash : faEye} style={{marginTop:'15px' , marginLeft: '10px' , height:'25px'  }} /> {/* Increase the size of the icon */}
+      <FontAwesomeIcon icon={passwordVisible ? faEyeSlash : faEye} style={{marginTop:'15px' , marginLeft: '10px' , height:'15px'  }} /> {/* Increase the size of the icon */}
     </span>
   </div> </div>
       </div>
@@ -188,7 +233,12 @@ const Login = () => {
       </div>
     </div>
     </div>
+    </div>
   );
   };
 
 export default Login;
+
+
+
+

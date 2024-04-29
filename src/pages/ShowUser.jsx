@@ -93,7 +93,7 @@ function ShowUser(props) {
                                                         <div className="image">
                                                         <div className="image">
   {data.image ? (
-    <img src={data.image.url} alt="Binasea" style={{ width: '500px', height: '400px' }} />
+    <img src={data.image.url} alt="Binasea" style={{ width: '200px', height: '200px' }} />
   ) : (
     <p></p>
   )}
