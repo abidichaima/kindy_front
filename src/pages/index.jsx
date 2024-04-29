@@ -58,6 +58,7 @@ import QuizzValide from "./QuizzValide";
 import ViewClassroom from './ViewClassroom';
 import ViewCalendarStudent from './ViewCalendarStudent';
 import ViewCourse from './ViewCourse';
+import View1 from './1';
 
    
 function getUserInfoFromCookie() {
@@ -156,6 +157,7 @@ const routes = [
   { path: '/mycalendarStudent', component: <ViewCalendarStudent />},
   { path: '/classroom', component: <ViewClassroom />},
   { path: '/course', component: <ViewCourse />},
+  { path: '/1', component: <View1 />},
 
 
  { path: '/quizz', component: <ViewQuizz/>},
