@@ -7,6 +7,8 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import {  isSameDay } from 'date-fns';
+import SideProfile from './SideProfile';
+import LessonsForm from '../components/LessonForm';
 
 function View1(props) {
     const [initialEvents, setInitialEvents] = useState([]);
@@ -96,6 +98,7 @@ function View1(props) {
           display: 'background',
           rendering: 'background',
           color: 'green',
+          title:'Freetime'
         });
         date.setDate(date.getDate() + 7);
       }
@@ -111,7 +114,7 @@ function View1(props) {
   };
 
   function handleEventClick(clickInfo) {
-    if (clickInfo.event.title !== 'Holiday') {
+    if (clickInfo.event.title !== 'Holiday' && clickInfo.event.title !== '') {
       console.log('modal true', clickInfo.event);
       setShowModal(true);
       setSelectedRange({ start: clickInfo.event.start, end: clickInfo.event.end });
@@ -119,16 +122,12 @@ function View1(props) {
     }
   }
 
+function handleCloseModal() {
+    setShowModal(false);
+    setSelectedRange(null);
+    setSelectedEvent(null);
+  }
 
-
-
-
-
-
-
-
-
-  
 
   return (
     <div>
@@ -138,7 +137,7 @@ function View1(props) {
             <div className="col-md-12">
               <ul className="breadcrumbs">
                 <li><Link to="/">Home</Link></li>
-                <li>All lessons</li>
+                <li>My calendar</li>
               </ul>
             </div>
           </div>
@@ -155,22 +154,32 @@ function View1(props) {
         <div className="container-fluid">
           <div className="row">
             <div className="col-xl-2 col-lg-4 col-md-12">
-              <Dashboard />
+              <SideProfile />
             </div>
             <div className="col-xl-10 col-lg-8 col-md-12">
               <div className="row">       
-                <div className={`col-xl-12 col-lg-12 col-md-12 overflow-table`}>
+              {showModal && (
+                  <div className="col-xl-3 col-lg-12 col-md-12">
+                    <LessonsForm
+                      show={showModal}
+                      selectedRange={selectedRange}
+                      selectedEvent={selectedEvent}
+                      onClose={handleCloseModal}
+                    />
+                  </div>
+                )}
+              <div className={`col-xl-${showModal ? '9' : '12'} col-lg-12 col-md-12 overflow-table`}>
                   <div className="dashboard-content inventory content-tab">
                     <div className="demo-app-main">
-                    <FullCalendar
-  plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-  headerToolbar={{
-    left: 'prev,next today',
-    center: 'title',
-    right: 'timeGridWeek,timeGridDay',
-  }}
-  initialView="timeGridWeek"
-                        editable={true}
+                      <FullCalendar
+                        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                        headerToolbar={{
+                          left: 'prev,next today',
+                          center: 'title',
+                          right: 'dayGridMonth,timeGridWeek,timeGridDay',
+                        }}
+                        initialView="timeGridWeek"
+                        editable={false}
                         selectable={true}
                         dayMaxEvents={true}
                         events={initialEvents.concat(holidayEvents).concat(freeTimeEvents)}
@@ -179,7 +188,42 @@ function View1(props) {
                         slotMinTime="08:00:00"
                         slotMaxTime="20:00:00"
                         eventContent={renderEventContent}
+                        selectMirror={true}
 
+
+                        
+                        selectOverlap={event => event.title === 'Freetime' ? true : false}
+
+
+                        select={(selectInfo) => {
+                          const selectedStart = selectInfo.start;
+                          const selectedEnd = selectInfo.end;
+                        
+                          // Check if the selected range overlaps with any holiday
+                          const overlapsWithHoliday = holidayEvents.some((holidayEvent) => {
+                            const holidayStart = holidayEvent.start;
+                            const holidayEnd = holidayEvent.end || holidayStart;
+                        
+                            // Check if the selected range is on the same day as the holiday
+                            const isSameStartDay = isSameDay(selectedStart, holidayStart);
+                            const isSameEndDay = isSameDay(selectInfo.end, holidayEnd);
+                        
+                            return (
+                              (isSameStartDay && isSameEndDay) || // Selected range is on the same day as the holiday
+                              (selectedStart >= holidayStart && selectedStart < holidayEnd) || // Selected start is within the holiday range
+                              (selectedEnd > holidayStart && selectedEnd <= holidayEnd) || // Selected end is within the holiday range
+                              (selectedStart <= holidayStart && selectedEnd >= holidayEnd) // Selected range encompasses the holiday range
+                            );
+                          });
+                        
+                          if (overlapsWithHoliday) {
+                            alert('Cannot add an event on a holiday date.');
+                          } else {
+                            setShowModal(true);
+                            setSelectedRange(selectInfo);
+                            setSelectedEvent(null);
+                          }
+                        }}
 />
                      
                     </div>
@@ -195,18 +239,22 @@ function View1(props) {
   );  
 }
 function renderEventContent(eventInfo) {
-    const { event } = eventInfo;
-    if (event.title === 'Holiday') {
-      return <span>Holiday</span>;
-    } else {
-      return (
-        <>
-          <b>{`${event.extendedProps.teacherfistname} ${event.extendedProps.teacherlastname}`}</b> <br />
-          <i>{event.title}</i>
-          <br />
-          Classroom: {event.extendedProps.classroom}
-        </>
-      );
-    }
+  const { event } = eventInfo;
+  if (event.title === 'Holiday') {
+    return <span style={{ color: 'white' }}>Holiday</span>;
+  } else if (event.title == 'Freetime') {
+    return <span style={{ color: 'white' }}>Freetime</span>; // Display nothing for free time events
+  } else {
+    return (
+      <>
+      {/* ${event.extendedProps.teacherFirstName} */}
+        <span style={{ color: 'black' }}><b>{`${event.extendedProps.teacherLastName}`}</b> </span><br />
+        <span style={{ color: 'black' }}>Course: <i>{event.title}</i></span>
+        <br />
+        <span style={{ color: 'black' }}>Room: {event.extendedProps.classroom}</span>
+      </>
+    );
   }
+}
+
 export default View1;

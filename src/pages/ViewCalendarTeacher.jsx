@@ -145,7 +145,7 @@ return (
               <div class="col-md-12">
                   <ul class="breadcrumbs">
                       <li><Link to="/">Home</Link></li>
-                      <li>All lessons</li>
+                      <li>My calendar</li>
                   </ul>
               </div>
           </div>
