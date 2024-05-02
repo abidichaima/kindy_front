@@ -46,7 +46,7 @@ function EventSatisfaction(props) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:4000/events/ma/stat');
+                const response = await axios.get('https://elkindy-back.onrender.com/events/ma/stat');
                 setData(response.data);
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -112,7 +112,7 @@ function EventSatisfaction(props) {
 
         async fetchChartData() {
             try {
-                const { data } = await axios.get('http://localhost:4000/events/ma/stat');
+                const { data } = await axios.get('https://elkindy-back.onrender.com/events/ma/stat');
                 const categories = data.map(item => item.eventName);
                 const series = [
                     {
@@ -156,7 +156,7 @@ function EventSatisfaction(props) {
 
     const handleAnalysisClick = () => {
         setShow(true);
-        axios.post('http://localhost:4000/events/analyze')
+        axios.post('https://elkindy-back.onrender.com/events/analyze')
             .then(response => {
                 console.log(response.data.message);
 

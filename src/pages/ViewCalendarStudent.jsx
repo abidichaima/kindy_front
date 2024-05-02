@@ -40,7 +40,7 @@ function ViewCalendarStudent(props) {
     console.log("user id",currentUser._id);
   
     // Fetch lessons for the teacher
-    fetch('http://localhost:4000/api/lesson/getByStudent', {
+    fetch('https://elkindy-back.onrender.com/api/lesson/getByStudent', {
       method: 'GET',  
       headers: {
         'student': currentUser._id
@@ -68,7 +68,7 @@ function ViewCalendarStudent(props) {
       });
   
     // Fetch holidays
-    fetch('http://localhost:4000/api/holiday')
+    fetch('https://elkindy-back.onrender.com/api/holiday')
       .then((response) => response.json())
       .then((data) => {
         const holidayEvents = data.map((holiday) => ({

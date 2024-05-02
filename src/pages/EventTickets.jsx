@@ -68,7 +68,7 @@ function EventTickets(props) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:4000/tickets/getTickets');
+                const response = await axios.get('https://elkindy-back.onrender.com/tickets/getTickets');
                 setData(response.data);
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -82,7 +82,7 @@ function EventTickets(props) {
         const fetchEvents = async () => {
             const eventPromises = data.map(async (item) => {
                 try {
-                    const response = await axios.get(`http://localhost:4000/events/${item.event_id}`);
+                    const response = await axios.get(`https://elkindy-back.onrender.com/events/${item.event_id}`);
                     return response.data.event;
                 } catch (error) {
                     console.error('Error fetching event data:', error);
@@ -121,7 +121,7 @@ function EventTickets(props) {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await axios.get('http://localhost:4000/user/users//getAllUsers');
+                const response = await axios.get('https://elkindy-back.onrender.com/user/users//getAllUsers');
                 setUsers(response.data);
             } catch (error) {
                 console.error('Error fetching users:', error);

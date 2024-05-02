@@ -42,7 +42,7 @@ const CardModal = (props) => {
     const onsubmit = (e) => {
         e.preventDefault();
 
-        axios.post('http://localhost:4000/api/payment', payload)
+        axios.post('https://elkindy-back.onrender.com/api/payment', payload)
             .then((res) => {
                 const { result } = res.data;
                
@@ -53,7 +53,7 @@ const CardModal = (props) => {
             })
             .catch((err) => console.error(err));
 
-            axios.post('http://localhost:4000/tickets/addUpdate', payload)
+            axios.post('https://elkindy-back.onrender.com/tickets/addUpdate', payload)
             .then((res) => {
                 console.log('Ticket after dispatch:', payload);  
             })

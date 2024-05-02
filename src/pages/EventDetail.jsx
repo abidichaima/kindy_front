@@ -18,7 +18,7 @@ function EventDetail(props) {
     useEffect(() => {
         const fetchDataT = async () => {
             try {
-                const response = await axios.get(`http://localhost:4000/tickets/event/${id}`);
+                const response = await axios.get(`https://elkindy-back.onrender.com/tickets/event/${id}`);
                 // Assuming response.data.tickets is an array of tickets
                 setDataT(response.data.tickets || []);
             } catch (error) {
@@ -35,7 +35,7 @@ function EventDetail(props) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`http://localhost:4000/events/${id}`);
+                const response = await axios.get(`https://elkindy-back.onrender.com/events/${id}`);
                 setData(response.data.event);
             } catch (error) {
                 console.error('Error fetching data:', error);

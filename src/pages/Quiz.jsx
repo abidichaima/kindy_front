@@ -64,7 +64,7 @@ const Quiz = () => {
   useEffect(() => {
     const fetchQuizData = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/quizz/show/${id}`);
+        const response = await axios.get(`https://elkindy-back.onrender.com/quizz/show/${id}`);
         setQuizData(response.data.quizz);
         console.log("eeee",response.data.quizz);
         startTimer();
@@ -185,7 +185,7 @@ const Quiz = () => {
     console.log("Réponses sélectionnées :", quizResult);
 
     try {
-      const response = await axios.post('http://localhost:4000/result/add', quizResult, {
+      const response = await axios.post('https://elkindy-back.onrender.com/result/add', quizResult, {
         headers: {
           'Content-Type': 'application/json'
         }
@@ -197,7 +197,7 @@ const Quiz = () => {
       setShowResults(true);
       setshowQuizz(false);
 
-      const Response = await axios.get(`http://localhost:4000/result/show/${resultId}`);
+      const Response = await axios.get(`https://elkindy-back.onrender.com/result/show/${resultId}`);
       console.log("tyu", Response.data);
       setResultResponse(Response.data);
     } catch (error) {

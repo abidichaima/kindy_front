@@ -42,7 +42,7 @@ function QuizzValide() {
   useEffect(() => {
     const fetchQuizData = async () => {
         try {
-            const response = await axios.get(`http://localhost:4000/quizz/show/${id}`);
+            const response = await axios.get(`https://elkindy-back.onrender.com/quizz/show/${id}`);
             setQuizData(response.data.quizz); 
         } catch (error) {
             console.error('Error fetching quiz data:', error);
@@ -66,7 +66,7 @@ if (!quizData) {
     alignItems: 'center',
   };
   const result= async () =>{
-    const response = await axios.get(`http://localhost:4000/result/user/${currentUser._id}/quiz/${id}`);
+    const response = await axios.get(`https://elkindy-back.onrender.com/result/user/${currentUser._id}/quiz/${id}`);
     const userAttempts = response.data.length;
     if (userAttempts){
      setResultResponse(response.data);
@@ -91,7 +91,7 @@ if (!quizData) {
 
         if (currentDate >= startDate && currentDate <= endDate) {
             try { 
-                const response = await axios.get(`http://localhost:4000/result/user/${currentUser._id}/quiz/${id}`);
+                const response = await axios.get(`https://elkindy-back.onrender.com/result/user/${currentUser._id}/quiz/${id}`);
                 const userAttempts = response.data.length;
                 console.log("userAttempts", userAttempts);
                 console.log("quizData", quizData.tentative);

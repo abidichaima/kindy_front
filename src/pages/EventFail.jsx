@@ -13,7 +13,7 @@ function EventFail(props) {
 
     const dispatch = useDispatch();
     useEffect(() => {
-        const Endpoint = "http://localhost:4000/tickets/delete";
+        const Endpoint = "https://elkindy-back.onrender.com/tickets/delete";
         fetch(Endpoint, {
             method: 'DELETE',
             headers: {

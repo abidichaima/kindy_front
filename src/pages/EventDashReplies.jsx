@@ -17,7 +17,7 @@ function EventsDashReplies(props) {
 
     useEffect(() => {
         if (id) {
-            axios.get(`http://localhost:4000/comment/${id}`)
+            axios.get(`https://elkindy-back.onrender.com/comment/${id}`)
                 .then((response) => {
                     setData(response.data);
 

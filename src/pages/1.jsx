@@ -28,7 +28,7 @@ function View1(props) {
     
   const fetchLessonData = () => {
     const currentUser = getUserInfoFromCookie();
-    fetch('http://localhost:4000/api/lesson/getByTeacher', {
+    fetch('https://elkindy-back.onrender.com/api/lesson/getByTeacher', {
       method: 'GET',
       headers: { 'teacher': currentUser._id },
     })
@@ -50,7 +50,7 @@ function View1(props) {
       .catch(error => console.error('Error fetching lessons:', error));
   };
   const fetchHolidayData = () => {
-    fetch('http://localhost:4000/api/holiday')
+    fetch('https://elkindy-back.onrender.com/api/holiday')
       .then(response => response.json())
       .then(data => {
         const holidays = data.map(holiday => ({
@@ -70,7 +70,7 @@ function View1(props) {
 
   const fetchFreeTimeData = () => {
     const currentUser = getUserInfoFromCookie();
-    fetch(`http://localhost:4000/api/freetime/${currentUser._id}`)
+    fetch(`https://elkindy-back.onrender.com/api/freetime/${currentUser._id}`)
       .then((response) => response.json())
       .then(data => {
         const events = generateEvents(data);

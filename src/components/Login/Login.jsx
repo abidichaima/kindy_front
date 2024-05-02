@@ -48,7 +48,7 @@ const Login = () => {
 
   const googleAuth = () => {
 		window.open(
-			`http://localhost:4000/user/auth/google/callback`,
+			`https://elkindy-back.onrender.com/user/auth/google/callback`,
 			"_self"
 		);
 	};
@@ -59,7 +59,7 @@ const Login = () => {
     
    
     try {
-      const url = 'http://localhost:4000/user';
+      const url = 'https://elkindy-back.onrender.com/user';
       const response = await axios.post(url, values, {
         headers: {
           'Content-Type': 'application/json',

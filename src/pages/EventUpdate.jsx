@@ -185,7 +185,7 @@ function UpdateEventForm(props) {
       image
     };
 
-    axios.post('http://localhost:4000/events/updateImage/', payload)
+    axios.post('https://elkindy-back.onrender.com/events/updateImage/', payload)
       .then(response => {
         console.log('Event updated successfully:', response.data);
         alert('Event updated successfully');

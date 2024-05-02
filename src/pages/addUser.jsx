@@ -193,7 +193,7 @@ function AddUserForm( props ) {
   
       } 
 
-    const addUserEndpoint = "http://localhost:4000/user/users/addUser"; // Replace with your actual backend endpoint
+    const addUserEndpoint = "https://elkindy-back.onrender.com/user/users/addUser"; // Replace with your actual backend endpoint
 
     fetch(addUserEndpoint, {
       method: 'POST',

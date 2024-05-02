@@ -165,7 +165,7 @@ setquestionsE('')   ;
       border: '1px solid #ced4da',
     }),
   };
-  const url = "http://localhost:4000/quizz";
+  const url = "https://elkindy-back.onrender.com/quizz";
  
    const AddQuizz = async (e) => {
     if (!quizzItem.titre) {

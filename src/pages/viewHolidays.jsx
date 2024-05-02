@@ -13,7 +13,7 @@ function Holidays(props) {
 
   const fetchHolidaysFromDatabase = async () => {
     try {
-      const response = await fetch('http://localhost:4000/api/holiday');
+      const response = await fetch('https://elkindy-back.onrender.com/api/holiday');
       const data = await response.json();
       if (response.ok) {
         setHolidays(data);
@@ -62,7 +62,7 @@ function Holidays(props) {
 
   const createHolidayInDatabase = async (date) => {
     try {
-      const response = await fetch('http://localhost:4000/api/holiday', {
+      const response = await fetch('https://elkindy-back.onrender.com/api/holiday', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

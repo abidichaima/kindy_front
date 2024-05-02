@@ -13,7 +13,7 @@ const EmailVerify = () => {
 		const verifyEmailUrl = async () => {
 
 			try {
-				const url = `http://localhost:4000/user/users/${param.id}/verify/${param.token}`;
+				const url = `https://elkindy-back.onrender.com/user/users/${param.id}/verify/${param.token}`;
 				console.log("Verification URL:", url);
 
 				const { data } = await axios.get(url);

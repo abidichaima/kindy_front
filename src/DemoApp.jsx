@@ -15,7 +15,7 @@ export default function DemoApp() {
   const [selectedEvent, setSelectedEvent] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:4000/api/lesson/get')
+    fetch('https://elkindy-back.onrender.com/api/lesson/get')
       .then((response) => response.json())
       .then((data) => {
         const events = data.map((lesson) => ({
@@ -43,7 +43,7 @@ export default function DemoApp() {
     // eslint-disable-next-line no-restricted-globals
     if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
       const eventId = clickInfo.event.id;
-      fetch(`http://localhost:4000/api/lesson/delete/${eventId}`, {
+      fetch(`https://elkindy-back.onrender.com/api/lesson/delete/${eventId}`, {
         method: 'DELETE',
       })
         .then((response) => response.json())

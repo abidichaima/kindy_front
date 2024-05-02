@@ -29,13 +29,13 @@ function ViewQuestion(props) {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.delete(`http://localhost:4000/events/delete/${id}`);
+          await axios.delete(`https://elkindy-back.onrender.com/events/delete/${id}`);
           Swal.fire(
             'Deleted!',
             'Your item has been deleted.',
             'success'
           );
-          axios.get('http://localhost:4000/events/')
+          axios.get('https://elkindy-back.onrender.com/events/')
             .then((response) => {
               setData(response.data);
             })
@@ -144,7 +144,7 @@ function ViewQuestion(props) {
 
   useEffect(() => {
     if (!isPopupOpenUp && !isPopupOpen) {
-      axios.get('http://localhost:4000/events/')
+      axios.get('https://elkindy-back.onrender.com/events/')
         .then((response) => {
           setData(response.data);
 
@@ -177,7 +177,7 @@ function ViewQuestion(props) {
   const close = () => {
     setAddShow(false);
     setUpdateShow(false)
-    axios.get('http://localhost:4000/events/')
+    axios.get('https://elkindy-back.onrender.com/events/')
       .then((response) => {
         setData(response.data);
       })

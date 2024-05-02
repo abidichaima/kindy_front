@@ -12,7 +12,7 @@ function RemarksPage(props) {
     const fetchLessonData = async () => {
       try {
         const lessonId = window.location.pathname.split('/')[2];
-        const response = await fetch(`http://localhost:4000/api/lesson/get/${lessonId}`);
+        const response = await fetch(`https://elkindy-back.onrender.com/api/lesson/get/${lessonId}`);
         if (!response.ok) {
           throw new Error('Failed to fetch lesson data');
         }
@@ -36,7 +36,7 @@ function RemarksPage(props) {
     
     try {
       const lessonId = window.location.pathname.split('/')[2];
-      const response = await fetch(`http://localhost:4000/api/lesson/lessons/${lessonId}`, {
+      const response = await fetch(`https://elkindy-back.onrender.com/api/lesson/lessons/${lessonId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

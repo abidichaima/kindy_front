@@ -19,10 +19,10 @@ function LessonsForm({ show, selectedRange, selectedEvent, onClose, onSubmit }) 
     const fetchData = async () => {
       try {
         const [studentsResponse, teachersResponse, coursesResponse, classroomsResponse] = await Promise.all([
-          fetch('http://localhost:4000/user/users/role/student'),
-          fetch('http://localhost:4000/user/users/role/teacher'),
-          fetch('http://localhost:4000/api/course/get'),
-          fetch('http://localhost:4000/api/classroom/get'),
+          fetch('https://elkindy-back.onrender.com/user/users/role/student'),
+          fetch('https://elkindy-back.onrender.com/user/users/role/teacher'),
+          fetch('https://elkindy-back.onrender.com/api/course/get'),
+          fetch('https://elkindy-back.onrender.com/api/classroom/get'),
         ]);
 
         const studentsData = await studentsResponse.json();
@@ -93,7 +93,7 @@ function LessonsForm({ show, selectedRange, selectedEvent, onClose, onSubmit }) 
     try {
       if (selectedEvent) {
         // Edit existing lesson
-        const response = await fetch(`http://localhost:4000/api/lesson/update/${selectedEvent.id}`, {
+        const response = await fetch(`https://elkindy-back.onrender.com/api/lesson/update/${selectedEvent.id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -116,7 +116,7 @@ function LessonsForm({ show, selectedRange, selectedEvent, onClose, onSubmit }) 
         }
       } else {
         // Create new lesson
-        const response = await fetch('http://localhost:4000/api/lesson/create', {
+        const response = await fetch('https://elkindy-back.onrender.com/api/lesson/create', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -143,7 +143,7 @@ function LessonsForm({ show, selectedRange, selectedEvent, onClose, onSubmit }) 
           // eslint-disable-next-line no-restricted-globals
     if (selectedEvent && confirm(`Are you sure you want to delete the lesson '${selectedEvent.title}'?`)) {
       try {
-        const response = await fetch(`http://localhost:4000/api/lesson/delete/${selectedEvent.id}`, {
+        const response = await fetch(`https://elkindy-back.onrender.com/api/lesson/delete/${selectedEvent.id}`, {
           method: 'DELETE',
         });
 

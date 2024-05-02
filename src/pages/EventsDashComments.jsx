@@ -88,7 +88,7 @@ function EventsDashComments(props) {
         const fetchEvents = async () => {
             const eventPromises = data?.map(async (item) => {
                 try {
-                    const response = await axios.get(`http://localhost:4000/events/${item.event_id}`);
+                    const response = await axios.get(`https://elkindy-back.onrender.com/events/${item.event_id}`);
                     return response.data.event;
                 } catch (error) {
                     console.error('Error fetching event data:', error);

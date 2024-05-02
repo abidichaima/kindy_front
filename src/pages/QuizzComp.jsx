@@ -60,9 +60,9 @@ function QuizzComp() {
   const handleGetQuestions = async (quizId, title) => {
     try {
         setLoading(true); // Indiquer le début du chargement
-        const response = await axios.post(`http://localhost:4000/quizz/get/${quizId}`);
+        const response = await axios.post(`https://elkindy-back.onrender.com/quizz/get/${quizId}`);
         console.log("title", title);
-        const responseSimilar = await axios.get(`http://localhost:4000/quizz/similar`);
+        const responseSimilar = await axios.get(`https://elkindy-back.onrender.com/quizz/similar`);
         const similarQuizzes = responseSimilar.data.similarQuizzes.similarQuizzes;
         setQuizz(similarQuizzes);
         const filteredQuestions = similarQuizzes.filter(quiz => quiz !== title);

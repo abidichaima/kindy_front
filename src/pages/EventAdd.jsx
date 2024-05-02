@@ -110,7 +110,7 @@ function AddEventForm(props) {
 
     }
     if(location && organizer && maxPeople && image && desc && price && title) {
-      const addEventEndpoint = "http://localhost:4000/events/addImage";
+      const addEventEndpoint = "https://elkindy-back.onrender.com/events/addImage";
 
       fetch(addEventEndpoint, {
         method: 'POST',

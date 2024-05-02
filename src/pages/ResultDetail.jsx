@@ -5,6 +5,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import PageTitle from '../components/pagetitle/PageTitle';
 import Dashboard from './Dashboard';
 import img from '../assets/images/BATTERIE.jpg';
+import SideProfile from './SideProfile';
 
 function ResultDetail() {
     const { id } = useParams();
@@ -13,7 +14,7 @@ function ResultDetail() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`http://localhost:4000/result/show/${id}`);
+                const response = await axios.get(`https://elkindy-back.onrender.com/result/show/${id}`);
                 console.log(response.data);
                 setData(response.data);
             } catch (error) {
@@ -52,7 +53,7 @@ function ResultDetail() {
                     <Tabs className='dashboard-filter'>
                         <div className="row">
                             <div className="col-xl-3 col-lg-12 col-md-12">
-                                <Dashboard />
+                                <SideProfile />
                             </div>
                             <div className="col-xl-9 col-lg-12 col-md-12 overflow-table">
                                 <div className="dashboard-content inventory content-tab">

@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom'
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import SideProfile from './SideProfile';
 
 function QuestionDetail(props) {
     const { id } = useParams();
@@ -17,7 +18,7 @@ function QuestionDetail(props) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`http://localhost:4000/question/show/${id}`);
+                const response = await axios.get(`https://elkindy-back.onrender.com/question/show/${id}`);
                 console.log("response",response);
                 setData(response.data.question);
                 console.log(data);
@@ -58,7 +59,7 @@ function QuestionDetail(props) {
                     <Tabs className='dashboard-filter'>
                         <div className="row ">                 
                             <div className="col-xl-3 col-lg-12 col-md-12">
-                                <Dashboard/>
+                                <SideProfile/>
                             </div>
                             <div className="col-xl-9 col-lg-12 col-md-12 overflow-table">
                                 <div className="dashboard-content inventory content-tab">

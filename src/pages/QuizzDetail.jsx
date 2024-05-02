@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom'
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import SideProfile from './SideProfile';
 
 function QuizzDetail(props) {
     const { id } = useParams();
@@ -17,7 +18,7 @@ function QuizzDetail(props) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`http://localhost:4000/quizz/show/${id}`);
+                const response = await axios.get(`https://elkindy-back.onrender.com/quizz/show/${id}`);
                 setData(response.data.quizz);
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -55,7 +56,7 @@ function QuizzDetail(props) {
                     <Tabs className='dashboard-filter'>
                         <div className="row ">                 
                             <div className="col-xl-3 col-lg-12 col-md-12">
-                                <Dashboard/>
+                                <SideProfile/>
                             </div>
                             <div className="col-xl-9 col-lg-12 col-md-12 overflow-table">
                                 <div className="dashboard-content inventory content-tab">

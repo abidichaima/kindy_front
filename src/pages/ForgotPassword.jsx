@@ -23,7 +23,7 @@ function ForgotPassword() {
     axios.defaults.withCredentials = true;
     const handleSubmit = (e) => {
         e.preventDefault()
-        axios.post('http://localhost:4000/user/users/forgot-password', {email})
+        axios.post('https://elkindy-back.onrender.com/user/users/forgot-password', {email})
         .then(res => {
             if(res.data.Status === "Success") {
               Swal.fire({

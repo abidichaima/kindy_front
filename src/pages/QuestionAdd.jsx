@@ -118,7 +118,7 @@ function QuestionAdd(props) {
      });
    };
  
-   const url = "http://localhost:4000/question";
+   const url = "https://elkindy-back.onrender.com/question";
  
    const AddQuestion = async (e) => {
 

@@ -36,13 +36,13 @@ function EventTest(props) {
       try {
         // Fetch ticket data
         console.log("currenttt ", currentUser._id);
-        const ticketResponse = await axios.get(`http://localhost:4000/tickets/user/${currentUser._id}`);
+        const ticketResponse = await axios.get(`https://elkindy-back.onrender.com/tickets/user/${currentUser._id}`);
         setDataT(ticketResponse.data.tickets || []);
 
         // Fetch event data
         const eventPromises = ticketResponse.data.tickets.map(async (item) => {
           try {
-            const eventResponse = await axios.get(`http://localhost:4000/events/${item.event_id}`);
+            const eventResponse = await axios.get(`https://elkindy-back.onrender.com/events/${item.event_id}`);
             return eventResponse.data.event;
           } catch (error) {
             console.error('Error fetching event data:', error);

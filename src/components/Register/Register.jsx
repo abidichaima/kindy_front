@@ -116,7 +116,7 @@ function Register() {
       }
   
       window.addEventListener('message', (event) => {
-        if (event.origin === 'http://localhost:4000') {
+        if (event.origin === 'https://elkindy-back.onrender.com') {
           console.log('Received data from popup:', event.data);
           
           // Close the popup
@@ -128,9 +128,9 @@ function Register() {
         name: result.user.displayName,
         email: result.user.email,
         photo: result.user.photoURL,
-      }, 'http://localhost:4000');
+      }, 'https://elkindy-back.onrender.com');
   
-      const res = await fetch('http://localhost:4000/user/users/google', {
+      const res = await fetch('https://elkindy-back.onrender.com/user/users/google', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -243,7 +243,7 @@ function Register() {
       const payload = { email, password, firstName, lastName, phoneNumber, level, confirmPassword };
       console.log(payload);
     
-      await axios.post("http://localhost:4000/user/users", payload, {
+      await axios.post("https://elkindy-back.onrender.com/user/users", payload, {
         headers: {
           'Content-Type': 'application/json',
         },

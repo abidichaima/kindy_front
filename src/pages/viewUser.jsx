@@ -92,7 +92,7 @@ const DeleteConfirmation = (userId) => {
   }).then(async (result) => {
     if (result.isConfirmed) {
       try {
-        const response = await fetch(`http://localhost:4000/user/users/deleteUser/${userId}`, {
+        const response = await fetch(`https://elkindy-back.onrender.com/user/users/deleteUser/${userId}`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
@@ -108,7 +108,7 @@ const DeleteConfirmation = (userId) => {
           Swal.fire('Error', 'Failed to delete the item.', 'error');
         }
 
-        axios.get('http://localhost:4000/user/users/getAllUsers')
+        axios.get('https://elkindy-back.onrender.com/user/users/getAllUsers')
         .then((response) => {
           setData(response.data);
         })
@@ -219,7 +219,7 @@ const [searchResults, setSearchResults] = useState([]);
   const endIndex = Math.min(startIndex + itemsPerPage, userList.length);
   const handleSearch = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/user/users/search/${email}`);
+      const response = await fetch(`https://elkindy-back.onrender.com/user/users/search/${email}`);
       if (response.ok) {
         const data = await response.json();
         setSearchResults(data);
@@ -237,7 +237,7 @@ const [searchResults, setSearchResults] = useState([]);
   const close = () => {
     setAddShow(false);
     setUpdateShow(false)
-    axios.get('http://localhost:4000/user/users/getAllUsers')
+    axios.get('https://elkindy-back.onrender.com/user/users/getAllUsers')
       .then((response) => {
         setData(response.data);
       })

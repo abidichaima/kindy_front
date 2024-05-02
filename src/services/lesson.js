@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const url = "http://localhost:4000/api/lesson";
+const url = "https://elkindy-back.onrender.com/api/lesson";
 export const getAllLessons = async () => {   
     return await axios.get(`${url}/get`);   
 };

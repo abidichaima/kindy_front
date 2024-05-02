@@ -15,7 +15,7 @@ function Dash(props) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:4000/result/showall`);
+        const response = await fetch(`https://elkindy-back.onrender.com/result/showall`);
         const data = await response.json();
 
         // Compter le nombre de quiz par grade
@@ -92,7 +92,7 @@ function Dash(props) {
   useEffect(() => {
     const fetchData = async () => {
         try {
-            const response = await fetch(`http://localhost:4000/result/showall`);
+            const response = await fetch(`https://elkindy-back.onrender.com/result/showall`);
             const data = await response.json();
             const quizScores = {};
   

@@ -26,7 +26,7 @@ function ShowUser(props) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/user/users/users/${id}`);
+        const response = await axios.get(`https://elkindy-back.onrender.com/user/users/users/${id}`);
         console.log('Full response:', response); // Log the entire response
 
         setData(response.data); // Update here
@@ -55,7 +55,8 @@ function ShowUser(props) {
                         <div class="col-md-12">
                             <ul class="breadcrumbs">
                                 <li><Link to="/dash">Home</Link></li>
-                                <li>Profile</li>
+                                <li><Link to="/showUser">Profile</Link></li>
+                                <li><Link >detail</Link></li>
                             </ul>
                         </div>
                     </div>
@@ -80,10 +81,6 @@ function ShowUser(props) {
                             <div className="col-xl-9 col-lg-12 col-md-12 overflow-table">
 
                                 <div className="dashboard-content inventory content-tab">
-
-
-
-                                    <PageTitle sub='User' title='Detail' />
 
                                     <section className="tf-item-detail">
                                         <div className="tf-container">

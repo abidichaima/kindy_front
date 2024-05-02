@@ -28,7 +28,7 @@ function ViewFreeTime(props) {
     console.log("user id", currentUser._id);
     const teacherId = currentUser._id; // Static teacher ID
 
-    fetch(`http://localhost:4000/api/freetime/${teacherId}`)
+    fetch(`https://elkindy-back.onrender.com/api/freetime/${teacherId}`)
       .then((response) => response.json())
       .then((data) => {
         const events = generateEvents(data);
@@ -102,7 +102,7 @@ function ViewFreeTime(props) {
         console.log("user id",currentUser._id);
         const teacherId = currentUser._id; // Static teacher ID
 
-      const response = await fetch(`http://localhost:4000/api/freeTime/${teacherId}`, {
+      const response = await fetch(`https://elkindy-back.onrender.com/api/freeTime/${teacherId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -169,7 +169,7 @@ function ViewFreeTime(props) {
        var currentUser = getUserInfoFromCookie();
         console.log("user id",currentUser._id);
         const teacherId = currentUser._id; // Static teacher ID
-      const response = await fetch(`http://localhost:4000/api/freeTime/${teacherId}`, {
+      const response = await fetch(`https://elkindy-back.onrender.com/api/freeTime/${teacherId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

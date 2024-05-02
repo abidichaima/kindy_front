@@ -4,7 +4,7 @@ export const rootApi = createApi({
     reducerPath: 'api',
     tagTypes: [],
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:4000/',
+        baseUrl: 'https://elkindy-back.onrender.com/',
     }),
     endpoints: (builder) => ({}),
 });

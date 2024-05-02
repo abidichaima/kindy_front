@@ -1,14 +1,14 @@
 import axios from "axios";
 
-const url = "http://localhost:4000/question";
+const url = "https://elkindy-back.onrender.com/question";
 export const getAllquestions = async () => {   
     return await axios.get(`${url}/showall`);   
 };
-const urlRes = "http://localhost:4000/result";
+const urlRes = "https://elkindy-back.onrender.com/result";
 export const getAllRes = async () => {   
     return await axios.get(`${urlRes}/showall`);   
 };
-const urlUser = "http://localhost:4000/users";
+const urlUser = "https://elkindy-back.onrender.com/users";
 export const getuser = async (id) => {   
     return await axios.get(`${urlUser}/${id}`);   
 };

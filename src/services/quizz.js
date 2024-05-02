@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const url = "http://localhost:4000/quizz";
-const url2 = "http://localhost:4000/result";
+const url = "https://elkindy-back.onrender.com/quizz";
+const url2 = "https://elkindy-back.onrender.com/result";
 
 export const getAllquizzs = async () => {   
     return await axios.get(`${url}/showall`);   
