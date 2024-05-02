@@ -78,75 +78,76 @@ function Dash(props) {
         console.error('Error fetching data:', error);
       }
     };
-
     fetchData();
   }, []); // Exécuté une seule fois au montage
 
+  // Fonction pour générer une couleur RGB aléatoire
+  const getRandomColor = () => {
+    const r = Math.floor(Math.random() * 256); // Rouge
+    const g = Math.floor(Math.random() * 256); // Vert
+    const b = Math.floor(Math.random() * 256); // Bleu
+    return `rgba(${r}, ${g}, ${b}, 0.5)`; // Format RGBA avec opacité de 0.5
+  };
+
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const response = await fetch(`http://localhost:4000/result/showall`);
-        const data = await response.json();
+        try {
+            const response = await fetch(`http://localhost:4000/result/showall`);
+            const data = await response.json();
+            const quizScores = {};
   
-        const quizResponses = {};
-        data.forEach(result => {
-          const quizTitle = result.quizId.titre;
-          const correctResponses = result.responses.filter(response => response.isCorrect).length;
-          const incorrectResponses = result.responses.length - correctResponses;
+            data.forEach(result => {
+                const quizTitle = result.quizId.titre;
+                const score = result.score;
   
-          if (!quizResponses[quizTitle]) {
-            quizResponses[quizTitle] = {
-              correct: correctResponses,
-              incorrect: incorrectResponses
-            };
-          }
-        });
+                // Ajouter le score à la liste des scores pour ce quiz
+                if (!quizScores[quizTitle]) {
+                    quizScores[quizTitle] = [score];
+                } else {
+                    quizScores[quizTitle].push(score);
+                }
+            });
   
-        const labels = Object.keys(quizResponses);
-        const correctValues = labels.map(quizTitle => quizResponses[quizTitle].correct);
-        const incorrectValues = labels.map(quizTitle => quizResponses[quizTitle].incorrect);
+            // Créer le nouveau graphique pour les scores de quiz
+            const ctxQuiz = quizChartRef.current.getContext('2d');
   
-        // Créer le nouveau graphique pour les réponses de quiz
-        const ctxQuiz = quizChartRef.current.getContext('2d');
-        const newQuizChartInstance = new Chart(ctxQuiz, {
-          type: 'bar',
-          data: {
-            labels: labels,
-            datasets: [
-              {
-                label: 'Réponses correctes',
-                data: correctValues,
-                backgroundColor: 'rgba(0, 255, 0, 0.5)', // Vert pour les réponses correctes
-                borderColor: 'rgba(0, 255, 0, 1)', // Vert pour les réponses correctes
-                borderWidth: 1
-              },
-              {
-                label: 'Réponses incorrectes',
-                data: incorrectValues,
-                backgroundColor: 'rgba(255, 0, 0, 0.5)', // Rouge pour les réponses incorrectes
-                borderColor: 'rgba(255, 0, 0, 1)', // Rouge pour les réponses incorrectes
-                borderWidth: 1
-              }
-            ]
-          },
-          options: {
-            scales: {
-              y: {
-                beginAtZero: true
-              }
-            }
-          }
-        });
+            // Préparer les données pour le graphique en nuage de points
+            const datasets = Object.keys(quizScores).map((quizTitle) => ({
+                label: quizTitle,
+                data: quizScores[quizTitle].map((score, i) => ({ x: quizTitle, y: score })),
+                backgroundColor: getRandomColor(), // Utilisation de couleurs aléatoires
+                borderColor: 'rgba(255, 255, 255, 1)', // Bordure blanche pour les points
+                borderWidth: 1,
+                pointRadius: 5 // Taille des points
+            }));
   
-        setQuizChartInstance(newQuizChartInstance);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
+            const newQuizChartInstance = new Chart(ctxQuiz, {
+                type: 'scatter', // Utilisation d'un graphique en nuage de points
+                data: {
+                    datasets: datasets
+                },
+                options: {
+                    scales: {
+                        x: {
+                            type: 'category',
+                            labels: Object.keys(quizScores) // Labels des quiz
+                        },
+                        y: {
+                            beginAtZero: true,
+                            suggestedMax: 100 // Limiter l'axe y à 100 pourcentage
+                        }
+                    }
+                }
+            });
+  
+            setQuizChartInstance(newQuizChartInstance);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
     };
   
     fetchData();
   }, []);
-  
   
 
   return (
@@ -178,14 +179,12 @@ function Dash(props) {
               <div className="col-xl-3 col-lg-12 col-md-12">
                 <Dashboard />
               </div>
-              
               <div className="col-xl-4 col-lg-4 col-md-4 overflow-table">
                 <div className="dashboard-content inventory content-tab">
                   <canvas ref={quizChartRef} id="quizChart" width="200" height="200"></canvas>
                 </div>
               </div>
-              <div className="col-xl-1 col-lg-1 col-md-1 overflow-table">
-</div>
+              <div className="col-xl-1 col-lg-1 col-md-1 overflow-table"></div>
               <div className="col-xl-4 col-lg-4 col-md-4 overflow-table">
                 <div className="dashboard-content inventory content-tab">
                   <canvas ref={chartRef} width="200" height="200"></canvas>

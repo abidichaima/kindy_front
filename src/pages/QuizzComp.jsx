@@ -10,6 +10,7 @@ import SideProfile from './SideProfile';
 import { FiLogIn } from 'react-icons/fi';
 import axios from 'axios';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
+import Swal from 'sweetalert2';
 
 function QuizzComp() {
   const [user, setUser] = useState({});
@@ -17,6 +18,7 @@ function QuizzComp() {
   const [questions, setQuestions] = useState([]);
   const [quizzesWithQuestions, setQuizzesWithQuestions] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [quizz, setQuizz] = useState([]);
 
   function getUserInfoFromCookie() {
     // Obtenez la valeur du cookie actuel (vous pouvez remplacer document.cookie par la méthode que vous utilisez pour récupérer les cookies)
@@ -55,22 +57,35 @@ function QuizzComp() {
     fetchQuizzes();
   }, [currentUser.level]);
  
-  const handleGetQuestions = async (quizId) => {
+  const handleGetQuestions = async (quizId, title) => {
     try {
-      setLoading(true); // Indiquer le début du chargement
-  
-      const response = await axios.post(`http://localhost:4000/quizz/get/${quizId}`);
-      console.log('Questions:', response.data);
+        setLoading(true); // Indiquer le début du chargement
+        const response = await axios.post(`http://localhost:4000/quizz/get/${quizId}`);
+        console.log("title", title);
+        const responseSimilar = await axios.get(`http://localhost:4000/quizz/similar`);
+        const similarQuizzes = responseSimilar.data.similarQuizzes.similarQuizzes;
+        setQuizz(similarQuizzes);
+        const filteredQuestions = similarQuizzes.filter(quiz => quiz !== title);
+        setQuestions(filteredQuestions);
+        setQuizzesWithQuestions([...quizzesWithQuestions, quizId]);
+
+        // Vérifier si la liste de questions filtrée est vide
+        if (filteredQuestions.length === 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'No Similarity',
+                text: 'No similar questions found.',
+            });
+        }
     } catch (error) {
-      const responseSimilar = await axios.get(`http://localhost:4000/quizz/similar`);
-      console.log('quiz:', responseSimilar.data.similarQuizzes.similarQuizzes);
-      setQuestions(responseSimilar.data.similarQuizzes.similarQuizzes);
-      setQuizzesWithQuestions([...quizzesWithQuestions, quizId]);
+        // Gérer les erreurs
     } finally {
-      setLoading(false); // Indiquer la fin du chargement
+        setLoading(false);
     }
-  };
-console.log("quest",questions);
+};
+
+console.log('quiz:', quizz);
+console.log("quest",questions.length);
   const quizzItemStyle = {
     marginBottom: '20px',
     border: '1px solid #ccc',
@@ -173,7 +188,7 @@ console.log("quest",questions);
         variant="contained"
         color="primary"
         startIcon={<CloudDownloadIcon />}
-        onClick={() => { handleGetQuestions(item._id); }}
+        onClick={() => { handleGetQuestions(item._id,item.titre); }}
         style={{ marginBottom: '20px' }} // Ajoutez un style supplémentaire si nécessaire
       >
         Suggest Similar 
