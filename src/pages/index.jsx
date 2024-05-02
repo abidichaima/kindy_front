@@ -61,6 +61,7 @@ import ViewCourse from './ViewCourse';
 import View1 from './1';
 import EventSatisfaction from './EventSatisfaction';
 import RemarksPage from './ViewRemarks';
+import Chatbot from './chat';
 
    
 function getUserInfoFromCookie() {
@@ -140,6 +141,7 @@ const routes = [
   { path: '/blog-details-v1', component: <BlogDetails01 />},
   { path: '/blog-details-v2', component: <BlogDetails02 />},
   { path: '/contact', component: <Contact />},
+  { path: '/chatbot', component: <Chatbot />},
 
   { path: '/users', component: <ViewUser />},
   { path: '/question', component: <ViewQuestion />},
