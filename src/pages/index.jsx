@@ -60,6 +60,7 @@ import ViewCalendarStudent from './ViewCalendarStudent';
 import ViewCourse from './ViewCourse';
 import View1 from './1';
 import EventSatisfaction from './EventSatisfaction';
+import RemarksPage from './ViewRemarks';
 
    
 function getUserInfoFromCookie() {
@@ -151,6 +152,8 @@ const routes = [
   { path: '/showUser/:id', component: <ShowUser />},
 
   { path: '/lesson', component: <ViewLesson />},
+  { path: '/lesson/:lessonId/remarks', component: <RemarksPage /> },
+
   { path: '/calendar', component: <ViewCalendar />},
   { path: '/freetime', component: <ViewFreeTime />},
   { path: '/holidays', component: <Holidays />},

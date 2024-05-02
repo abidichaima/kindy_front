@@ -1,7 +1,6 @@
 import React , {useState,useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import img from '../assets/images/BATTERIE.jpg'
-import Dashboard from './Dashboard';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
