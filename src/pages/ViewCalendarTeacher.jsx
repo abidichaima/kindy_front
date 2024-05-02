@@ -51,18 +51,14 @@ function ViewCalendarTeacher(props) {
         const events = data.map((lesson) => ({
           id: lesson._id,
           title: `${lesson.course?.name || 'No Course'}`,
-          title: `${lesson.course?.name || 'No Course'}`,
           start: new Date(lesson.startLessonDate),
           end: new Date(lesson.endLessonDate),
           teacher: lesson.teacher,
           students: lesson.students,
           classroomm: lesson.classroom._id,
           classroom: lesson.classroom.name,
-          classroomm: lesson.classroom._id,
-          classroom: lesson.classroom.name,
           course: lesson.course,
           teacherfistname: lesson.teacher.firstName,
-          teacherlastname: lesson.teacher.lastName ,
           teacherlastname: lesson.teacher.lastName ,
         }));
         setInitialEvents(events);

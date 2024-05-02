@@ -13,7 +13,7 @@ function View1(props) {
     const [initialEvents, setInitialEvents] = useState([]);
     const [holidayEvents, setHolidayEvents] = useState([]);
     const [freeTimeEvents, setFreeTimeEvents] = useState([]);
-    const [showModal, setShowModal] = useState(true);
+    const [showModal, setShowModal] = useState(false);
     const [selectedRange, setSelectedRange] = useState(null);
     const [selectedEvent, setSelectedEvent] = useState(null);
   console.log("initialEvents:", initialEvents);

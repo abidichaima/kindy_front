@@ -50,7 +50,7 @@ function ViewCalendarStudent(props) {
       .then((data) => {
         const events = data.map((lesson) => ({
           id: lesson._id,
-          title: `${lesson.typeLesson} - ${lesson.course?.name || 'No Course'}`,
+          title: `${lesson.course?.name || 'No Course'}`,
           start: new Date(lesson.startLessonDate),
           end: new Date(lesson.endLessonDate),
           teacher: lesson.teacher,
@@ -59,7 +59,7 @@ function ViewCalendarStudent(props) {
           classroom: lesson.classroom.name,
           course: lesson.course,
           teacherfistname: lesson.teacher.firstName,
-          teacherlastname: lesson.teacher.lastName,
+          teacherlastname: lesson.teacher.lastName ,
         }));
         setInitialEvents(events);
       })
@@ -144,12 +144,12 @@ return (
               <div className="row">
                 {showModal && (
                   <div className="col-xl-3 col-lg-12 col-md-12">
-                    <LessonsForm
+                {/*    <LessonsForm
                       show={showModal}
                       selectedRange={selectedRange}
                       selectedEvent={selectedEvent}
                       onClose={handleCloseModal}
-                    />
+                /> */}
                   </div>
                 )}
                 <div className={`col-xl-${showModal ? '9' : '12'} col-lg-12 col-md-12 overflow-table`}>
@@ -162,9 +162,9 @@ return (
                           center: 'title',
                           right: 'dayGridMonth,timeGridWeek,timeGridDay',
                         }}
-                        initialView="dayGridMonth"
+                        initialView="timeGridWeek"
                         editable={false}
-                        selectable={true}
+                        selectable={false}
                         selectMirror={true}
                         dayMaxEvents={true}
                         weekends={weekendsVisible}
@@ -172,7 +172,7 @@ return (
 
                         selectOverlap={false}
                         
-                        select={(selectInfo) => {
+                  /*      select={(selectInfo) => {
                           const selectedStart = selectInfo.start;
                           const selectedEnd = selectInfo.end;
                         
@@ -200,9 +200,9 @@ return (
                             setSelectedRange(selectInfo);
                             setSelectedEvent(null);
                           }
-                        }}
+                        }}*/
                         eventContent={renderEventContent}
-                        eventClick={handleEventClick}
+                        //eventClick={handleEventClick}
                         eventsSet={handleEvents}
                         contentHeight="auto"
                         slotMinTime="08:00:00"
@@ -236,10 +236,10 @@ function renderEventContent(eventInfo) {
   } else {
     return (
       <>
-        <b>{`${event.extendedProps.teacherfistname} ${event.extendedProps.teacherlastname}`}</b> <br />
-        <i>{event.title}</i>
+        <span style={{ color: 'black' }}><b>{`${event.extendedProps.teacherfistname} ${event.extendedProps.teacherlastname}`}</b> </span><br />
+        <span style={{ color: 'black' }}>Course: <i>{event.title}</i></span>
         <br />
-        Classroom: {event.extendedProps.classroom}
+        <span style={{ color: 'black' }}>Classroom: {event.extendedProps.classroom}</span>
       </>
     );
   }
