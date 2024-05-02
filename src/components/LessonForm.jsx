@@ -220,7 +220,7 @@ function LessonsForm({ show, selectedRange, selectedEvent, onClose, onSubmit }) 
               type="text"
               value={typeLesson}
               onChange={(e) => setTypeLesson(e.target.value)}
-              required
+              
             />
           </label>
           <br />

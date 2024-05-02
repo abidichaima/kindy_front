@@ -241,7 +241,7 @@ function renderEventContent(eventInfo) {
   const { event } = eventInfo;
   if (event.title === 'Holiday') {
     return <span style={{ color: 'white' }}>Holiday</span>;
-  } else if (event.title == 'Freetime') {
+  } else if (event.title === 'Freetime') {
     return <span style={{ color: 'white' }}>Freetime</span>; // Display nothing for free time events
   } else {
     return (
