@@ -382,7 +382,12 @@ const Quiz = () => {
                       >
                         Backward
                       </Button>
-                    </Link>                  </CardContent>
+                    </Link>   
+                    <Button
+                         
+                      >
+                        Another
+                      </Button>               </CardContent>
 
                 </Card>
               )}

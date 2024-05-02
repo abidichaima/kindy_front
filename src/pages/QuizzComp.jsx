@@ -8,7 +8,7 @@ import img from '../assets/images/BATTERIE.jpg';
 import { getuser } from '../services/question';
 import SideProfile from './SideProfile';
 import { FiLogIn } from 'react-icons/fi';
-
+import axios from 'axios';
 function QuizzComp() {
   const [user, setUser] = useState({});
   const [quizzList, setQuizzList] = useState([]);
@@ -49,6 +49,18 @@ function QuizzComp() {
   
     fetchQuizzes();
   }, [currentUser.level]);
+ 
+  const handleGetQuestions = async (quizId) => {
+    try {
+        const response = await axios.post(`http://localhost:4000/quizz/get/${quizId}`);
+        console.log('Questions:', response.data);
+    } catch (error) {
+        
+                const responseSimilar = await axios.get(`http://localhost:4000/quizz/similar`);
+                console.log('quiz:', responseSimilar.data);
+            
+    }
+};
 
   const quizzItemStyle = {
     marginBottom: '20px',
@@ -121,24 +133,26 @@ function QuizzComp() {
                             <div className=" col-md-2" ></div>
                             <div className="content  col-md-6">
                             <h2 style={title} className="title-detail"></h2>
-                              {quizzList && quizzList.map((item, index) => (                             
-                                <div key={index} style={quizzItemStyle}>
-                                  <h3 style={quizzTitleStyle}>
-                                    <svg
-                                      viewBox="0 0 24 24"
-                                      fill="currentColor"
-                                      height="1em"
-                                      width="1em"
-                                    >
-                                      <path d="M20.315 4.319l-8.69 8.719-3.31-3.322-2.069 2.076 5.379 5.398 10.76-10.796zM5.849 14.689L0 19.682h24l-5.864-4.991h-3.2l-1.024.896h3.584l3.072 2.815H3.417l3.072-2.815h2.688l-.896-.896z" />
-                                    </svg>                                   
-                                    <Link to={`/quizz/validation/${item._id}`} style={quizzLinkStyle}>
-                                      {item.titre}
-                                    </Link>
-                                  </h3>
-                                  <p>{item.description}</p>
-                                </div>
-                              ))}
+                            {quizzList && quizzList.map((item, index) => (                             
+    <div key={index} style={quizzItemStyle}>
+        <h3 style={quizzTitleStyle}>
+            <svg
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                height="1em"
+                width="1em"
+            >
+                <path d="M20.315 4.319l-8.69 8.719-3.31-3.322-2.069 2.076 5.379 5.398 10.76-10.796zM5.849 14.689L0 19.682h24l-5.864-4.991h-3.2l-1.024.896h3.584l3.072 2.815H3.417l3.072-2.815h2.688l-.896-.896z" />
+            </svg>                                   
+            <Link to={`/quizz/validation/${item._id}`} style={quizzLinkStyle}>
+                {item.titre}
+            </Link>
+            {/* Ajoutez le bouton ici avec l'action onClick */}
+            <Button onClick={() => handleGetQuestions(item._id)}>Obtenir les questions</Button>
+        </h3>
+        <p>{item.description}</p>
+    </div>
+))}
                             </div>
                             <div className=" col-md-4" ></div>
                           </div>
