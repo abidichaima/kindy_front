@@ -59,7 +59,7 @@ function LessonsForm({ show, selectedRange, selectedEvent, onClose, onSubmit }) 
   useEffect(() => {
     if (selectedEvent) {
       setSelectedTeacher({ value: selectedEvent.extendedProps.teacher._id, label: `${selectedEvent.extendedProps.teacher.firstName} ${selectedEvent.extendedProps.teacher.lastName}` });
-      setSelectedCourse({ value: selectedEvent.extendedProps.course._id, label: selectedEvent.extendedProps.course.name });
+   //   setSelectedCourse({ value: selectedEvent.extendedProps.course._id, label: selectedEvent.extendedProps.course.name });
       setSelectedClassroom({ value: selectedEvent.extendedProps.classroom._id, label: selectedEvent.extendedProps.classroom.name });
 
       setStartLessonDate(formatDate(selectedEvent.start));

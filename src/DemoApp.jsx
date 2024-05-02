@@ -40,6 +40,7 @@ export default function DemoApp() {
   }
 
   function handleEventClick(clickInfo) {
+    // eslint-disable-next-line no-restricted-globals
     if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
       const eventId = clickInfo.event.id;
       fetch(`http://localhost:4000/api/lesson/delete/${eventId}`, {

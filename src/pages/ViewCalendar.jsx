@@ -18,7 +18,6 @@ function ViewCalendar(props) {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [searchTerm, setSearchTerm] = useState(''); // State to hold the search term
   const calendarRef = useRef(null);
-
   useEffect(() => {
     fetch('http://localhost:4000/api/lesson/get')
       .then((response) => response.json())
@@ -30,8 +29,8 @@ function ViewCalendar(props) {
           end: new Date(lesson.endLessonDate),
           teacher: lesson.teacher,
           students: lesson.students,
-          classroomm: lesson.classroom._id,
-          classroom: lesson.classroom.name,
+          classroomm: lesson.classroom?._id,
+          classroom: lesson.classroom?.name,
           course: lesson.course,
           teacherfistname: lesson.teacher.firstName,
           teacherlastname: lesson.teacher.lastName ,
